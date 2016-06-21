@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="module_webcrawlingant" default="compile.module.webcrawlingant">
   <dirname property="module.webcrawlingant.basedir" file="${ant.file.module_webcrawlingant}"/>
+  <dirname property="module.webcrawlingant.builddir" file="AntBuild"/>
   
   <property name="module.jdk.home.webcrawlingant" value="${project.jdk.home}"/>
   <property name="module.jdk.bin.webcrawlingant" value="${project.jdk.bin}"/>
@@ -8,8 +9,8 @@
   
   <property name="compiler.args.webcrawlingant" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
   
-  <property name="webcrawlingant.output.dir" value="${module.webcrawlingant.basedir}/out/production/WebCrawlingAnt"/>
-  <property name="webcrawlingant.testoutput.dir" value="${module.webcrawlingant.basedir}/out/test/WebCrawlingAnt"/>
+  <property name="webcrawlingant.output.dir" value="${module.webcrawlingant.basedir}/${module.webcrawlingant.builddir}/production/WebCrawlingAnt"/>
+  <property name="webcrawlingant.testoutput.dir" value="${module.webcrawlingant.basedir}/${module.webcrawlingant.builddir}/test/WebCrawlingAnt"/>
   
   <path id="webcrawlingant.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->

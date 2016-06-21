@@ -30,7 +30,7 @@ public abstract class BaseCrawler extends Thread {
 		TutorGroup, ECTutor, L4Tutor
 	}
 
-	String CONFIG_FILE = "config.csv";
+	String CONFIG_FILE = "Configs/config.csv";
 	protected String CRIT_SUBJECT_KEY = "WC_SEARCH_CRIT";
 	protected String CRIT_LOCATION_KEY = "WC_SEARCH_OUT_CRIT";
 	protected String CRIT_PRICE_KEY = "WC_SEARCH_COND_PRICE_ABOVE";

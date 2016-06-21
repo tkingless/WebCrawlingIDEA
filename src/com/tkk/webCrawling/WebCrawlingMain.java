@@ -2,6 +2,7 @@ package com.tkk.webCrawling;
 
 import com.tkk.webCrawling.webCrawler.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,6 +12,9 @@ import java.util.*;
 public class WebCrawlingMain {
 
 	public static void main(String[] args) throws IOException {
+
+		//Workaround to ensure outputs folders
+		FileManager.CreateFolder("Outputs");
 
 		// DB flushing
 		Crawlee_DB.GetInstance();
@@ -73,7 +77,7 @@ public class WebCrawlingMain {
 		}
 		
 		// Parsing
-		FileManager filewriter = new FileManager("result.csv");
+		FileManager filewriter = new FileManager("Outputs/result.csv");
 		filewriter.AppendOnNewLine(new SimpleDateFormat().format(new Date()) + " 's update:", false);
 		for (Crawlee cr : ECTutorCrawler.GetInstance().getCrawlees()) {
 			filewriter.AppendOnNewLine("The case index: " + cr.getCase_index());

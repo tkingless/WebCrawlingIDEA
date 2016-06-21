@@ -27,7 +27,7 @@ public class Crawlee_DB {
 		}
 	}
 
-	static String DB_HISTORY = "case_DB.csv";
+	static String DB_HISTORY = "Outputs/case_DB.csv";
 	static String[] library_header_mapping = { "DISCOVERED DATE", "AND TIME", "WEBSITE", "INDEX", "LOCATION",
 			"TUTOR TIME", "GENDER", "INFO", "SUBJECT", "FEE", "OTHER" };
 
@@ -278,9 +278,12 @@ public class Crawlee_DB {
 		boolean needArchive = false;
 		Date archiveTime = new Date();
 
-		String oldDBfolder = "OLD_DB";
+		String oldDBfolder = "Outputs/OLD_DB";
 		FileManager.CreateFolder(oldDBfolder);
-		String oldDB = String.format("%s/%s_tmp", oldDBfolder, DB_HISTORY);
+
+		String[] DB_HISTORYparts = DB_HISTORY.split("/");
+		String shortDB_HISTORY = DB_HISTORYparts[DB_HISTORYparts.length-1];
+		String oldDB = String.format("%s/%s_tmp", oldDBfolder, shortDB_HISTORY);
 
 		// Creates file to write to
 		FileManager output = new FileManager(oldDB);
@@ -339,7 +342,7 @@ public class Crawlee_DB {
 
 		if (needArchive) {
 			String archiveFile = String.format("%s/%s_%s%s", oldDBfolder, dayFormat.format(archiveTime),
-					timeFormat.format(archiveTime), DB_HISTORY);
+					timeFormat.format(archiveTime), shortDB_HISTORY);
 
 			if (FileManager.RenameFile(DB_HISTORY, archiveFile) && FileManager.RenameFile(oldDB, DB_HISTORY)) {
 				System.out.println("[Swapping file] swapping file right!!!");
