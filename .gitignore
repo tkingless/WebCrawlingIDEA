@@ -4,3 +4,4 @@ config.csv
 result.csv
 case_DB.csv
 OLD_DB/
+.idea/workspace.xml
