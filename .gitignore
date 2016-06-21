@@ -1,0 +1,6 @@
+.DS_Store
+out/
+config.csv
+result.csv
+case_DB.csv
+OLD_DB/
