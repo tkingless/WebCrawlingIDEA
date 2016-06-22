@@ -10,6 +10,8 @@
   
   <property name="webcrawlingant.output.dir" value="${module.webcrawlingant.basedir}/AntBuild/production/WebCrawlingAnt"/>
   <property name="webcrawlingant.testoutput.dir" value="${module.webcrawlingant.basedir}/AntBuild/test/WebCrawlingAnt"/>
+
+  <property name="webcrawlingant.output.jar.dir" value="${module.webcrawlingant.basedir}/AntBuild/jar"/>
   
   <path id="webcrawlingant.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
@@ -87,4 +89,25 @@
     <delete dir="${webcrawlingant.output.dir}"/>
     <delete dir="${webcrawlingant.testoutput.dir}"/>
   </target>
+
+  <property name="mainClass" value="com.tkk.webCrawling.WebCrawlingMain"/>
+
+  <target name="jar.module.webcrawlingant.production" depends="compile.module.webcrawlingant.production" description="make module jar">
+    <mkdir dir="${webcrawlingant.output.jar.dir}"/>
+    <jar destfile="${webcrawlingant.output.jar.dir}/${ant.project.name}_production.jar" basedir="${webcrawlingant.output.dir}">
+      <manifest>
+        <attribute name="Main-Class" value="${mainClass}"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="run.jar.module.helloworld.production" depends="jar.module.webcrawlingant.production">
+    <java fork="true" classname="${mainClass}">
+      <classpath>
+        <path refid="webcrawlingant.module.production.classpath"/>
+        <path location="${webcrawlingant.output.jar.dir}/${ant.project.name}_production.jar"/>
+      </classpath>
+    </java>
+  </target>
+
 </project>
