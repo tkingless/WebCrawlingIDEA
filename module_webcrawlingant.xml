@@ -22,6 +22,7 @@
     <path refid="library.commons-csv-1.1.classpath"/>
     <path refid="library.commons-collections4-4.0.classpath"/>
     <path refid="library.jsoup-1.8.2.classpath"/>
+    <path refid="library.maven:_org.mongodb:mongo-java-driver:3.2.2.classpath"/>
   </path>
   
   <path id="webcrawlingant.runtime.production.module.classpath">
@@ -29,6 +30,7 @@
     <path refid="library.commons-csv-1.1.classpath"/>
     <path refid="library.commons-collections4-4.0.classpath"/>
     <path refid="library.jsoup-1.8.2.classpath"/>
+    <path refid="library.maven:_org.mongodb:mongo-java-driver:3.2.2.classpath"/>
   </path>
   
   <path id="webcrawlingant.module.classpath">
@@ -37,6 +39,7 @@
     <path refid="library.commons-csv-1.1.classpath"/>
     <path refid="library.commons-collections4-4.0.classpath"/>
     <path refid="library.jsoup-1.8.2.classpath"/>
+    <path refid="library.maven:_org.mongodb:mongo-java-driver:3.2.2.classpath"/>
   </path>
   
   <path id="webcrawlingant.runtime.module.classpath">
@@ -45,6 +48,7 @@
     <path refid="library.commons-csv-1.1.classpath"/>
     <path refid="library.commons-collections4-4.0.classpath"/>
     <path refid="library.jsoup-1.8.2.classpath"/>
+    <path refid="library.maven:_org.mongodb:mongo-java-driver:3.2.2.classpath"/>
   </path>
   
   
