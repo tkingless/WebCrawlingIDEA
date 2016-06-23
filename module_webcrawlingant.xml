@@ -62,7 +62,7 @@
   
   <path id="webcrawlingant.module.sourcepath">
     <dirset dir="${module.webcrawlingant.basedir}">
-      <include name="src/com/tkk/webCrawling"/>
+      <include name="src"/>
     </dirset>
   </path>
   
