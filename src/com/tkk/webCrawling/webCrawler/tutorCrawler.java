@@ -12,60 +12,30 @@ import org.apache.commons.collections4.*;
 import org.apache.commons.collections4.map.MultiValueMap;
 import org.apache.commons.csv.*;
 
-public abstract class tutorCrawler extends Thread {
-
-	public enum CrawlingStates {
-		STATE_PARSE_IN_CONFIG,
-		STATE_PROCESS_URL,
-		STATE_ANALYSE_CONTENT,
-		STATE_SEARCH_CRIT_FILTER,
-		STATE_POSTPROCESS
-	}
+public abstract class tutorCrawler extends baseCrawler {
 
 	/*
 	 * Binding of Crawler object (programming logical concept) with a key Since
 	 * there is no reason for a strange web key to tell program run
 	 */
-	public enum CrawlerKeyBinding {
-		TutorGroup, ECTutor, L4Tutor, HKJC
-	}
 
 	String CONFIG_FILE = "Configs/config.csv";
 	protected String CRIT_SUBJECT_KEY = "WC_SEARCH_CRIT";
 	protected String CRIT_LOCATION_KEY = "WC_SEARCH_OUT_CRIT";
 	protected String CRIT_PRICE_KEY = "WC_SEARCH_COND_PRICE_ABOVE";
 	protected String[] config_header_mapping = { "WEB_KEY", "TYPE", "VALUE" };
-	private CrawlerKeyBinding mID;
 
-	public CrawlerKeyBinding get_mID() {
-		return mID;
-	}
-
-	protected tutorCrawler.CrawlingStates mState;
+	protected CrawlingStates mState;
 	protected List<TutorCaseCrawlee> tutorCaseCrawlees = new ArrayList<TutorCaseCrawlee>();
 
 	/*
 	 * Need it be protected?
 	 */
 	protected MultiMap<String, String> config = new MultiValueMap<String, String>();
-    protected Thread thread;
     
 	protected tutorCrawler(CrawlerKeyBinding id, String threadName) {
-		System.out.println("[tutorCrawler] constructed called and parse in config");
-		mID = id;
+		super(id,threadName);
 		ParseInResultAction(mID);
-		if(thread == null){
-			thread = new Thread(this, threadName);
-			System.out.println("[thread] thread, " + threadName + " created.");
-		}
-	}
-	
-	public void StartRun() {
-		if(thread != null){
-			thread.start(); //jump to the run function to see what to do
-		}else{
-			System.err.println("thread not initialized");
-		}
 	}
 	
 	protected void ParseInResultAction(CrawlerKeyBinding id) {
