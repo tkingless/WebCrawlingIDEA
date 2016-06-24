@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-import com.tkk.webCrawling.crawleeClass.TutorCaseCrawlee;
+import com.tkk.webCrawling.crawleeClass.baseCrawlee;
 import org.jsoup.nodes.Document;
 import com.tkk.webCrawling.utils.Stopwatch;
 
@@ -58,12 +58,12 @@ public class ConcurrencyMachine {
 
 	}
 
-	public void RegisterQueue(TutorCaseCrawlee request) {
+	public void RegisterQueue(baseCrawlee request) {
 		// TODO: public function to
 			requests.add(request);
 	}
 
-	public void RegisterQueue(List<TutorCaseCrawlee> request) {
+	public void RegisterQueue(List<baseCrawlee> request) {
 			requests.addAll(request);
 	}
 }
