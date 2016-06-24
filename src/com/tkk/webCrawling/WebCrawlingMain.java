@@ -1,7 +1,7 @@
 package com.tkk.webCrawling;
 
 import com.tkk.webCrawling.webCrawler.*;
-import com.tkk.webCrawling.crawleeClass.TutorCaseCrawlee;
+import com.tkk.webCrawling.crawleeClass.*;
 
 import java.io.IOException;
 import java.util.Date;
@@ -16,13 +16,13 @@ public class WebCrawlingMain {
 		FileManager.CreateFolder("Outputs");
 
 		// declared all the websites
-		List<tutorCrawler> crawlers = new ArrayList<tutorCrawler>();
+		List<baseCrawler> crawlers = new ArrayList<baseCrawler>();
 		crawlers.add(HKJCcrawler.GetInstance());
 
 		// WAIT, until constructors finish and have websites get their
 		// board indexes
-		for (tutorCrawler crlr : crawlers) {
-			List<TutorCaseCrawlee> crles = crlr.getTutorCaseCrawlees();
+		for (baseCrawler crlr : crawlers) {
+			List<TutorCaseCrawlee> crles = null;
 
 			synchronized (crles) {
 				try {
@@ -35,38 +35,12 @@ public class WebCrawlingMain {
 			}
 
 			//System.out.println(String.format("[%s tutorCaseCrawlees] size 2: %s",crlr.toString(),crlr.getTutorCaseCrawlees().size()));
-			ConcurrencyMachine.GetInstance().RegisterQueue(crles);
+			ConcurrencyMachine.GetInstance().RegisterQueue(null);
 		}
 
 		ConcurrencyMachine.GetInstance().InvokeQueue();
 
-		// WAIT, until crawled and tutorCaseCrawlee mature, write to same DB file
-		// need to lock the log file
-		Date runTime = new Date();
-
-		for (tutorCrawler crlr : crawlers) {
-			List<TutorCaseCrawlee> crles = crlr.getTutorCaseCrawlees();
-			// @Problem: this is interesting, tutorCaseCrawlees is protected inside Crawler,
-			// but I can modifiy it outside here
-			for (Iterator<TutorCaseCrawlee> crwl_iter = crles.iterator(); crwl_iter.hasNext(); ) {
-				TutorCaseCrawlee crwl = crwl_iter.next();
-				try {
-					if (Crawlee_DB.GetInstance().LookUpFromDB(crwl, runTime)) {
-						crwl_iter.remove();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-			// WAIT, until writing DB file, write result file (this is
-			// postprocessing)
-			for (tutorCrawler crlr : crawlers) {
-				crlr.PostProcessAction();
-			}
-
-			System.out.println("Program main runned to LAST line!");
+		System.out.println("Program main runned to LAST line!");
 
 		}
 
