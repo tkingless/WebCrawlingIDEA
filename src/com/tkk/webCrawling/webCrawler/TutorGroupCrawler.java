@@ -12,7 +12,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-public class TutorGroupCrawler extends BaseCrawler {
+public class TutorGroupCrawler extends tutorCrawler {
 
 	public static String URL_KEY = "WC_URL";
 
@@ -20,7 +20,7 @@ public class TutorGroupCrawler extends BaseCrawler {
 	private static TutorGroupCrawler instance = null;
 
 	protected TutorGroupCrawler() {
-		super(BaseCrawler.CrawlerKeyBinding.TutorGroup, threadName);
+		super(tutorCrawler.CrawlerKeyBinding.TutorGroup, threadName);
 	}
 
 	public static TutorGroupCrawler GetInstance() {

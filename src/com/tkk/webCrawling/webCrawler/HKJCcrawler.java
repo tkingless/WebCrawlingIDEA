@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HKJCcrawler extends BaseCrawler {
+public class HKJCcrawler extends tutorCrawler {
 
     static final String boardUrl = "http://bet.hkjc.com/football/odds/odds_inplay.aspx?ci=en-US";
     static final String allOddsBaseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";

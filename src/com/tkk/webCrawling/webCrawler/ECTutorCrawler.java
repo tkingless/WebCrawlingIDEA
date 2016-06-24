@@ -15,7 +15,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-public class ECTutorCrawler extends BaseCrawler {
+public class ECTutorCrawler extends tutorCrawler {
 
 	String URL_KEY = "WC_URL";
 	String URL_INDEX_KEY = "WC_INDEX_URL";
@@ -25,7 +25,7 @@ public class ECTutorCrawler extends BaseCrawler {
 
 	protected ECTutorCrawler() {
 		// exists only to defeat instantiation
-		super(BaseCrawler.CrawlerKeyBinding.ECTutor,threadName);
+		super(tutorCrawler.CrawlerKeyBinding.ECTutor,threadName);
 	}
 
 	public static ECTutorCrawler GetInstance() {

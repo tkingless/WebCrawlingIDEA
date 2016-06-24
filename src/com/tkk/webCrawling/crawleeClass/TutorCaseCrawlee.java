@@ -26,7 +26,7 @@ public class TutorCaseCrawlee extends baseCrawlee {
 		return url;
 	}
 
-	private BaseCrawler crawlerBelonged;
+	private tutorCrawler crawlerBelonged;
 
 	public HashMap<String, String> map = new HashMap<String, String>();
 
@@ -35,7 +35,7 @@ public class TutorCaseCrawlee extends baseCrawlee {
 	 * Location,LastUpdateAt,Time,Gender,Info,Subject,Fee,Other
 	 */
 
-	public TutorCaseCrawlee(int idx, String aUrl, BaseCrawler crawler) {
+	public TutorCaseCrawlee(int idx, String aUrl, tutorCrawler crawler) {
 		super(crawler);
 		case_index = idx;
 		url = aUrl;
@@ -88,7 +88,7 @@ public class TutorCaseCrawlee extends baseCrawlee {
 	public Document call() {
 		try {
 			
-			if(this.getCrawlerBelonged().get_mID() == BaseCrawler.CrawlerKeyBinding.TutorGroup){
+			if(this.getCrawlerBelonged().get_mID() == tutorCrawler.CrawlerKeyBinding.TutorGroup){
 				state = State.SUCCESS;
 				crawlerBelonged.AnalyzeContentAction(this);
 				return null;

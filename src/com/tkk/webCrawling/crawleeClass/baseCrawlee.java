@@ -1,6 +1,6 @@
 package com.tkk.webCrawling.crawleeClass;
 
-import com.tkk.webCrawling.webCrawler.BaseCrawler;
+import com.tkk.webCrawling.webCrawler.tutorCrawler;
 import org.jsoup.nodes.Document;
 
 import java.util.concurrent.Callable;
@@ -14,9 +14,9 @@ public class baseCrawlee implements Callable<Document> {
         SUCCESS, FAILURE, QUEUE, TIME_OUT
     }
 
-    private BaseCrawler crawlerBelonged;
+    private tutorCrawler crawlerBelonged;
 
-    public BaseCrawler getCrawlerBelonged() {
+    public tutorCrawler getCrawlerBelonged() {
         return crawlerBelonged;
     }
 
@@ -28,7 +28,7 @@ public class baseCrawlee implements Callable<Document> {
 
     public  baseCrawlee.State state;
 
-    public baseCrawlee( BaseCrawler crawlerBelonged) {
+    public baseCrawlee( tutorCrawler crawlerBelonged) {
         this.crawlerBelonged = crawlerBelonged;
         state = State.QUEUE;
     }

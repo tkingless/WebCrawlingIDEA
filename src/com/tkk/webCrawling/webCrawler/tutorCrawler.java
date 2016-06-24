@@ -12,7 +12,7 @@ import org.apache.commons.collections4.*;
 import org.apache.commons.collections4.map.MultiValueMap;
 import org.apache.commons.csv.*;
 
-public abstract class BaseCrawler extends Thread {
+public abstract class tutorCrawler extends Thread {
 
 	public enum CrawlingStates {
 		STATE_PARSE_IN_CONFIG,
@@ -41,7 +41,7 @@ public abstract class BaseCrawler extends Thread {
 		return mID;
 	}
 
-	protected BaseCrawler.CrawlingStates mState;
+	protected tutorCrawler.CrawlingStates mState;
 	protected List<TutorCaseCrawlee> tutorCaseCrawlees = new ArrayList<TutorCaseCrawlee>();
 
 	/*
@@ -50,8 +50,8 @@ public abstract class BaseCrawler extends Thread {
 	protected MultiMap<String, String> config = new MultiValueMap<String, String>();
     protected Thread thread;
     
-	protected BaseCrawler (CrawlerKeyBinding id,String threadName) {
-		System.out.println("[BaseCrawler] constructed called and parse in config");
+	protected tutorCrawler(CrawlerKeyBinding id, String threadName) {
+		System.out.println("[tutorCrawler] constructed called and parse in config");
 		mID = id;
 		ParseInResultAction(mID);
 		if(thread == null){
@@ -109,7 +109,7 @@ public abstract class BaseCrawler extends Thread {
 
 	public void AnalyzeContentAction(TutorCaseCrawlee crwl) {
 		mState = CrawlingStates.STATE_ANALYSE_CONTENT;
-		System.out.println("[BaseCrawler] AnalyzeContentAction() called");
+		System.out.println("[tutorCrawler] AnalyzeContentAction() called");
 	}
 
 	public void FilterByCritAction() {

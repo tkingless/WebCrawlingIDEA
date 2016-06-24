@@ -16,12 +16,12 @@ public class WebCrawlingMain {
 		FileManager.CreateFolder("Outputs");
 
 		// declared all the websites
-		List<BaseCrawler> crawlers = new ArrayList<BaseCrawler>();
+		List<tutorCrawler> crawlers = new ArrayList<tutorCrawler>();
 		crawlers.add(HKJCcrawler.GetInstance());
 
 		// WAIT, until constructors finish and have websites get their
 		// board indexes
-		for (BaseCrawler crlr : crawlers) {
+		for (tutorCrawler crlr : crawlers) {
 			List<TutorCaseCrawlee> crles = crlr.getTutorCaseCrawlees();
 
 			synchronized (crles) {
@@ -44,7 +44,7 @@ public class WebCrawlingMain {
 		// need to lock the log file
 		Date runTime = new Date();
 
-		for (BaseCrawler crlr : crawlers) {
+		for (tutorCrawler crlr : crawlers) {
 			List<TutorCaseCrawlee> crles = crlr.getTutorCaseCrawlees();
 			// @Problem: this is interesting, tutorCaseCrawlees is protected inside Crawler,
 			// but I can modifiy it outside here
@@ -62,7 +62,7 @@ public class WebCrawlingMain {
 
 			// WAIT, until writing DB file, write result file (this is
 			// postprocessing)
-			for (BaseCrawler crlr : crawlers) {
+			for (tutorCrawler crlr : crawlers) {
 				crlr.PostProcessAction();
 			}
 
