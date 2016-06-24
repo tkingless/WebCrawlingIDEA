@@ -1,4 +1,4 @@
-package com.tkk.webCrawling;
+package com.tkk.webCrawling.crawleeClass;
 
 import java.io.IOException;
 import java.lang.String;
@@ -13,7 +13,11 @@ import org.jsoup.nodes.Document;
 
 import com.tkk.webCrawling.webCrawler.*;
 
-public class Crawlee implements Callable<Document> {
+public class TutorCaseCrawlee implements Callable<Document> {
+
+	public TutorCaseCrawlee() {
+
+	}
 
 	enum State {
 		SUCCESS, FAILURE, QUEUE, TIME_OUT
@@ -51,7 +55,7 @@ public class Crawlee implements Callable<Document> {
 	 * Location,LastUpdateAt,Time,Gender,Info,Subject,Fee,Other
 	 */
 
-	public Crawlee(int idx, String aUrl, BaseCrawler crawler) {
+	public TutorCaseCrawlee(int idx, String aUrl, BaseCrawler crawler) {
 		state = State.QUEUE;
 		case_index = idx;
 		url = aUrl;
@@ -59,7 +63,7 @@ public class Crawlee implements Callable<Document> {
 
 	}
 
-	public Crawlee(int idx) {
+	public TutorCaseCrawlee(int idx) {
 		case_index = idx;
 	}
 
@@ -73,7 +77,7 @@ public class Crawlee implements Callable<Document> {
 		for (String str : strings) {
 			content = content + str + System.getProperty("line.separator");
 		}
-		// System.out.println("[Crawlee] content: " + content);
+		// System.out.println("[TutorCaseCrawlee] content: " + content);
 		return content;
 	}
 
