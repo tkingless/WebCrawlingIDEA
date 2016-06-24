@@ -10,11 +10,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.tkk.webCrawling.crawleeClass.TutorCaseCrawlee;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-
-import com.tkk.webCrawling.Crawlee;
 
 public class L4TutorCrawler extends BaseCrawler {
 
@@ -85,21 +84,21 @@ public class L4TutorCrawler extends BaseCrawler {
 			}
 		}
 
-		synchronized (crawlees) {
+		synchronized (tutorCaseCrawlees) {
 			Collections.sort(onboard_indices);
 
 			for (String index : onboard_indices) {
 				int idx = Integer.parseInt(index);
-				crawlees.add(new Crawlee(idx, url + index, this));
+				tutorCaseCrawlees.add(new TutorCaseCrawlee(idx, url + index, this));
 			}
 
-			System.out.println("[L4Tutor crawlees] size: " + this.getCrawlees().size());
-			crawlees.notify();
+			System.out.println("[L4Tutor tutorCaseCrawlees] size: " + this.getTutorCaseCrawlees().size());
+			tutorCaseCrawlees.notify();
 		}
 	}
 
-	public void AnalyzeContentAction(Crawlee crawlee) {
-		Document doc = crawlee.getJdoc();
+	public void AnalyzeContentAction(TutorCaseCrawlee tutorCaseCrawlee) {
+		Document doc = tutorCaseCrawlee.getJdoc();
 		HashMap<String, String> searchNodes = new HashMap<String, String>();
 		searchNodes.put("Location", "span[class$=title]");
 		searchNodes.put("LastUpdateAt", "span[class$=loginTime]");
@@ -109,34 +108,34 @@ public class L4TutorCrawler extends BaseCrawler {
 		Elements lastUpdate = doc.select(searchNodes.get("LastUpdateAt"));
 		Elements eles = doc.select(searchNodes.get("Details"));
 
-		crawlee.Put("Website","Website: " + this.toString());
-		crawlee.Put("Location", "Location: " + location.text());
-		crawlee.Put("LastUpdateAt", "Last Update: " + lastUpdate.text());
-		crawlee.Put("Time", eles.get(0).text());
-		crawlee.Put("Gender", eles.get(1).text());
-		crawlee.Put("Info", eles.get(2).text());
-		crawlee.Put("Subject", eles.get(3).text());
-		crawlee.Put("Fee", eles.get(4).text());
-		crawlee.Put("Other", eles.get(5).text());
+		tutorCaseCrawlee.Put("Website","Website: " + this.toString());
+		tutorCaseCrawlee.Put("Location", "Location: " + location.text());
+		tutorCaseCrawlee.Put("LastUpdateAt", "Last Update: " + lastUpdate.text());
+		tutorCaseCrawlee.Put("Time", eles.get(0).text());
+		tutorCaseCrawlee.Put("Gender", eles.get(1).text());
+		tutorCaseCrawlee.Put("Info", eles.get(2).text());
+		tutorCaseCrawlee.Put("Subject", eles.get(3).text());
+		tutorCaseCrawlee.Put("Fee", eles.get(4).text());
+		tutorCaseCrawlee.Put("Other", eles.get(5).text());
 	}
 
 	public void FilterByCritAction() {
 		super.FilterByCritAction();
 		
-		for (Iterator<Crawlee> crawlee_ite = crawlees.iterator(); crawlee_ite.hasNext();) {
-			Crawlee crawlee = crawlee_ite.next();
+		for (Iterator<TutorCaseCrawlee> crawlee_ite = tutorCaseCrawlees.iterator(); crawlee_ite.hasNext();) {
+			TutorCaseCrawlee tutorCaseCrawlee = crawlee_ite.next();
 			Boolean beDeleted = true;
 
-			if (FilterInBySubject(crawlee.Context())) {
-				if (!FilterByFee(crawlee)) {
-					if (FilterOutByLocation(crawlee.Context())) {
+			if (FilterInBySubject(tutorCaseCrawlee.Context())) {
+				if (!FilterByFee(tutorCaseCrawlee)) {
+					if (FilterOutByLocation(tutorCaseCrawlee.Context())) {
 						beDeleted = false;
 					}
 				}
 			}
 
 			if (beDeleted) {
-				System.out.println("[SearchCrit] L4Tutor Going to delete crawlee: " + crawlee.getCase_index());
+				System.out.println("[SearchCrit] L4Tutor Going to delete tutorCaseCrawlee: " + tutorCaseCrawlee.getCase_index());
 				crawlee_ite.remove();
 			}
 		}
@@ -145,8 +144,8 @@ public class L4TutorCrawler extends BaseCrawler {
 	public void PostProcessAction() {
 		super.PostProcessAction();
 		// Result:
-		for (Crawlee cr : crawlees) {
-			System.out.println("[SearchCrit] L4Tutor Remaining crawlee: " + cr.getCase_index());
+		for (TutorCaseCrawlee cr : tutorCaseCrawlees) {
+			System.out.println("[SearchCrit] L4Tutor Remaining tutorCaseCrawlee: " + cr.getCase_index());
 		}
 	}
 

@@ -3,7 +3,6 @@ package com.tkk.webCrawling.crawleeClass;
 import java.io.IOException;
 import java.lang.String;
 import java.util.HashMap;
-import java.util.concurrent.*;
 import java.util.Collection;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -13,15 +12,7 @@ import org.jsoup.nodes.Document;
 
 import com.tkk.webCrawling.webCrawler.*;
 
-public class TutorCaseCrawlee implements Callable<Document> {
-
-	public TutorCaseCrawlee() {
-
-	}
-
-	enum State {
-		SUCCESS, FAILURE, QUEUE, TIME_OUT
-	}
+public class TutorCaseCrawlee extends baseCrawlee {
 
 	private int case_index;
 
@@ -37,18 +28,7 @@ public class TutorCaseCrawlee implements Callable<Document> {
 
 	private BaseCrawler crawlerBelonged;
 
-	public BaseCrawler getCrawlerBelonged() {
-		return crawlerBelonged;
-	}
-
-	private Document Jdoc;
-
-	public Document getJdoc() {
-		return Jdoc;
-	}
-
 	public HashMap<String, String> map = new HashMap<String, String>();
-	public State state;
 
 	/*
 	 * Current keys of HashMap are:
@@ -56,10 +36,9 @@ public class TutorCaseCrawlee implements Callable<Document> {
 	 */
 
 	public TutorCaseCrawlee(int idx, String aUrl, BaseCrawler crawler) {
-		state = State.QUEUE;
+		super(crawler);
 		case_index = idx;
 		url = aUrl;
-		crawlerBelonged = crawler;
 
 	}
 

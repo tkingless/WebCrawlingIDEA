@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.tkk.webCrawling.CSVmanager;
-import com.tkk.webCrawling.Crawlee;
+import com.tkk.webCrawling.crawleeClass.TutorCaseCrawlee;
 import com.tkk.webCrawling.FileManager;
 
 import org.apache.commons.collections4.*;
@@ -27,7 +27,7 @@ public abstract class BaseCrawler extends Thread {
 	 * there is no reason for a strange web key to tell program run
 	 */
 	public enum CrawlerKeyBinding {
-		TutorGroup, ECTutor, L4Tutor
+		TutorGroup, ECTutor, L4Tutor, HKJC
 	}
 
 	String CONFIG_FILE = "Configs/config.csv";
@@ -42,7 +42,7 @@ public abstract class BaseCrawler extends Thread {
 	}
 
 	protected BaseCrawler.CrawlingStates mState;
-	protected List<Crawlee> crawlees = new ArrayList<Crawlee>();
+	protected List<TutorCaseCrawlee> tutorCaseCrawlees = new ArrayList<TutorCaseCrawlee>();
 
 	/*
 	 * Need it be protected?
@@ -98,8 +98,8 @@ public abstract class BaseCrawler extends Thread {
 		}
 	}
 	
-	public List<Crawlee> getCrawlees () {
-		return crawlees;
+	public List<TutorCaseCrawlee> getTutorCaseCrawlees() {
+		return tutorCaseCrawlees;
 	}
 
 	//TODO: can prevent the throws here?
@@ -107,7 +107,7 @@ public abstract class BaseCrawler extends Thread {
 		mState = CrawlingStates.STATE_PROCESS_URL;
 	}
 
-	public void AnalyzeContentAction(Crawlee crwl) {
+	public void AnalyzeContentAction(TutorCaseCrawlee crwl) {
 		mState = CrawlingStates.STATE_ANALYSE_CONTENT;
 		System.out.println("[BaseCrawler] AnalyzeContentAction() called");
 	}
@@ -116,13 +116,13 @@ public abstract class BaseCrawler extends Thread {
 		mState = CrawlingStates.STATE_SEARCH_CRIT_FILTER;
 	}
 	
-	protected Boolean FilterByFee(Crawlee crawlee) {
+	protected Boolean FilterByFee(TutorCaseCrawlee tutorCaseCrawlee) {
 		int price_above = -1;
 		@SuppressWarnings({ "unchecked" })
 		Collection<String> price_str = (Collection<String>) config.get(CRIT_PRICE_KEY);
 		price_above = Integer.parseInt((String) price_str.toArray()[0]);
 		if (price_above != -1) {
-			if (crawlee.GetFee() > price_above)
+			if (tutorCaseCrawlee.GetFee() > price_above)
 				return false;
 		}
 		return true;

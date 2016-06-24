@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import com.tkk.webCrawling.crawleeClass.TutorCaseCrawlee;
 import org.apache.commons.csv.*;
 
 /*
@@ -18,12 +19,12 @@ public class Crawlee_DB {
 	class DateCrawlee {
 		public Date day;
 		public Date time;
-		public Crawlee crawlee;
+		public TutorCaseCrawlee tutorCaseCrawlee;
 
-		public DateCrawlee(Date aDay, Date aTime, Crawlee crle) {
+		public DateCrawlee(Date aDay, Date aTime, TutorCaseCrawlee crle) {
 			day = aDay;
 			time = aTime;
-			crawlee = crle;
+			tutorCaseCrawlee = crle;
 		}
 	}
 
@@ -105,7 +106,7 @@ public class Crawlee_DB {
 		for (int i = 1; i < DB.size(); i++) {
 			CSVRecord record = DB.get(i);
 
-			Crawlee sample = new Crawlee(Integer.parseInt(record.get(library_header_mapping[3])));
+			TutorCaseCrawlee sample = new TutorCaseCrawlee(Integer.parseInt(record.get(library_header_mapping[3])));
 
 			sample.Put("Website", record.get(library_header_mapping[2]));
 			sample.Put("Location", record.get(library_header_mapping[4]));
@@ -136,8 +137,8 @@ public class Crawlee_DB {
 
 	}
 
-	void StreamToRecords(Date day, Date time, Crawlee crle) {
-		// records.crawlee.add(crle);
+	void StreamToRecords(Date day, Date time, TutorCaseCrawlee crle) {
+		// records.tutorCaseCrawlee.add(crle);
 		// System.out.println("[DB, read entry] today: " + dayFormat.format(day)
 		// + " and crle: " + crle.Context());
 		records.add(new DateCrawlee(day, time, crle));
@@ -146,7 +147,7 @@ public class Crawlee_DB {
 	static public int WriteToDBcount = 0;
 	static public int WriteToDBLoopCnt = 0;
 
-	public synchronized boolean LookUpFromDB(Crawlee aCrle, Date time) throws IOException {
+	public synchronized boolean LookUpFromDB(TutorCaseCrawlee aCrle, Date time) throws IOException {
 		boolean isNewDBentry = (!MatchBeforeWriteDB(aCrle) | records.size() == 0);
 		// boolean isNewDBentry = !MatchBeforeWriteDB(aCrle);
 		// System.out.println("[DB,matching] isNewDBentry: " + isNewDBentry + "
@@ -175,34 +176,34 @@ public class Crawlee_DB {
 	 * thinking the conditions are what the system will respond if the cond
 	 * changed
 	 */
-	boolean MatchBeforeWriteDB(Crawlee aCrle) {
+	boolean MatchBeforeWriteDB(TutorCaseCrawlee aCrle) {
 
 		MatchBeforeWriteDBcount++;
 		boolean hasSameMatch = false;
 		// boolean hasSameMatch = true;
 		for (DateCrawlee record : records) {
 
-			if (!record.crawlee.GetValueByKey("Website").equals(aCrle.GetValueByKey("Website")))
+			if (!record.tutorCaseCrawlee.GetValueByKey("Website").equals(aCrle.GetValueByKey("Website")))
 				continue;
 
 			MatchBeforeWriteDBLoopCnt++;
-			if (record.crawlee.getCase_index() == aCrle.getCase_index()) {
+			if (record.tutorCaseCrawlee.getCase_index() == aCrle.getCase_index()) {
 				// should check info, since the student info should strongly
 				// bind to the case index
 				String infoValue = CommaTransform(aCrle.GetValueByKey("Info"));
 				String subjectValue = CommaTransform(aCrle.GetValueByKey("Subject"));
 				String locationValue = CommaTransform(aCrle.GetValueByKey("Location"));
-				boolean infoBool = infoValue.equals(record.crawlee.GetValueByKey("Info"));
-				boolean subjectBool = subjectValue.equals(record.crawlee.GetValueByKey("Subject"));
-				boolean locationBool = locationValue.equals(record.crawlee.GetValueByKey("Location"));
-				boolean feeBool = (record.crawlee.GetFee() == aCrle.GetFee());
+				boolean infoBool = infoValue.equals(record.tutorCaseCrawlee.GetValueByKey("Info"));
+				boolean subjectBool = subjectValue.equals(record.tutorCaseCrawlee.GetValueByKey("Subject"));
+				boolean locationBool = locationValue.equals(record.tutorCaseCrawlee.GetValueByKey("Location"));
+				boolean feeBool = (record.tutorCaseCrawlee.GetFee() == aCrle.GetFee());
 
 				// System.out.println("[DB matching] the four, infoBool: " +
 				// infoBool + " subjectBool: " + subjectBool + " locationBool: "
 				// + locationBool + ", feeBool: " + feeBool);
 				// System.out.println("[DB matching] locationValue: " +
 				// locationValue + ",record location: " +
-				// record.crawlee.GetValueByKey("Location"));
+				// record.tutorCaseCrawlee.GetValueByKey("Location"));
 				if (infoBool && subjectBool && feeBool && locationBool) {
 					hasSameMatch = true;
 					break;
@@ -211,13 +212,13 @@ public class Crawlee_DB {
 
 		}
 		if (!hasSameMatch)
-			System.out.println("[DB matching] DB matching return false as no same matching, and remote crawlee id: "
+			System.out.println("[DB matching] DB matching return false as no same matching, and remote tutorCaseCrawlee id: "
 					+ aCrle.getCase_index());
 		return hasSameMatch;
 	}
 
 	// Write on DBFile
-	void AppendNewEntryOnDB(Date discoverTime, Crawlee newEntry) throws IOException {
+	void AppendNewEntryOnDB(Date discoverTime, TutorCaseCrawlee newEntry) throws IOException {
 
 		// {"DISCOVERD DATE","AND TIME","INDEX","LOCATION","TUTOR
 		// TIME","GENDER","INFO","SUBJECT","FEE","OTHER"}

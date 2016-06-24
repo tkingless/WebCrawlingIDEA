@@ -7,11 +7,10 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.tkk.webCrawling.crawleeClass.TutorCaseCrawlee;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-
-import com.tkk.webCrawling.Crawlee;
 
 public class TutorGroupCrawler extends BaseCrawler {
 
@@ -45,7 +44,7 @@ public class TutorGroupCrawler extends BaseCrawler {
 		@SuppressWarnings("unchecked")
 		Collection<String> urls = (Collection<String>) config.get(URL_KEY);
 		List<Document> tmpDocs = new ArrayList<Document>();
-		List<Crawlee> tmpCrles = new ArrayList<Crawlee>();
+		List<TutorCaseCrawlee> tmpCrles = new ArrayList<TutorCaseCrawlee>();
 
 		for (String url : urls) {
 			System.out.println("The url: " + url);
@@ -61,18 +60,18 @@ public class TutorGroupCrawler extends BaseCrawler {
 		// Do search part:
 		AnalyzeContentAction(tmpDocs,tmpCrles);
 
-		synchronized (crawlees) {
-			crawlees.addAll(tmpCrles);
-			System.out.println("[TutorGroup] crawlees size: " + crawlees.size());
-			crawlees.notify();
+		synchronized (tutorCaseCrawlees) {
+			tutorCaseCrawlees.addAll(tmpCrles);
+			System.out.println("[TutorGroup] tutorCaseCrawlees size: " + tutorCaseCrawlees.size());
+			tutorCaseCrawlees.notify();
 		}
 
 	}
 
-	public void AnalyzeContentAction(Crawlee crawlee) {
+	public void AnalyzeContentAction(TutorCaseCrawlee tutorCaseCrawlee) {
 	}
 
-	void AnalyzeContentAction(List<Document> Docs, List<Crawlee> Crles) {
+	void AnalyzeContentAction(List<Document> Docs, List<TutorCaseCrawlee> Crles) {
 		String JsoupSearchNode_HEAD = "span[id$=cs%d]";
 		String JsoupSearchNode_CONTENT = "div[id$=cdiv%d]";
 
@@ -115,7 +114,7 @@ public class TutorGroupCrawler extends BaseCrawler {
 				System.out.println(headingStr);
 				System.out.println(contentStr);
 
-				Crawlee tmpCrle = new Crawlee(0, "", this);
+				TutorCaseCrawlee tmpCrle = new TutorCaseCrawlee(0, "", this);
 				tmpCrle.Put("Website", "Website: " + this.toString());
 				tmpCrle.Put("Fee", "Fee: " + GetFee(headingStr));
 				tmpCrle.Put("Info", "Info :" + headingStr);
@@ -139,20 +138,20 @@ public class TutorGroupCrawler extends BaseCrawler {
 	public void FilterByCritAction() {
 		super.FilterByCritAction();
 		
-		for (Iterator<Crawlee> crawlee_ite = crawlees.iterator(); crawlee_ite.hasNext();) {
-			Crawlee crawlee = crawlee_ite.next();
+		for (Iterator<TutorCaseCrawlee> crawlee_ite = tutorCaseCrawlees.iterator(); crawlee_ite.hasNext();) {
+			TutorCaseCrawlee tutorCaseCrawlee = crawlee_ite.next();
 			Boolean beDeleted = true;
 
-			if (FilterInBySubject(crawlee.Context())) {
-				if (!FilterByFee(crawlee)) {
-					if (FilterOutByLocation(crawlee.Context())) {
+			if (FilterInBySubject(tutorCaseCrawlee.Context())) {
+				if (!FilterByFee(tutorCaseCrawlee)) {
+					if (FilterOutByLocation(tutorCaseCrawlee.Context())) {
 						beDeleted = false;
 					}
 				}
 			}
 
 			if (beDeleted) {
-				System.out.println("[SearchCrit] TutorGroup Going to delete crawlee: " + crawlee.GetValueByKey("Info"));
+				System.out.println("[SearchCrit] TutorGroup Going to delete tutorCaseCrawlee: " + tutorCaseCrawlee.GetValueByKey("Info"));
 				crawlee_ite.remove();
 			}
 		}
