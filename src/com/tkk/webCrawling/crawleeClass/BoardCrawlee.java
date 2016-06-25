@@ -21,12 +21,27 @@ public class BoardCrawlee extends baseCrawlee {
     List<String> onboard_indices = new ArrayList<String>();
     List<String> idx_urls = new ArrayList<String>();
 
-    String boardUrl = "http://bet.hkjc.com/football/odds/odds_inplay.aspx?ci=en-US";
-    String allOddsBaseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";
+    static String boardUrl = "http://bet.hkjc.com/football/odds/odds_inplay.aspx?ci=en-US";
+    static String allOddsBaseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";
+
+
 
     public BoardCrawlee(baseCrawler crawlerBelonged) {
         super(crawlerBelonged);
     }
+
+    class MatchStruct {
+        public String allOddsLinkAddr;
+        public String matchId;
+        public MatchStruct(String aMatchId) {
+            matchId = aMatchId;
+            allOddsLinkAddr = allOddsBaseUrl + aMatchId;
+            System.out.println("MatchStruct constructed, matchId:" + matchId);
+            System.out.println("and allOddsLink" + allOddsLinkAddr);
+        }
+    }
+
+    List<MatchStruct> matches = new ArrayList<MatchStruct>();
 
     //callable callbacks
     public Document call() {
@@ -43,25 +58,27 @@ public class BoardCrawlee extends baseCrawlee {
         return Jdoc;
     }
 
-    void GetChildNodes () {
+    void GetChildNodes() {
 
         HashMap<String, String> searchNodes = new HashMap<String, String>();
         searchNodes.put("onboardChildUrls", "td[class$=cdAllIn] > a[href]");
 
         Elements onboardChildUrls = Jdoc.select(searchNodes.get("onboardChildUrls"));
+        Pattern linkaddr = Pattern.compile("tmatchid=[0-9]{1,}");
 
         for (Element aRefUrl : onboardChildUrls) {
-            System.out.println("url: " + aRefUrl );
+            //System.out.println("url: " + aRefUrl);
+
+            Matcher matchid = linkaddr.matcher(aRefUrl.toString());
+
+            while (matchid.find()) {
+                String str = matchid.group();
+                str = str.substring(str.lastIndexOf('=') + 1);
+                matches.add(new MatchStruct(str));
+            }
         }
 
-        /*Pattern atrbt = Pattern.compile("");
-        Matcher rawIdxUrls = atrbt.matcher(Jdoc.body().toString());
-
-        while (rawIdxUrls.find()) {
-            String str = rawIdxUrls.group();
-            str = str.substring(str.lastIndexOf('_') + 1);
-            onboard_indices.add(str);
-        }*/
+        System.out.println("The size of matches: " + matches.size());
 
 
     }

@@ -42,6 +42,7 @@ public class WebCrawlingMain {
 
 		for (baseCrawler crlr : crawlers) {
 				crlr.StartRun();
+				//to make current thread join the crlr thread, i.e. wait crlr thread finished to continue.
 				crlr.JoinThread();
 		}
 
