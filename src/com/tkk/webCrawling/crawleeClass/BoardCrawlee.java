@@ -36,8 +36,8 @@ public class BoardCrawlee extends baseCrawlee {
         public MatchStruct(String aMatchId) {
             matchId = aMatchId;
             allOddsLinkAddr = allOddsBaseUrl + aMatchId;
-            System.out.println("MatchStruct constructed, matchId:" + matchId);
-            System.out.println("and allOddsLink" + allOddsLinkAddr);
+            //System.out.println("MatchStruct constructed, matchId:" + matchId);
+            //System.out.println("and allOddsLink" + allOddsLinkAddr);
         }
     }
 
