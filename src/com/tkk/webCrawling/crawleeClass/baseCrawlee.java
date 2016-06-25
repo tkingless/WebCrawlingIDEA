@@ -5,16 +5,13 @@ import org.jsoup.nodes.Document;
 
 import java.util.concurrent.Callable;
 
-/**
- * Created by tkingkwun on 24/6/2016.
- */
 public class baseCrawlee implements Callable<Document> {
 
     enum State {
         SUCCESS, FAILURE, QUEUE, TIME_OUT
     }
 
-    private baseCrawler crawlerBelonged;
+    protected baseCrawler crawlerBelonged;
 
     public baseCrawler getCrawlerBelonged() {
         return crawlerBelonged;

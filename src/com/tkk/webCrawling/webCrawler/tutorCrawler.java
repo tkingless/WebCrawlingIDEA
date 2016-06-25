@@ -72,7 +72,6 @@ public abstract class tutorCrawler extends baseCrawler {
 		return tutorCaseCrawlees;
 	}
 
-	//TODO: can prevent the throws here?
 	protected void ProcessUrlsAction() {
 		mState = CrawlingStates.STATE_PROCESS_URL;
 	}

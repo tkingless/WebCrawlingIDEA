@@ -1,7 +1,7 @@
 package com.tkk.webCrawling.webCrawler;
 
 /**
- * Created by tkingkwun on 24/6/2016.
+ * Created by tkingless on 24/6/2016.
  */
 public abstract class baseCrawler extends Thread {
 
@@ -25,6 +25,10 @@ public abstract class baseCrawler extends Thread {
 
     protected Thread thread;
 
+    public void JoinThread() throws InterruptedException {
+        thread.join();
+    }
+
     protected baseCrawler(CrawlerKeyBinding id, String threadName) {
         mID = id;
         if(thread == null){
@@ -32,6 +36,7 @@ public abstract class baseCrawler extends Thread {
         }
     }
 
+    //to be called externally, to ask inherited to run run(), with creating a new thread
     public void StartRun() {
         if(thread != null){
             thread.start(); //jump to the run function to see what to do

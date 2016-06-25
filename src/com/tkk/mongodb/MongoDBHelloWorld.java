@@ -3,7 +3,7 @@ import com.mongodb.*;
 import java.net.UnknownHostException;
 
 /**
- * Created by tkingkwun on 23/6/2016.
+ * Created by tkingless on 23/6/2016.
  */
 public class MongoDBHelloWorld {
     public static void main(String[] args) throws UnknownHostException {

@@ -4,13 +4,11 @@ import com.tkk.webCrawling.webCrawler.*;
 import com.tkk.webCrawling.crawleeClass.*;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.*;
 
 public class WebCrawlingMain {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 
 		//Workaround to ensure outputs folders
 		FileManager.CreateFolder("Outputs");
@@ -21,7 +19,9 @@ public class WebCrawlingMain {
 
 		// WAIT, until constructors finish and have websites get their
 		// board indexes
-		for (baseCrawler crlr : crawlers) {
+
+
+		/*for (baseCrawler crlr : crawlers) {
 			List<TutorCaseCrawlee> crles = null;
 
 			synchronized (crles) {
@@ -38,7 +38,13 @@ public class WebCrawlingMain {
 			ConcurrencyMachine.GetInstance().RegisterQueue(null);
 		}
 
-		ConcurrencyMachine.GetInstance().InvokeQueue();
+		ConcurrencyMachine.GetInstance().InvokeQueue();*/
+
+		for (baseCrawler crlr : crawlers) {
+				crlr.StartRun();
+				crlr.JoinThread();
+		}
+
 
 		System.out.println("Program main runned to LAST line!");
 

@@ -46,12 +46,7 @@ public class ECTutorCrawler extends tutorCrawler {
 		}
 	}
 
-	/*
-	 * TODO: Split this function, too clumsy
-	 */
 	protected void ProcessUrlsAction() {
-
-		// super.ProcessUrlsAction();
 
 		List<String> onboard_indices = new ArrayList<String>();
 
