@@ -1,7 +1,6 @@
 package com.tkk.webCrawling;
 
 import com.tkk.webCrawling.webCrawler.*;
-import com.tkk.webCrawling.crawleeClass.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -16,10 +15,6 @@ public class WebCrawlingMain {
 		// declared all the websites
 		List<baseCrawler> crawlers = new ArrayList<baseCrawler>();
 		crawlers.add(HKJCcrawler.GetInstance());
-
-		// WAIT, until constructors finish and have websites get their
-		// board indexes
-
 
 		/*for (baseCrawler crlr : crawlers) {
 			List<TutorCaseCrawlee> crles = null;

@@ -14,7 +14,7 @@ public abstract class baseCrawler extends Thread {
     }
 
     public enum CrawlerKeyBinding {
-        TutorGroup, ECTutor, L4Tutor, HKJC
+        TutorGroup, ECTutor, L4Tutor, HKJC, MatchEvent
     }
 
     protected CrawlerKeyBinding mID;

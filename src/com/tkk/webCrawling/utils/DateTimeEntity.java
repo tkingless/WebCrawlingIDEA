@@ -17,30 +17,36 @@ public class DateTimeEntity {
     TimeZone timezone;
 
     public static Date GetCurrentTime() {
+        //TODO
         return null;
     }
 
     public static Date GetToday() {
+        //TODO
         return null;
     }
 
     public DateTimeEntity(SimpleDateFormat dayFormat, SimpleDateFormat timeFormat) {
         this.dayFormat = dayFormat;
         this.timeFormat = timeFormat;
+        //Set default timezone to HK
     }
 
     public DateTimeEntity() {
     }
 
     public void SetDayFormat(String format) {
+        //TODO
 
     }
 
     public void SetTimeFormat(String format) {
+        //TODO
 
     }
 
     public Time CalTimeIntervalDiff (Time time){
+        //TODO
         return  new Time(90);
     }
 }

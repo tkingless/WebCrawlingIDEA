@@ -22,26 +22,12 @@ public class BoardCrawlee extends baseCrawlee {
     List<String> idx_urls = new ArrayList<String>();
 
     static String boardUrl = "http://bet.hkjc.com/football/odds/odds_inplay.aspx?ci=en-US";
-    static String allOddsBaseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";
-
-
 
     public BoardCrawlee(baseCrawler crawlerBelonged) {
         super(crawlerBelonged);
     }
 
-    class MatchStruct {
-        public String allOddsLinkAddr;
-        public String matchId;
-        public MatchStruct(String aMatchId) {
-            matchId = aMatchId;
-            allOddsLinkAddr = allOddsBaseUrl + aMatchId;
-            //System.out.println("MatchStruct constructed, matchId:" + matchId);
-            //System.out.println("and allOddsLink" + allOddsLinkAddr);
-        }
-    }
-
-    List<MatchStruct> matches = new ArrayList<MatchStruct>();
+    List<MatchCrawlee> matches = new ArrayList<MatchCrawlee>();
 
     //callable callbacks
     public Document call() {
@@ -54,7 +40,6 @@ public class BoardCrawlee extends baseCrawlee {
             e.printStackTrace();
 
         }
-
         return Jdoc;
     }
 
@@ -67,14 +52,13 @@ public class BoardCrawlee extends baseCrawlee {
         Pattern linkaddr = Pattern.compile("tmatchid=[0-9]{1,}");
 
         for (Element aRefUrl : onboardChildUrls) {
-            //System.out.println("url: " + aRefUrl);
 
             Matcher matchid = linkaddr.matcher(aRefUrl.toString());
 
             while (matchid.find()) {
                 String str = matchid.group();
                 str = str.substring(str.lastIndexOf('=') + 1);
-                matches.add(new MatchStruct(str));
+                matches.add(new MatchCrawlee(str));
             }
         }
 
