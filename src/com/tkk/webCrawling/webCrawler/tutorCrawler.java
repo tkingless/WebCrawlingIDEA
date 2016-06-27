@@ -4,9 +4,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.tkk.webCrawling.CSVmanager;
+import com.tkk.webCrawling.utils.*;
 import com.tkk.webCrawling.crawleeClass.TutorCaseCrawlee;
-import com.tkk.webCrawling.FileManager;
 
 import org.apache.commons.collections4.*;
 import org.apache.commons.collections4.map.MultiValueMap;

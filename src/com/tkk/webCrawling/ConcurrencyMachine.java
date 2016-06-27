@@ -59,7 +59,6 @@ public class ConcurrencyMachine {
 	}
 
 	public void RegisterQueue(baseCrawlee request) {
-		// TODO: public function to
 			requests.add(request);
 	}
 

@@ -3,10 +3,6 @@ package com.tkk.webCrawling.webCrawler;
 
 import com.tkk.webCrawling.ConcurrencyMachine;
 import com.tkk.webCrawling.crawleeClass.BoardCrawlee;
-import com.tkk.webCrawling.crawleeClass.TutorCaseCrawlee;
-import org.jsoup.nodes.Document;
-
-import java.util.HashMap;
 
 public class HKJCcrawler extends baseCrawler {
 

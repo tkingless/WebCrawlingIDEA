@@ -21,4 +21,8 @@ public class MatchEventWorker extends baseCrawler {
         //TODO
         return false;
     }
+
+    public void LaunchProcess(){
+        //TODO, if fullfill criteria, start a monitoring thread
+    }
 }

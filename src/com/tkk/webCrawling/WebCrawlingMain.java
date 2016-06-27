@@ -1,6 +1,8 @@
 package com.tkk.webCrawling;
 
+import com.tkk.webCrawling.utils.*;
 import com.tkk.webCrawling.webCrawler.*;
+
 
 import java.io.IOException;
 import java.util.*;
