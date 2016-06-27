@@ -48,6 +48,7 @@ public class BoardCrawlee extends baseCrawlee {
 
         HashMap<String, String> searchNodes = new HashMap<String, String>();
         searchNodes.put("onboardChildUrls", "td[class$=cdAllIn] > a[href]");
+        searchNodes.put("MatchNo","a[title$=\"All Odds\"]");
 
         Elements onboardChildUrls = Jdoc.select(searchNodes.get("onboardChildUrls"));
         Pattern linkaddr = Pattern.compile("tmatchid=[0-9]{1,}");
@@ -65,6 +66,35 @@ public class BoardCrawlee extends baseCrawlee {
 
         System.out.println("The size of matcheWorkers: " + matcheWorkers.size());
 
+    }
 
+    List<Elements> cardinalityChecks = new ArrayList<Elements>();
+    boolean CardinalityChecking () {
+        boolean result = true;
+
+        int cardinality = 0;
+
+        if (!cardinalityChecks.isEmpty()){
+            cardinality = cardinalityChecks.get(0).size();
+        }
+        else {
+            result = false;
+            System.out.println("[Error]BoardCrawlee.CardinalityChecking is null");
+        }
+
+        for (Elements eles: cardinalityChecks) {
+            if(eles.size() != cardinality){
+                result = false;
+                System.out.println("[Error]inconsistent cardinality check number found, hint: ");
+                System.out.println(eles.text());
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    void ParsingDocIntoMatchWorker () {
+        //TODO
     }
 }
