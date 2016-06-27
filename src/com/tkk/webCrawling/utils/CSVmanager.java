@@ -1,4 +1,4 @@
-package com.tkk.webCrawling;
+package com.tkk.webCrawling.utils;
 import java.io.*;
 import java.lang.String;
 import java.util.List;
