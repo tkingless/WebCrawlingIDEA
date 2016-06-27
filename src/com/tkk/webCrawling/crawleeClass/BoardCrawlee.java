@@ -1,5 +1,6 @@
 package com.tkk.webCrawling.crawleeClass;
 
+import com.tkk.webCrawling.webCrawler.MatchEventWorker;
 import com.tkk.webCrawling.webCrawler.baseCrawler;
 import com.tkk.webCrawling.utils.JsoupHelper;
 import org.jsoup.nodes.Document;
@@ -27,7 +28,7 @@ public class BoardCrawlee extends baseCrawlee {
         super(crawlerBelonged);
     }
 
-    List<MatchCrawlee> matches = new ArrayList<MatchCrawlee>();
+    List<MatchEventWorker> matcheWorkers = new ArrayList<MatchEventWorker>();
 
     //callable callbacks
     public Document call() {
@@ -58,11 +59,11 @@ public class BoardCrawlee extends baseCrawlee {
             while (matchid.find()) {
                 String str = matchid.group();
                 str = str.substring(str.lastIndexOf('=') + 1);
-                matches.add(new MatchCrawlee(str));
+                matcheWorkers.add(new MatchEventWorker(str));
             }
         }
 
-        System.out.println("The size of matches: " + matches.size());
+        System.out.println("The size of matcheWorkers: " + matcheWorkers.size());
 
 
     }

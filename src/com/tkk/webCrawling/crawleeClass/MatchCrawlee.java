@@ -7,17 +7,11 @@ import com.tkk.webCrawling.utils.DateTimeEntity;
  */
 public class MatchCrawlee extends baseCrawlee {
 
-    static String allOddsBaseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";
-
-    public String allOddsLinkAddr;
-    public String matchId;
+    String linkAddr;
 
     DateTimeEntity recordTime;
 
-    public MatchCrawlee (String aMatchId) {
-        matchId = aMatchId;
-        allOddsLinkAddr = allOddsBaseUrl + aMatchId;
-        //System.out.println("MatchStruct constructed, matchId:" + matchId);
-        System.out.println("and allOddsLink: " + allOddsLinkAddr);
+    public void SetupCrawlee(){
+        //TODO
     }
 }
