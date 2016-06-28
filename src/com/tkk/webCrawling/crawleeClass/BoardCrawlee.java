@@ -1,5 +1,6 @@
 package com.tkk.webCrawling.crawleeClass;
 
+import com.tkk.webCrawling.utils.DateTimeEntity;
 import com.tkk.webCrawling.webCrawler.MatchEventWorker;
 import com.tkk.webCrawling.webCrawler.baseCrawler;
 import com.tkk.webCrawling.utils.JsoupHelper;
@@ -95,6 +96,11 @@ public class BoardCrawlee extends baseCrawlee {
 
         CardinalityChecking();
         System.out.println("The size of matcheWorkers: " + matcheWorkers.size());
+
+        //DateTimeEntity Testing
+        System.out.println("Today is : "+ DateTimeEntity.GetToday());
+        System.out.println("and now time is : "+ DateTimeEntity.GetCurrentTime());
+        System.out.println("the new instance time zone is: " + (new DateTimeEntity()).PrintGlobalDatetime());
 
     }
 
