@@ -1,6 +1,5 @@
 package com.tkk.webCrawling.utils;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -10,43 +9,50 @@ import java.util.TimeZone;
  */
 public class DateTimeEntity {
 
-    SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
-    Date day;
-    Date time;
+    static SimpleDateFormat default_dayFormat = new SimpleDateFormat("dd-MM-yyyy");
+    static SimpleDateFormat default_timeFormat = new SimpleDateFormat("hh:mm:ss");
+
+    SimpleDateFormat dayFormat;
+    SimpleDateFormat timeFormat;
+
+    Date instant;
+    //default timezone is the one where the program runs
     TimeZone timezone;
 
-    public static Date GetCurrentTime() {
-        //TODO
-        return null;
+    public static String GetCurrentTime() {
+        return default_timeFormat.format(new Date());
     }
 
-    public static Date GetToday() {
-        //TODO
-        return null;
+    public static String GetToday() {
+        return default_dayFormat.format(new Date());
     }
 
-    public DateTimeEntity(SimpleDateFormat dayFormat, SimpleDateFormat timeFormat) {
-        this.dayFormat = dayFormat;
-        this.timeFormat = timeFormat;
-        //Set default timezone to HK
+    public DateTimeEntity(Date anInstant) {
+        timezone = TimeZone.getDefault();
+        instant = anInstant;
     }
 
     public DateTimeEntity() {
     }
 
-    public void SetDayFormat(String format) {
-        //TODO
-
+    public void SetDayFormat(SimpleDateFormat format) {
+        this.dayFormat = default_dayFormat;
     }
 
-    public void SetTimeFormat(String format) {
-        //TODO
-
+    public void SetTimeFormat(SimpleDateFormat format) {
+        this.timeFormat = default_timeFormat;
     }
 
-    public Time CalTimeIntervalDiff (Time time){
+    public Date CalTimeIntervalDiff (Date time){
         //TODO
-        return  new Time(90);
+        return new Date(90);
+    }
+
+    public Date GetTimestamp () {
+        return new Date(0);
+    }
+
+    public void SetTimezone (TimeZone tz) {
+        timezone = tz;
     }
 }

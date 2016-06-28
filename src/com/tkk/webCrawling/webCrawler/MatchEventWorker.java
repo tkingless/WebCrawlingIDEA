@@ -11,6 +11,13 @@ import java.util.Timer;
 //this is class is to be long-live thread worker to log happening event
 public class MatchEventWorker extends baseCrawler {
 
+    enum MatchState {
+        STATE_PRE_REGISTERED,
+        STATE_MATCH_START,
+        STATE_MATCH_LOGGING,
+        STATE_MATCH_ENDED
+    }
+
     static final String threadName = "MatchEventWorker-thread";
 
     String baseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";

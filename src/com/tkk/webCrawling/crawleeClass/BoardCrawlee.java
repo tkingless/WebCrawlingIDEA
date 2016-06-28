@@ -23,6 +23,8 @@ public class BoardCrawlee extends baseCrawlee {
     List<String> idx_urls = new ArrayList<String>();
 
     static String boardUrl = "http://bet.hkjc.com/football/odds/odds_inplay.aspx?ci=en-US";
+    //TODO
+    static List<MatchEventWorker> livingWorkers;
 
     public BoardCrawlee(baseCrawler crawlerBelonged) {
         super(crawlerBelonged);
@@ -48,9 +50,16 @@ public class BoardCrawlee extends baseCrawlee {
 
         HashMap<String, String> searchNodes = new HashMap<String, String>();
         searchNodes.put("onboardChildUrls", "td[class$=cdAllIn] > a[href]");
-        searchNodes.put("MatchNo","a[title$=\"All Odds\"]");
+        searchNodes.put("MatchNo","td[class$=\"cday ttgR2\"] > span > a[title$=\"All Odds\"]");
+        searchNodes.put("MatchTeams","td[class$=\"cteams ttgR2\"]");
+        searchNodes.put("Status","td[class$=\"cesst\"] > span");
 
         Elements onboardChildUrls = Jdoc.select(searchNodes.get("onboardChildUrls"));
+        Elements matchNos = Jdoc.select(searchNodes.get("MatchNo"));
+        Elements matchTeams = Jdoc.select(searchNodes.get("MatchTeams"));
+        Elements statuses = Jdoc.select(searchNodes.get("Status"));
+
+        //Get match indexes
         Pattern linkaddr = Pattern.compile("tmatchid=[0-9]{1,}");
 
         for (Element aRefUrl : onboardChildUrls) {
@@ -60,10 +69,31 @@ public class BoardCrawlee extends baseCrawlee {
             while (matchid.find()) {
                 String str = matchid.group();
                 str = str.substring(str.lastIndexOf('=') + 1);
-                matcheWorkers.add(new MatchEventWorker(str));
+               // matcheWorkers.add(new MatchEventWorker(str));
+                System.out.println("GetChildNodes(), match indexes: " + str);
             }
         }
 
+        //Get matchId, matchTeams
+        for (Element matchNo : matchNos){
+            System.out.println("GetChildNodes(), match id: " + matchNo.text());
+        }
+        for (Element matchTeam : matchTeams) {
+            System.out.println("GetChildNodes(), match team: " + matchTeam.text());
+        }
+        for (Element status : statuses) {
+            System.out.println("GetChildNodes(), match status: " + status.text());
+            String startTime = status.childNode(3).toString();
+            System.out.println("GetChildNodes(), match status & raw date: " + startTime);
+        }
+
+
+        cardinalityChecks.add(onboardChildUrls);
+        cardinalityChecks.add(matchNos);
+        cardinalityChecks.add(matchTeams);
+        cardinalityChecks.add(statuses);
+
+        CardinalityChecking();
         System.out.println("The size of matcheWorkers: " + matcheWorkers.size());
 
     }
