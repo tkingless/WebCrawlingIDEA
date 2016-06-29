@@ -3,8 +3,8 @@ package com.tkk.webCrawling.utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -16,6 +16,7 @@ public class DateTimeEntity {
     final static TimeZone default_timezone = TimeZone.getDefault();
     final static SimpleDateFormat default_dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     final static SimpleDateFormat default_timeFormat = new SimpleDateFormat("HH:mm:ss"); //HH-> hh, 12hr format
+    final static SimpleDateFormat default_parseInFormat = new SimpleDateFormat("dd/MM/yyyyTHH:mm:ss"); //HH-> hh, 12hr format
 
     SimpleDateFormat dateFormat = default_dateFormat;
     SimpleDateFormat timeFormat = default_timeFormat;
@@ -33,18 +34,19 @@ public class DateTimeEntity {
         return default_dateFormat.format(new Date());
     }
 
-    public DateTimeEntity(String dateStr, String timeStr) throws ParseException {
-        timezone = default_timezone;
-        instant = dateFormat.parse(dateStr);
-        instant = timeFormat.parse(timeStr);
+    public static String GetCurrentYear() {
+        return String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+    }
+
+    public DateTimeEntity(String ParseInDatetime) throws ParseException {
+        instant = default_parseInFormat.parse(ParseInDatetime);
         ConfigZoneDatetime();
     }
 
-    public DateTimeEntity(String dateStr, String timeStr, SimpleDateFormat aDateFormat, SimpleDateFormat aTimeFormat) throws ParseException {
-        dateFormat = aDateFormat;
-        timeFormat = aTimeFormat;
-        instant = dateFormat.parse(dateStr);
-        instant = timeFormat.parse(timeStr);
+    public DateTimeEntity(String ParseInDatetime, SimpleDateFormat ParseInDateFormat) throws ParseException {
+        System.out.print("hihi");
+        instant = ParseInDateFormat.parse(ParseInDatetime);
+        System.out.print("hihi");
         ConfigZoneDatetime();
     }
 
@@ -56,9 +58,8 @@ public class DateTimeEntity {
     void ConfigZoneDatetime(){
         LocalDateTime ldt = LocalDateTime.ofInstant(instant.toInstant(),timezone.toZoneId());
         zonedInstant = ZonedDateTime.of(ldt,timezone.toZoneId());
-
-        System.out.printf("Original: %s %s\n",zonedInstant.toString(), zonedInstant.getZone().toString());
-        System.out.printf("With Dubai: %s %s\n",zonedInstant.withZoneSameInstant(ZoneId.of("Asia/Dubai")),ZoneId.of("Asia/Dubai").toString() );
+        ///System.out.printf("Original: %s %s\n",zonedInstant.toString(), zonedInstant.getZone().toString());
+        ///System.out.printf("With Dubai: %s %s\n",zonedInstant.withZoneSameInstant(ZoneId.of("Asia/Dubai")),ZoneId.of("Asia/Dubai").toString() );
     }
 
     public void SetDayFormat(SimpleDateFormat format) {
@@ -96,6 +97,11 @@ public class DateTimeEntity {
 
     public String GetTheInstantTime() {
         return timeFormat.format(instant);
+    }
+
+    @Override
+    public String toString() {
+        return zonedInstant.toString();
     }
 
 }

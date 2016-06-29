@@ -9,10 +9,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,13 +52,15 @@ public class BoardCrawlee extends baseCrawlee {
         return Jdoc;
     }
 
-    void GetChildNodes() {
+    void GetChildNodes() throws ParseException {
 
         HashMap<String, String> searchNodes = new HashMap<String, String>();
         searchNodes.put("onboardChildUrls", "td[class$=cdAllIn] > a[href]");
         searchNodes.put("MatchNo","td[class$=\"cday ttgR2\"] > span > a[title$=\"All Odds\"]");
         searchNodes.put("MatchTeams","td[class$=\"cteams ttgR2\"]");
         searchNodes.put("Status","td[class$=\"cesst\"] > span");
+
+        String yr = DateTimeEntity.GetCurrentYear();
 
         Elements onboardChildUrls = Jdoc.select(searchNodes.get("onboardChildUrls"));
         Elements matchNos = Jdoc.select(searchNodes.get("MatchNo"));
@@ -84,9 +90,48 @@ public class BoardCrawlee extends baseCrawlee {
             System.out.println("GetChildNodes(), match team: " + matchTeam.text());
         }
         for (Element status : statuses) {
-            System.out.println("GetChildNodes(), match status: " + status.text());
-            String startTime = status.childNode(3).toString();
-            System.out.println("GetChildNodes(), match status & raw date: " + startTime);
+            ///System.out.println("GetChildNodes(), match status: " + status.text());
+
+            if (status.text().contains("Expected In Play start selling time")) {
+                String startTimeWeb = status.childNode(3).toString();
+                System.out.println("GetChildNodes(), match status & raw date: " + startTimeWeb);
+
+                Pattern dayPattern = Pattern.compile("[0-9]{2}/[0-9]{2}");
+                Pattern timePattern = Pattern.compile("[0-9]{2}:[0-9]{2}");
+
+                Matcher dayMatch = dayPattern.matcher(startTimeWeb);
+                Matcher timeMatch = timePattern.matcher(startTimeWeb);
+
+                dayMatch.find();
+                timeMatch.find();
+
+                System.out.println("GetChildNodes(), start day is: " + dayMatch.group());
+                System.out.println("GetChildNodes(), start time is: " + timeMatch.group());
+
+                StringBuilder dateTimeBuilder = new StringBuilder(timeMatch.group()).append(":00 ");
+                dateTimeBuilder.append(dayMatch.group());
+                dateTimeBuilder.append("/");
+                dateTimeBuilder.append(yr);
+
+                SimpleDateFormat parseFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+                Date tested = parseFormat.parse("03:00:00 01/07/2016");
+                //DateTimeEntity test= new DateTimeEntity("03:00:00 01/07/2016",new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
+
+                System.out.print("hihi");
+
+                try {
+                    DateTimeEntity matchStartTime = new DateTimeEntity(dateTimeBuilder.toString(),
+                            new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
+                    System.out.println("GetChildNodes(), matchStartTime is: " + matchStartTime.toString());
+                }
+                catch (ParseException e){
+                    e.printStackTrace();
+                }
+
+
+
+
+            }
         }
 
 
@@ -98,11 +143,12 @@ public class BoardCrawlee extends baseCrawlee {
         CardinalityChecking();
         System.out.println("The size of matcheWorkers: " + matcheWorkers.size());
 
-        //DateTimeEntity Testing
-        System.out.println("Today is : "+ DateTimeEntity.GetToday());
-        System.out.println("and now time is : "+ DateTimeEntity.GetCurrentTime());
-        DateTimeEntity dte = new DateTimeEntity();
-        dte.SetTimezone(TimeZone.getTimeZone("Asia/Dubai"));
+        ///DateTimeEntity Testing
+        ///System.out.println("Today is : "+ DateTimeEntity.GetToday());
+        ///System.out.println("and now time is : "+ DateTimeEntity.GetCurrentTime());
+        ///DateTimeEntity dte = new DateTimeEntity();
+        ///dte.SetTimezone(TimeZone.getTimeZone("Asia/Dubai"));
+        System.out.println("This year is : "+ DateTimeEntity.GetCurrentYear());
 
     }
 
