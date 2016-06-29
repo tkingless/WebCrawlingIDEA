@@ -16,7 +16,7 @@ public class DateTimeEntity {
     final static TimeZone default_timezone = TimeZone.getDefault();
     final static SimpleDateFormat default_dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     final static SimpleDateFormat default_timeFormat = new SimpleDateFormat("HH:mm:ss"); //HH-> hh, 12hr format
-    final static SimpleDateFormat default_parseInFormat = new SimpleDateFormat("dd/MM/yyyyTHH:mm:ss"); //HH-> hh, 12hr format
+    final static SimpleDateFormat default_parseInFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"); //HH-> hh, 12hr format
 
     SimpleDateFormat dateFormat = default_dateFormat;
     SimpleDateFormat timeFormat = default_timeFormat;
@@ -39,14 +39,15 @@ public class DateTimeEntity {
     }
 
     public DateTimeEntity(String ParseInDatetime) throws ParseException {
+        System.out.println("hihihi");
         instant = default_parseInFormat.parse(ParseInDatetime);
         ConfigZoneDatetime();
     }
 
     public DateTimeEntity(String ParseInDatetime, SimpleDateFormat ParseInDateFormat) throws ParseException {
-        System.out.print("hihi");
+        System.out.println("hihihihi");
         instant = ParseInDateFormat.parse(ParseInDatetime);
-        System.out.print("hihi");
+        System.out.println("hihihihi");
         ConfigZoneDatetime();
     }
 

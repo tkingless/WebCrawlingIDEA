@@ -11,12 +11,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,15 +47,13 @@ public class BoardCrawlee extends baseCrawlee {
         return Jdoc;
     }
 
-    void GetChildNodes() throws ParseException {
+    void GetChildNodes() {
 
         HashMap<String, String> searchNodes = new HashMap<String, String>();
         searchNodes.put("onboardChildUrls", "td[class$=cdAllIn] > a[href]");
         searchNodes.put("MatchNo","td[class$=\"cday ttgR2\"] > span > a[title$=\"All Odds\"]");
         searchNodes.put("MatchTeams","td[class$=\"cteams ttgR2\"]");
         searchNodes.put("Status","td[class$=\"cesst\"] > span");
-
-        String yr = DateTimeEntity.GetCurrentYear();
 
         Elements onboardChildUrls = Jdoc.select(searchNodes.get("onboardChildUrls"));
         Elements matchNos = Jdoc.select(searchNodes.get("MatchNo"));
@@ -111,25 +104,21 @@ public class BoardCrawlee extends baseCrawlee {
                 StringBuilder dateTimeBuilder = new StringBuilder(timeMatch.group()).append(":00 ");
                 dateTimeBuilder.append(dayMatch.group());
                 dateTimeBuilder.append("/");
-                dateTimeBuilder.append(yr);
+                dateTimeBuilder.append(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
 
                 SimpleDateFormat parseFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
-                Date tested = parseFormat.parse("03:00:00 01/07/2016");
-                //DateTimeEntity test= new DateTimeEntity("03:00:00 01/07/2016",new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
-
-                System.out.print("hihi");
-
                 try {
-                    DateTimeEntity matchStartTime = new DateTimeEntity(dateTimeBuilder.toString(),
-                            new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
-                    System.out.println("GetChildNodes(), matchStartTime is: " + matchStartTime.toString());
-                }
-                catch (ParseException e){
+                    Date tested = parseFormat.parse("03:00:00 01/07/2016");
+                    System.out.println("tested: " + tested.toString());
+
+                    DateTimeEntity test = new DateTimeEntity(dateTimeBuilder.toString());
+                    DateTimeEntity test2 = new DateTimeEntity(dateTimeBuilder.toString(),parseFormat);
+                }catch (ParseException e){
                     e.printStackTrace();
                 }
+                //DateTimeEntity test= new DateTimeEntity("03:00:00 01/07/2016",new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
 
-
-
+                System.out.println("hihi");
 
             }
         }
