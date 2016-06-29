@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -100,7 +101,8 @@ public class BoardCrawlee extends baseCrawlee {
         //DateTimeEntity Testing
         System.out.println("Today is : "+ DateTimeEntity.GetToday());
         System.out.println("and now time is : "+ DateTimeEntity.GetCurrentTime());
-        System.out.println("the new instance time zone is: " + (new DateTimeEntity()).PrintGlobalDatetime());
+        DateTimeEntity dte = new DateTimeEntity();
+        dte.SetTimezone(TimeZone.getTimeZone("Asia/Dubai"));
 
     }
 

@@ -2,6 +2,9 @@ package com.tkk.webCrawling.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -18,6 +21,7 @@ public class DateTimeEntity {
     SimpleDateFormat timeFormat = default_timeFormat;
 
     Date instant;
+    private ZonedDateTime zonedInstant;
     //default timezone is the one where the program runs
     TimeZone timezone = default_timezone;
 
@@ -31,23 +35,30 @@ public class DateTimeEntity {
 
     public DateTimeEntity(String dateStr, String timeStr) throws ParseException {
         timezone = default_timezone;
-        dateFormat.setTimeZone(timezone);
-        timeFormat.setTimeZone(timezone);
         instant = dateFormat.parse(dateStr);
         instant = timeFormat.parse(timeStr);
+        ConfigZoneDatetime();
     }
 
     public DateTimeEntity(String dateStr, String timeStr, SimpleDateFormat aDateFormat, SimpleDateFormat aTimeFormat) throws ParseException {
         dateFormat = aDateFormat;
         timeFormat = aTimeFormat;
-        dateFormat.setTimeZone(timezone);
-        timeFormat.setTimeZone(timezone);
         instant = dateFormat.parse(dateStr);
         instant = timeFormat.parse(timeStr);
+        ConfigZoneDatetime();
     }
 
     public DateTimeEntity(){
         instant = new Date();
+        ConfigZoneDatetime();
+    }
+
+    void ConfigZoneDatetime(){
+        LocalDateTime ldt = LocalDateTime.ofInstant(instant.toInstant(),timezone.toZoneId());
+        zonedInstant = ZonedDateTime.of(ldt,timezone.toZoneId());
+
+        System.out.printf("Original: %s %s\n",zonedInstant.toString(), zonedInstant.getZone().toString());
+        System.out.printf("With Dubai: %s %s\n",zonedInstant.withZoneSameInstant(ZoneId.of("Asia/Dubai")),ZoneId.of("Asia/Dubai").toString() );
     }
 
     public void SetDayFormat(SimpleDateFormat format) {
@@ -69,6 +80,10 @@ public class DateTimeEntity {
 
     public void SetTimezone (TimeZone tz) {
         timezone = tz;
+
+        zonedInstant = ZonedDateTime.ofInstant(instant.toInstant(),timezone.toZoneId());
+        System.out.printf("tz modified: %s %s\n",zonedInstant.toString(), zonedInstant.getZone().toString());
+
     }
 
     public TimeZone GetTimezone() {
@@ -83,9 +98,4 @@ public class DateTimeEntity {
         return timeFormat.format(instant);
     }
 
-    public String PrintGlobalDatetime() {
-        SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        isoFormat.setTimeZone(timezone);
-        return isoFormat.format(instant);
-    }
 }
