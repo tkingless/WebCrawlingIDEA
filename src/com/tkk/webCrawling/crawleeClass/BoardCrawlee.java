@@ -115,7 +115,10 @@ public class BoardCrawlee extends baseCrawlee {
         cardinalityChecks.add(matchTeams);
         cardinalityChecks.add(statuses);
 
-        CardinalityChecking();
+        if(CardinalityChecking())
+        {
+            //TODO: iterate the elements
+        }
         System.out.println("The size of matcheWorkers: " + matcheWorkers.size());
 
         ///DateTimeEntity Testing

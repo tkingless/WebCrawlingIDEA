@@ -22,9 +22,14 @@ public class MatchEventWorker extends baseCrawler {
     String baseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";
     //The unique id for this worker
     String matchId;
+    Timer scanPeriod;
 
     DateTimeEntity commenceTime;
-    Timer scanPeriod;
+    MatchState status;
+    //the secondary key to be used
+    String matchKey;
+    String matchTeams;
+
 
     public MatchEventWorker(String aMatchId) {
         super(CrawlerKeyBinding.MatchEvent, threadName+"-"+aMatchId);
