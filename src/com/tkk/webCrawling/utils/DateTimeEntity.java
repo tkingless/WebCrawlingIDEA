@@ -15,7 +15,11 @@ public class DateTimeEntity {
 
     final static TimeZone default_timezone = TimeZone.getDefault();
     final static SimpleDateFormat default_dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-    final static SimpleDateFormat default_timeFormat = new SimpleDateFormat("HH:mm:ss"); //HH-> hh, 12hr format
+    final static SimpleDateFormat default_timeFormat = new SimpleDateFormat("HH:mm:ss"); //HH-> hh, 12hr
+
+    //Fatal*****, the simpleDateFormat is bug, but java itself shows nothing to this, make thread just jump whenever called this class
+    //final static SimpleDateFormat default_parseInFormat = new SimpleDateFormat("dd/MM/yyyyTHH:mm:ss"); //HH-> hh, 12hr format
+
     final static SimpleDateFormat default_parseInFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"); //HH-> hh, 12hr format
 
     SimpleDateFormat dateFormat = default_dateFormat;
