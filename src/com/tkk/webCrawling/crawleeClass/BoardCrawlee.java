@@ -107,12 +107,16 @@ public class BoardCrawlee extends baseCrawlee {
                 dateTimeBuilder.append(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
 
                 SimpleDateFormat parseFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+
                 try {
                     Date tested = parseFormat.parse("03:00:00 01/07/2016");
                     System.out.println("tested: " + tested.toString());
 
                     DateTimeEntity test = new DateTimeEntity(dateTimeBuilder.toString());
-                    DateTimeEntity test2 = new DateTimeEntity(dateTimeBuilder.toString(),parseFormat);
+                    System.out.println("test1: " + test.toString());
+                    DateTimeEntity test2 = new DateTimeEntity(dateTimeBuilder.toString(),new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
+                    System.out.println("test2: " + test2.toString());
+
                 }catch (ParseException e){
                     e.printStackTrace();
                 }
