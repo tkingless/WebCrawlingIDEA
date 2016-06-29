@@ -43,17 +43,19 @@ public class BoardCrawlee extends baseCrawlee {
         } catch (IOException e) {
             e.printStackTrace();
 
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         return Jdoc;
     }
 
-    void GetChildNodes() {
+    void GetChildNodes() throws ParseException {
 
         HashMap<String, String> searchNodes = new HashMap<String, String>();
         searchNodes.put("onboardChildUrls", "td[class$=cdAllIn] > a[href]");
-        searchNodes.put("MatchNo","td[class$=\"cday ttgR2\"] > span > a[title$=\"All Odds\"]");
-        searchNodes.put("MatchTeams","td[class$=\"cteams ttgR2\"]");
-        searchNodes.put("Status","td[class$=\"cesst\"] > span");
+        searchNodes.put("MatchNo", "td[class$=\"cday ttgR2\"] > span > a[title$=\"All Odds\"]");
+        searchNodes.put("MatchTeams", "td[class$=\"cteams ttgR2\"]");
+        searchNodes.put("Status", "td[class$=\"cesst\"] > span");
 
         Elements onboardChildUrls = Jdoc.select(searchNodes.get("onboardChildUrls"));
         Elements matchNos = Jdoc.select(searchNodes.get("MatchNo"));
@@ -70,13 +72,13 @@ public class BoardCrawlee extends baseCrawlee {
             while (matchid.find()) {
                 String str = matchid.group();
                 str = str.substring(str.lastIndexOf('=') + 1);
-               // matcheWorkers.add(new MatchEventWorker(str));
+                // matcheWorkers.add(new MatchEventWorker(str));
                 System.out.println("GetChildNodes(), match indexes: " + str);
             }
         }
 
         //Get matchId, matchTeams
-        for (Element matchNo : matchNos){
+        for (Element matchNo : matchNos) {
             System.out.println("GetChildNodes(), match id: " + matchNo.text());
         }
         for (Element matchTeam : matchTeams) {
@@ -98,24 +100,20 @@ public class BoardCrawlee extends baseCrawlee {
                 dayMatch.find();
                 timeMatch.find();
 
-                System.out.println("GetChildNodes(), start day is: " + dayMatch.group());
-                System.out.println("GetChildNodes(), start time is: " + timeMatch.group());
+                ///System.out.println("GetChildNodes(), start day is: " + dayMatch.group());
+                ///System.out.println("GetChildNodes(), start time is: " + timeMatch.group());
 
                 StringBuilder dateTimeBuilder = new StringBuilder(timeMatch.group()).append(":00 ");
                 dateTimeBuilder.append(dayMatch.group());
                 dateTimeBuilder.append("/");
                 dateTimeBuilder.append(DateTimeEntity.GetCurrentYear());
 
-                try {
+                DateTimeEntity test2 = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
+                System.out.println("test2: " + test2.toString());
+                System.out.println("test2, date: " + test2.GetTheInstantDate());
+                System.out.println("test2, time: " + test2.GetTheInstantTime());
 
-                    DateTimeEntity test2 = new DateTimeEntity(dateTimeBuilder.toString(),new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
-                    System.out.println("test2: " + test2.toString());
-                    System.out.println("test2, date: " + test2.GetTheInstantDate());
-                    System.out.println("test2, time: " + test2.GetTheInstantTime());
 
-                }catch (ParseException e){
-                    e.printStackTrace();
-                }
                 //DateTimeEntity test= new DateTimeEntity("03:00:00 01/07/2016",new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
 
             }
@@ -135,26 +133,26 @@ public class BoardCrawlee extends baseCrawlee {
         ///System.out.println("and now time is : "+ DateTimeEntity.GetCurrentTime());
         ///DateTimeEntity dte = new DateTimeEntity();
         ///dte.SetTimezone(TimeZone.getTimeZone("Asia/Dubai"));
-        System.out.println("This year is : "+ DateTimeEntity.GetCurrentYear());
+        System.out.println("This year is : " + DateTimeEntity.GetCurrentYear());
 
     }
 
     List<Elements> cardinalityChecks = new ArrayList<Elements>();
-    boolean CardinalityChecking () {
+
+    boolean CardinalityChecking() {
         boolean result = true;
 
         int cardinality = 0;
 
-        if (!cardinalityChecks.isEmpty()){
+        if (!cardinalityChecks.isEmpty()) {
             cardinality = cardinalityChecks.get(0).size();
-        }
-        else {
+        } else {
             result = false;
             System.out.println("[Error]BoardCrawlee.CardinalityChecking is null");
         }
 
-        for (Elements eles: cardinalityChecks) {
-            if(eles.size() != cardinality){
+        for (Elements eles : cardinalityChecks) {
+            if (eles.size() != cardinality) {
                 result = false;
                 System.out.println("[Error]inconsistent cardinality check number found, hint: ");
                 System.out.println(eles.text());
@@ -165,7 +163,7 @@ public class BoardCrawlee extends baseCrawlee {
         return result;
     }
 
-    void ParsingDocIntoMatchWorker () {
+    void ParsingDocIntoMatchWorker() {
         //TODO
     }
 }
