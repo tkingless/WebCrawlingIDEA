@@ -39,15 +39,12 @@ public class DateTimeEntity {
     }
 
     public DateTimeEntity(String ParseInDatetime) throws ParseException {
-        System.out.println("hihihi");
         instant = default_parseInFormat.parse(ParseInDatetime);
         ConfigZoneDatetime();
     }
 
     public DateTimeEntity(String ParseInDatetime, SimpleDateFormat ParseInDateFormat) throws ParseException {
-        System.out.println("hihihihi");
         instant = ParseInDateFormat.parse(ParseInDatetime);
-        System.out.println("hihihihi");
         ConfigZoneDatetime();
     }
 

@@ -104,25 +104,19 @@ public class BoardCrawlee extends baseCrawlee {
                 StringBuilder dateTimeBuilder = new StringBuilder(timeMatch.group()).append(":00 ");
                 dateTimeBuilder.append(dayMatch.group());
                 dateTimeBuilder.append("/");
-                dateTimeBuilder.append(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
-
-                SimpleDateFormat parseFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+                dateTimeBuilder.append(DateTimeEntity.GetCurrentYear());
 
                 try {
-                    Date tested = parseFormat.parse("03:00:00 01/07/2016");
-                    System.out.println("tested: " + tested.toString());
 
-                    DateTimeEntity test = new DateTimeEntity(dateTimeBuilder.toString());
-                    System.out.println("test1: " + test.toString());
                     DateTimeEntity test2 = new DateTimeEntity(dateTimeBuilder.toString(),new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
                     System.out.println("test2: " + test2.toString());
+                    System.out.println("test2, date: " + test2.GetTheInstantDate());
+                    System.out.println("test2, time: " + test2.GetTheInstantTime());
 
                 }catch (ParseException e){
                     e.printStackTrace();
                 }
                 //DateTimeEntity test= new DateTimeEntity("03:00:00 01/07/2016",new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
-
-                System.out.println("hihi");
 
             }
         }
