@@ -1,7 +1,6 @@
 package com.tkk.webCrawling.webCrawler;
 
 import com.tkk.webCrawling.utils.DateTimeEntity;
-
 import java.util.Timer;
 
 /**
@@ -49,5 +48,14 @@ public class MatchEventWorker extends baseCrawler {
 
     void EmitRequest () {
         //TODO grab data periodically
+    }
+
+    //The main loop function
+    void Proc(){
+    //TODO
+    }
+
+    public void Kill(){
+
     }
 }

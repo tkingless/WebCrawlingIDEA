@@ -100,25 +100,15 @@ public class BoardCrawlee extends baseCrawlee {
                 dayMatch.find();
                 timeMatch.find();
 
-                ///System.out.println("GetChildNodes(), start day is: " + dayMatch.group());
-                ///System.out.println("GetChildNodes(), start time is: " + timeMatch.group());
-
                 StringBuilder dateTimeBuilder = new StringBuilder(timeMatch.group()).append(":00 ");
                 dateTimeBuilder.append(dayMatch.group());
                 dateTimeBuilder.append("/");
                 dateTimeBuilder.append(DateTimeEntity.GetCurrentYear());
 
-                DateTimeEntity test2 = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
-                System.out.println("test2: " + test2.toString());
-                System.out.println("test2, date: " + test2.GetTheInstantDate());
-                System.out.println("test2, time: " + test2.GetTheInstantTime());
-
-
-                //DateTimeEntity test= new DateTimeEntity("03:00:00 01/07/2016",new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
+                DateTimeEntity matchStartTime = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
 
             }
         }
-
 
         cardinalityChecks.add(onboardChildUrls);
         cardinalityChecks.add(matchNos);
@@ -133,7 +123,6 @@ public class BoardCrawlee extends baseCrawlee {
         ///System.out.println("and now time is : "+ DateTimeEntity.GetCurrentTime());
         ///DateTimeEntity dte = new DateTimeEntity();
         ///dte.SetTimezone(TimeZone.getTimeZone("Asia/Dubai"));
-        System.out.println("This year is : " + DateTimeEntity.GetCurrentYear());
 
     }
 
