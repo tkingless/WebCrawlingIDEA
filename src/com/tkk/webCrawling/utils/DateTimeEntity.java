@@ -73,8 +73,8 @@ public class DateTimeEntity {
     }
 
     //return timediff in milliseconds
-    public long CalTimeIntervalDiff (Date time){
-        return instant.getTime() - time.getTime();
+    public long CalTimeIntervalDiff (DateTimeEntity time){
+        return instant.getTime() - time.instant.getTime();
     }
 
     public Date GetTheInstant () {
