@@ -72,7 +72,6 @@ public class BoardCrawlee extends baseCrawlee {
             while (matchid.find()) {
                 String str = matchid.group();
                 str = str.substring(str.lastIndexOf('=') + 1);
-                // matcheWorkers.add(new MatchEventWorker(str));
                 System.out.println("GetChildNodes(), match indexes: " + str);
             }
         }
@@ -117,7 +116,13 @@ public class BoardCrawlee extends baseCrawlee {
 
         if(CardinalityChecking())
         {
+            System.out.println("[Iterator loop start:]");
             //TODO: iterate the elements
+            Iterator<Element> matchidIte = matchNos.iterator();
+
+            while (matchidIte.hasNext()){
+                System.out.println(matchidIte.next().text());
+            }
         }
         System.out.println("The size of matcheWorkers: " + matcheWorkers.size());
 

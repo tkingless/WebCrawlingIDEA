@@ -1,6 +1,9 @@
 package com.tkk.webCrawling.webCrawler;
 
 import com.tkk.webCrawling.utils.DateTimeEntity;
+import org.jsoup.nodes.Document;
+
+import javax.print.Doc;
 import java.util.Timer;
 
 /**
@@ -22,7 +25,7 @@ public class MatchEventWorker extends baseCrawler {
     String baseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";
     //The unique id for this worker
     String matchId;
-    Timer scanPeriod;
+    long scanPeriod = 5000;
 
     DateTimeEntity commenceTime;
     MatchState status;
@@ -31,11 +34,24 @@ public class MatchEventWorker extends baseCrawler {
     String matchTeams;
 
 
-    public MatchEventWorker(String aMatchId) {
+    public MatchEventWorker(String aMatchId, Document matchKeyDoc, Document statusDoc, Document teamsDoc) {
         super(CrawlerKeyBinding.MatchEvent, threadName+"-"+aMatchId);
         matchId = aMatchId;
         System.out.println("MatchEventWorker constructed, matchId:" + matchId);
         //System.out.println("and allOddsLink: " + linkAddr);
+    }
+
+    void ExtractMatcdKey (Document matchKeyDoc) {
+
+    }
+
+    void ExtractStatus(Document statusDoc) {
+        //TODO: in some case, suppose the program failed to get the start time of the match event, mark current start time to
+        //to the start time
+    }
+
+    void ExtractTeams(Document teamsDoc) {
+
     }
 
     public boolean IsLive(){
