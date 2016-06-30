@@ -53,6 +53,9 @@ public class MatchEventWorker extends baseCrawler {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        System.out.println("MatcherEventWorker finishied constructer.");
+       -+*run();
     }
 
     void ExtractMatcdKey (Element matchKeyEle) {
@@ -107,9 +110,34 @@ public class MatchEventWorker extends baseCrawler {
         //TODO grab data periodically
     }
 
+    public void run() {
+        try {
+            System.out.println("MatchEventWorker run() called");
+            Proc();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+
+
     //The main loop function
     void Proc(){
-    //TODO
+        int count = 0;
+        while (status != MatchState.STATE_MATCH_ENDED){
+            //TODO doing something appropriate
+
+            if (count > 4)
+                break;
+
+            count++;
+
+            try {
+                wait(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //yield wait for scansecond
+        }
     }
 
     public void Kill(){
