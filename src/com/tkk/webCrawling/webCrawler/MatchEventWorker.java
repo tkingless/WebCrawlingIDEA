@@ -16,6 +16,8 @@ import java.util.regex.Pattern;
 public class MatchEventWorker extends baseCrawler {
 
     enum MatchState {
+        STATE_INITIALIZATION,
+        //only at state of pre_registered, the thread is launched
         STATE_PRE_REGISTERED,
         STATE_MATCH_START,
         STATE_MATCH_LOGGING,
@@ -38,6 +40,7 @@ public class MatchEventWorker extends baseCrawler {
 
     public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element teamsEle) {
         super(CrawlerKeyBinding.MatchEvent, threadName+"-"+aMatchId);
+        status = MatchState.STATE_INITIALIZATION;
         matchId = aMatchId;
         System.out.println("MatchEventWorker constructed, matchId:" + matchId);
         ///System.out.println("and allOddsLink: " + linkAddr);
