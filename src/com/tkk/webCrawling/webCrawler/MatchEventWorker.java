@@ -3,6 +3,7 @@ package com.tkk.webCrawling.webCrawler;
 import com.tkk.webCrawling.utils.DateTimeEntity;
 import org.jsoup.nodes.Element;
 
+import java.io.InterruptedIOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
@@ -54,8 +55,15 @@ public class MatchEventWorker extends baseCrawler {
             e.printStackTrace();
         }
 
-        System.out.println("MatcherEventWorker finishied constructer.");
-       -+*run();
+        System.out.println("MatcherEventWorker finished constructer.");
+
+       /* try{
+            synchronized (this){
+                thread.run();
+            }
+        }catch (IllegalMonitorStateException e){
+            e.printStackTrace();
+        }*/
     }
 
     void ExtractMatcdKey (Element matchKeyEle) {
@@ -130,6 +138,8 @@ public class MatchEventWorker extends baseCrawler {
                 break;
 
             count++;
+
+            System.out.println("Threadname: " + threadName + matchId + " , run() count is: " + count);
 
             try {
                 wait(2000);

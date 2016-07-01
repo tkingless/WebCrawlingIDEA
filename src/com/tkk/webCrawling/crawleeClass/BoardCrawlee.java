@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -65,8 +66,7 @@ public class BoardCrawlee extends baseCrawlee {
         cardinalityChecks.add(matchTeams);
         cardinalityChecks.add(statuses);
 
-        if(CardinalityChecking())
-        {
+        if (CardinalityChecking()) {
             System.out.println("[Iterator loop start:]");
             Iterator<Element> matchNoIte = matchNos.iterator();
             Iterator<Element> matchTeamIte = matchTeams.iterator();
@@ -86,9 +86,10 @@ public class BoardCrawlee extends baseCrawlee {
                     System.out.println("GetChildNodes(), match indexes: " + matchId);
                 }
 
-               MatchEventWorker crleWorker = new MatchEventWorker(matchId,matchNoIte.next(),
-                        matchStatIte.next(),matchTeamIte.next());
+                MatchEventWorker crleWorker = new MatchEventWorker(matchId, matchNoIte.next(),
+                        matchStatIte.next(), matchTeamIte.next());
                 //TODO: if meet the condition, add it to livingworker
+
             }
         }
         System.out.println("The size of matcheWorkers: " + matcheWorkers.size());
