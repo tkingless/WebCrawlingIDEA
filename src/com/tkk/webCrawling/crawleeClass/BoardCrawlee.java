@@ -52,7 +52,8 @@ public class BoardCrawlee extends baseCrawlee {
 
         HashMap<String, String> searchNodes = new HashMap<String, String>();
         searchNodes.put("onboardChildUrls", "td[class$=cdAllIn] > a[href]");
-        searchNodes.put("MatchNo", "td[class$=\"cday ttgR2\"] > span > a[title$=\"All Odds\"]");
+        //searchNodes.put("MatchNo", "td[class$=\"cday ttgR2\"] > span > a[title$=\"All Odds\"]");
+        searchNodes.put("MatchNo", "td[class$=\"cday ttgR2\"]");
         searchNodes.put("MatchTeams", "td[class$=\"cteams ttgR2\"]");
         searchNodes.put("Status", "td[class$=\"cesst\"] > span");
 
@@ -117,6 +118,11 @@ public class BoardCrawlee extends baseCrawlee {
                 break;
             }
         }
+
+        //debug use
+       /* for (Elements eles: cardinalityChecks){
+            System.out.println(eles.size());
+        }*/
 
         return result;
     }
