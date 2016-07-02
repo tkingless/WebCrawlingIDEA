@@ -10,10 +10,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 import java.io.IOException;
+
 import org.apache.commons.io.*;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 //Reference: http://stackoverflow.com/questions/2811001/how-to-read-xml-using-xpath-in-java
 
@@ -24,42 +28,33 @@ public class XPathExpt {
 
     public static void main(String[] args) {
 
-        String uri = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=103867";
-
-       /* URL url = new URL(uri);
-        HttpURLConnection connection =
-                (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Accept", "application/xml");
-
-        InputStream xml = connection.getInputStream();
-
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(xml);
-
-        System.out.println(doc.toString());*/
+        String uri = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=103868";
 
         try {
             String source = JsoupHelper.GetDocumentFrom(uri).toString();
             //System.out.println(source);
-            InputStream xml = IOUtils.toInputStream(source,"UTF-8");
+            InputStream xml = IOUtils.toInputStream(source, "UTF-8");
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(xml);
 
             doc.getDocumentElement().normalize();
-            System.out.println ("Root element of the doc is " + doc.getDocumentElement().getNodeName());
+            //System.out.println ("Root element of the doc is " + doc.getDocumentElement().getNodeName());
 
-            XPathFactory xpathFactory = XPathFactory.newInstance();
-            XPath xpath = xpathFactory.newXPath();
-            XPathExpression expr = xpath.compile("//pool[@type=\"HAD\"]/@h");
+            String HADhomeQuery = "//pool[@type=\"HAD\"]/@h";
+            String HADdrawQuery = "//pool[@type=\"HAD\"]/@d";
+            String HADawayQuery = "//pool[@type=\"HAD\"]/@a";
+            String CornerTotalQuery = "//match/@ninety_mins_total_corner";
+            String CornerLineQuery = "//pool[@type=\"CHL\"]/@line";
+            String CornerHighQuery = "//pool[@type=\"CHL\"]/@h";
+            String CornerLowQuery = "//pool[@type=\"CHL\"]/@l";
 
-            NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            List<String> queries = Arrays.asList(HADhomeQuery,HADdrawQuery,HADawayQuery,
+                    CornerTotalQuery,CornerLineQuery,CornerHighQuery,CornerLowQuery);
 
-            for (int i = 0; i < nodes.getLength(); i++){
-                System.out.println(nodes.item(i).getNodeValue());
+            for (String str : queries){
+                System.out.println(GetValueByQuery(str,doc));
             }
 
         } catch (IOException e) {
@@ -68,9 +63,28 @@ public class XPathExpt {
             e.printStackTrace();
         } catch (SAXException e) {
             e.printStackTrace();
+        }
+    }
+
+    static String GetValueByQuery(String aQuery, Document doc) {
+        XPathFactory xpathFactory = XPathFactory.newInstance();
+        XPath xpath = xpathFactory.newXPath();
+
+        try {
+            XPathExpression expr = xpath.compile(aQuery);
+            NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+
+            /*for (int i = 0; i < nodes.getLength(); i++) {
+                System.out.println(nodes.item(i).getNodeValue());
+            }*/
+
+            return nodes.item(0).getNodeValue();
+
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
 
+        return "";
     }
 }
+
