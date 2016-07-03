@@ -64,6 +64,8 @@ public class MatchEventWorker extends baseCrawler {
         }catch (IllegalMonitorStateException e){
             e.printStackTrace();
         }*/
+
+        this.StartRun();
     }
 
     void ExtractMatcdKey (Element matchKeyEle) {
@@ -134,7 +136,7 @@ public class MatchEventWorker extends baseCrawler {
         while (status != MatchState.STATE_MATCH_ENDED){
             //TODO doing something appropriate
 
-            if (count > 4)
+            if (count > 2)
                 break;
 
             count++;
@@ -142,7 +144,7 @@ public class MatchEventWorker extends baseCrawler {
             System.out.println("Threadname: " + threadName + matchId + " , run() count is: " + count);
 
             try {
-                wait(2000);
+                sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
