@@ -57,14 +57,6 @@ public class MatchEventWorker extends baseCrawler {
 
         System.out.println("MatcherEventWorker finished constructer.");
 
-       /* try{
-            synchronized (this){
-                thread.run();
-            }
-        }catch (IllegalMonitorStateException e){
-            e.printStackTrace();
-        }*/
-
         this.StartRun();
     }
 
@@ -148,7 +140,6 @@ public class MatchEventWorker extends baseCrawler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            //yield wait for scansecond
         }
     }
 

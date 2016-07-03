@@ -67,30 +67,7 @@ public class BoardCrawlee extends baseCrawlee {
         cardinalityChecks.add(statuses);
 
         if (CardinalityChecking()) {
-            System.out.println("[Iterator loop start:]");
-            Iterator<Element> matchNoIte = matchNos.iterator();
-            Iterator<Element> matchTeamIte = matchTeams.iterator();
-            Iterator<Element> matchStatIte = statuses.iterator();
-
-            //Get match indexes
-            Pattern linkaddr = Pattern.compile("tmatchid=[0-9]{1,}");
-
-            for (Element aRefUrl : onboardChildUrls) {
-
-                Matcher idMatcher = linkaddr.matcher(aRefUrl.toString());
-                String matchId = "";
-
-                if (idMatcher.find()) {
-                    matchId = idMatcher.group();
-                    matchId = matchId.substring(matchId.lastIndexOf('=') + 1);
-                    System.out.println("GetChildNodes(), match indexes: " + matchId);
-                }
-
-                MatchEventWorker crleWorker = new MatchEventWorker(matchId, matchNoIte.next(),
-                        matchStatIte.next(), matchTeamIte.next());
-                //TODO: if meet the condition, add it to livingworker
-
-            }
+            List<MatchEventWorker> parsedWorkers = ParsingDocIntoMatchWorker(onboardChildUrls,matchNos,matchTeams,statuses);
         }
         System.out.println("The size of matcheWorkers: " + matcheWorkers.size());
     }
@@ -121,7 +98,37 @@ public class BoardCrawlee extends baseCrawlee {
         return result;
     }
 
-    void ParsingDocIntoMatchWorker() {
-        //TODO
+    List<MatchEventWorker> ParsingDocIntoMatchWorker( Elements onboardChildUrls, Elements matchNos, Elements matchTeams, Elements statuses ) {
+
+        List<MatchEventWorker> workerList = new ArrayList<MatchEventWorker>();
+
+        System.out.println("[Iterator loop start:]");
+        Iterator<Element> matchNoIte = matchNos.iterator();
+        Iterator<Element> matchTeamIte = matchTeams.iterator();
+        Iterator<Element> matchStatIte = statuses.iterator();
+
+        //Get match indexes
+        Pattern linkaddr = Pattern.compile("tmatchid=[0-9]{1,}");
+
+        for (Element aRefUrl : onboardChildUrls) {
+
+            Matcher idMatcher = linkaddr.matcher(aRefUrl.toString());
+            String matchId = "";
+
+            if (idMatcher.find()) {
+                matchId = idMatcher.group();
+                matchId = matchId.substring(matchId.lastIndexOf('=') + 1);
+                System.out.println("GetChildNodes(), match indexes: " + matchId);
+            }
+
+            MatchEventWorker crleWorker = new MatchEventWorker(matchId, matchNoIte.next(),
+                    matchStatIte.next(), matchTeamIte.next());
+
+            workerList.add(crleWorker);
+            //TODO: if meet the condition, add it to livingworker
+
+        }
+
+        return workerList;
     }
 }
