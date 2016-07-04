@@ -23,9 +23,6 @@ public class ConcurrencyMachine {
 		return instance;
 	}
 
-	// TODO: runtime should be recorded just about to mass crawl, refer to
-	// ECTutor
-
 	ExecutorService executorService;
 	List<Callable<Document>> requests = new ArrayList<Callable<Document>>();
 

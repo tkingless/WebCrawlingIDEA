@@ -18,17 +18,11 @@ import java.util.regex.Pattern;
  */
 public class BoardCrawlee extends baseCrawlee {
 
-    List<String> onboard_indices = new ArrayList<String>();
-    List<String> idx_urls = new ArrayList<String>();
-
     static String boardUrl = "http://bet.hkjc.com/football/odds/odds_inplay.aspx?ci=en-US";
-    //TODO
 
     public BoardCrawlee(baseCrawler crawlerBelonged) {
         super(crawlerBelonged);
     }
-
-    List<MatchEventWorker> matcheWorkers = new ArrayList<MatchEventWorker>();
 
     //callable callbacks
     public Document call() {
@@ -68,7 +62,6 @@ public class BoardCrawlee extends baseCrawlee {
         if (CardinalityChecking()) {
             List<MatchEventWorker> parsedWorkers = ParsingDocIntoMatchWorker(onboardChildUrls,matchNos,matchTeams,statuses);
         }
-        System.out.println("The size of matcheWorkers: " + matcheWorkers.size());
     }
 
     List<Elements> cardinalityChecks = new ArrayList<Elements>();
@@ -129,7 +122,6 @@ public class BoardCrawlee extends baseCrawlee {
                     matchStatIte.next(), matchTeamIte.next());
 
             workerList.add(crleWorker);
-            //TODO: if meet the condition, add it to livingworker
 
         }
 

@@ -99,7 +99,6 @@ public class TutorCaseCrawlee extends baseCrawlee {
 			String errStr = "Server Error";
 			if (Jdoc.title().contains(errStr) || Jdoc.text().contains(errStr)) {
 				state = State.FAILURE;
-				// TODO: retry if you can
 			} else {
 				state = State.SUCCESS;
 				crawlerBelonged.AnalyzeContentAction(this);
