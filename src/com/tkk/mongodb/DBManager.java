@@ -12,4 +12,8 @@ public class DBManager {
 
     private DBManager() {
     }
+
+    public boolean IsThereConnection() {
+        return true;
+    }
 }
