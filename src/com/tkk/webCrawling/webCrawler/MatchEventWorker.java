@@ -6,6 +6,8 @@ import org.jsoup.nodes.Element;
 import java.io.InterruptedIOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +25,8 @@ public class MatchEventWorker extends baseCrawler {
         STATE_PRE_REGISTERED,
         STATE_MATCH_START,
         STATE_MATCH_LOGGING,
-        STATE_MATCH_ENDED
+        STATE_MATCH_ENDED,
+        STATE_INITIALIZATION_FAILURE
     }
 
     enum MatchStage {
@@ -32,6 +35,7 @@ public class MatchEventWorker extends baseCrawler {
         STAGE_HALFTIME,
         STAGE_SECOND,
     }
+    Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST,MatchStage.STAGE_HALFTIME,MatchStage.STAGE_SECOND);
 
     static final String threadName = "MatchEventWorker-thread";
 
@@ -40,8 +44,10 @@ public class MatchEventWorker extends baseCrawler {
     String matchId;
     long scanPeriod = 5000;
     long preRegperiod = 1000 * 60 * 5;
+    final long matchIntervalLength = 1000 * 60 * 120;
 
     DateTimeEntity commenceTime;
+    DateTimeEntity endTime;
     MatchState status;
     MatchStage stage;
     //the secondary key to be used
@@ -75,6 +81,7 @@ public class MatchEventWorker extends baseCrawler {
         System.out.println("GetChildNodes(), matchKey: " + matchKey);
     }
 
+    private boolean noDBcommenceTimeHistory = false;
     void ExtractStatus(Element statusEle) throws ParseException {
         //TODO: in some case, suppose the program failed to get the start time of the match event, mark current start time to
         //to the start time
@@ -98,15 +105,26 @@ public class MatchEventWorker extends baseCrawler {
             commenceTime = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
             System.out.println("ExtractStatus(),commenceTime: " + commenceTime.toString());
             stage = MatchStage.STAGE_ESST;
-        }else if (statusEle.text().contains("1st Half In Progress")) {
-            //TODO something
-            stage = MatchStage.STAGE_FIRST;
-        }else if (statusEle.text().contains("Half Time")) {
-            //TODO something
-            stage = MatchStage.STAGE_HALFTIME;
-        }else if (statusEle.text().contains("2nd Half In Progress")){
-            //TODO something
-            stage = MatchStage.STAGE_SECOND;
+        }else {
+
+            //TODO (DB feature) try to load futureRecord to get the commenceTime
+
+            if(commenceTime == null) {
+                System.out.println("[Warning] commenceTime is null, set commenceTime to now()");
+                commenceTime = new DateTimeEntity();
+                noDBcommenceTimeHistory = true;
+            }
+
+            if (statusEle.text().contains("1st Half In Progress")) {
+                //TODO something
+                stage = MatchStage.STAGE_FIRST;
+            } else if (statusEle.text().contains("Half Time")) {
+                //TODO something
+                stage = MatchStage.STAGE_HALFTIME;
+            } else if (statusEle.text().contains("2nd Half In Progress")) {
+                //TODO something
+                stage = MatchStage.STAGE_SECOND;
+            }
         }
     }
 
@@ -137,25 +155,47 @@ public class MatchEventWorker extends baseCrawler {
         }
     }
 
+    Set<MatchState> terminateStates = EnumSet.of(MatchState.STATE_MATCH_ENDED,
+            MatchState.STATE_FUTURE_MATCH,
+            MatchState.STATE_INITIALIZATION_FAILURE);
 
     //The main loop function
     void Proc() {
 
-        while (status != MatchState.STATE_MATCH_ENDED || status != MatchState.STATE_FUTURE_MATCH) {
+        while (!terminateStates.contains(status)) {
 
             if (status == MatchState.STATE_INITIALIZATION) {
+                System.out.println("Threadname: " + threadName + matchId + " STATE_INITIALIZATION");
                 //TODO
                 //compare the match startime and check the match status,
                 //////check if Match_stage==InPlayESST_nobr
                 ////////if too long away from statrtime, set state to STATE_FUTURE_MATCH
-                ////////else if within the preRegperiod, enter STATE_PRE_REGISTERED
+                ////////else if within the preRegPeriod, enter STATE_PRE_REGISTERED
                 //if already in progress and no record before, set the startime to now, and state to STATE_PRE_REGISTERED
-                System.out.println("Threadname: " + threadName + matchId + " STATE_INITIALIZATION");
 
+                long timediff = 0;
 
-                long timediff = commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
-                System.out.println("timediff: " + timediff + " id: " + matchId);
-                status = MatchState.STATE_PRE_REGISTERED;
+                if (!noDBcommenceTimeHistory){
+                    timediff = commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
+                    System.out.println("timediff: " + timediff + " match id: " + matchId);
+                }
+
+                //only pass considered cases
+                if(timediff > 0 && stage == MatchStage.STAGE_ESST){
+                    if(timediff < preRegperiod){
+                        status = MatchState.STATE_PRE_REGISTERED;
+                    }else if (timediff > preRegperiod){
+                        status = MatchState.STATE_FUTURE_MATCH;
+                    }
+                }else if(timediff <= 0){
+                    if (onMatchingStages.contains(stage)){
+                        status = MatchState.STATE_PRE_REGISTERED;
+                    }
+                }
+                else{
+                    status = MatchState.STATE_INITIALIZATION_FAILURE;
+                }
+
             } else if (status == MatchState.STATE_PRE_REGISTERED) {
                 //TODO
                 //check if the match qualified has been registered, ensure the registration of the match (about to start/already started) to DB and the static liveworkers
@@ -166,12 +206,18 @@ public class MatchEventWorker extends baseCrawler {
                 //listen to the allodds xml, wait the MATCH_STAGE to "firsthalf", then
                 System.out.println("Threadname: " + threadName + matchId + " STATE_PRE_REGISTERED");
                 status = MatchState.STATE_MATCH_ENDED;
-            } else if (status == MatchState.STATE_MATCH_START) {
 
+            } else if (status == MatchState.STATE_MATCH_START) {
+                //TODO (DB feature) update the acutal match start time
+                //TODO set the scanPeriod shorter
+                //TODO (DB feature) init relevant DB objects
 
                 System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_START");
             } else if (status == MatchState.STATE_FUTURE_MATCH){
-                //TODO add the match registration to DB
+                //TODO (DB feature) add the match registration to DB
+
+            } else if (status == MatchState.STATE_MATCH_LOGGING){
+                System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
             }
 
 
@@ -183,6 +229,8 @@ public class MatchEventWorker extends baseCrawler {
                 e.printStackTrace();
             }*/
         }
+
+        System.out.println("[LOG] Threadname: " + threadName + matchId + " Proc() escaped, and the state is: " + status.toString());
     }
 
     public void Kill() {
