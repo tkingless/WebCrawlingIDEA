@@ -8,7 +8,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -137,22 +136,22 @@ public class BoardCrawlee extends baseCrawlee {
         return workerList;
     }
 
-    static List<String> matchIDs = new ArrayList<String>();
+    static List<String> livingWorkerMatchIDs = new ArrayList<String>();
     public synchronized static boolean IsRegisteredByID(MatchEventWorker worker){
         boolean isRegistered = false;
         String ID = worker.getMatchId();
 
-        if(matchIDs.contains(ID))
+        if(livingWorkerMatchIDs.contains(ID))
             isRegistered = true;
 
         return isRegistered;
     }
 
     public synchronized static void RegisterWorker(MatchEventWorker worker){
-        matchIDs.add(worker.getMatchId());
+        livingWorkerMatchIDs.add(worker.getMatchId());
     }
 
     public synchronized static void DetachWorker(MatchEventWorker worker) {
-        matchIDs.remove(worker.getMatchId());
+        livingWorkerMatchIDs.remove(worker.getMatchId());
     }
 }

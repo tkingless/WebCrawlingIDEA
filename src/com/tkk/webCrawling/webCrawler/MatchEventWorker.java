@@ -89,8 +89,6 @@ public class MatchEventWorker extends baseCrawler {
 
     private boolean noDBcommenceTimeHistory = false;
     void ExtractStatus(Element statusEle) throws ParseException {
-        //TODO: in some case, suppose the program failed to get the start time of the match event, mark current start time to
-        //to the start time
         if (statusEle.text().contains("Expected In Play start selling time")) {
             String startTimeWeb = statusEle.childNode(3).toString();
 
@@ -212,7 +210,6 @@ public class MatchEventWorker extends baseCrawler {
 
                 }else
                 if(noDBcommenceTimeHistory && onMatchingStages.contains(stage)){
-                    commenceTime = new DateTimeEntity();
                     //TODO (DB feature) insert the instant event to DB
                     System.out.println("TODO: Threadname: " + threadName + matchId + " register to DB");
 
