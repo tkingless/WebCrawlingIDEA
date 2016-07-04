@@ -1,9 +1,9 @@
 package com.tkk.webCrawling.webCrawler;
 
+import com.tkk.webCrawling.crawleeClass.BoardCrawlee;
 import com.tkk.webCrawling.utils.DateTimeEntity;
 import org.jsoup.nodes.Element;
 
-import java.io.InterruptedIOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.EnumSet;
@@ -26,7 +26,8 @@ public class MatchEventWorker extends baseCrawler {
         STATE_MATCH_START,
         STATE_MATCH_LOGGING,
         STATE_MATCH_ENDED,
-        STATE_INITIALIZATION_FAILURE
+        STATE_INITIALIZATION_FAILURE,
+        STATE_ALREADY_REGISTERED
     }
 
     enum MatchStage {
@@ -40,6 +41,11 @@ public class MatchEventWorker extends baseCrawler {
     static final String threadName = "MatchEventWorker-thread";
 
     String baseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";
+
+    public String getMatchId() {
+        return matchId;
+    }
+
     //The unique id for this worker
     String matchId;
     long scanPeriod = 5000;
@@ -134,8 +140,7 @@ public class MatchEventWorker extends baseCrawler {
     }
 
     public boolean IsLive() {
-        //TODO
-        return false;
+        return thread.isAlive();
     }
 
     public void LaunchProcess() {
@@ -148,7 +153,7 @@ public class MatchEventWorker extends baseCrawler {
 
     public void run() {
         try {
-            System.out.println("MatchEventWorker run() called");
+            ////System.out.println("MatchEventWorker run() called");
             Proc();
         } catch (Exception e) {
             System.err.println(e);
@@ -157,7 +162,8 @@ public class MatchEventWorker extends baseCrawler {
 
     Set<MatchState> terminateStates = EnumSet.of(MatchState.STATE_MATCH_ENDED,
             MatchState.STATE_FUTURE_MATCH,
-            MatchState.STATE_INITIALIZATION_FAILURE);
+            MatchState.STATE_INITIALIZATION_FAILURE,
+            MatchState.STATE_ALREADY_REGISTERED);
 
     //The main loop function
     void Proc() {
@@ -166,15 +172,8 @@ public class MatchEventWorker extends baseCrawler {
 
             if (status == MatchState.STATE_INITIALIZATION) {
                 System.out.println("Threadname: " + threadName + matchId + " STATE_INITIALIZATION");
-                //TODO
-                //compare the match startime and check the match status,
-                //////check if Match_stage==InPlayESST_nobr
-                ////////if too long away from statrtime, set state to STATE_FUTURE_MATCH
-                ////////else if within the preRegPeriod, enter STATE_PRE_REGISTERED
-                //if already in progress and no record before, set the startime to now, and state to STATE_PRE_REGISTERED
 
                 long timediff = 0;
-
                 if (!noDBcommenceTimeHistory){
                     timediff = commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
                     System.out.println("timediff: " + timediff + " match id: " + matchId);
@@ -190,6 +189,7 @@ public class MatchEventWorker extends baseCrawler {
                 }else if(timediff <= 0){
                     if (onMatchingStages.contains(stage)){
                         status = MatchState.STATE_PRE_REGISTERED;
+                        scanPeriod = 0;
                     }
                 }
                 else{
@@ -197,34 +197,53 @@ public class MatchEventWorker extends baseCrawler {
                 }
 
             } else if (status == MatchState.STATE_PRE_REGISTERED) {
-                //TODO
-                //check if the match qualified has been registered, ensure the registration of the match (about to start/already started) to DB and the static liveworkers
-                //////if yes (def: both DB and local instance of boardcrawlee has record), set state to STATE_MATCH_START
-                //////if no, register. Ensure boardcrawlee will not add same instance
-                //note here is thread safe concern about static liveworker on class BoardCrawlee
-                //
-                //listen to the allodds xml, wait the MATCH_STAGE to "firsthalf", then
+
                 System.out.println("Threadname: " + threadName + matchId + " STATE_PRE_REGISTERED");
-                status = MatchState.STATE_MATCH_ENDED;
+
+                if(BoardCrawlee.IsRegisteredByID(this)){
+                    status = MatchState.STATE_ALREADY_REGISTERED;
+                    break;
+                }
+                if(stage == MatchStage.STAGE_ESST){
+                    long longwait = commenceTime.CalTimeIntervalDiff(new DateTimeEntity()) + 1000 * 15;
+                    scanPeriod = longwait;
+                    //TODO (DB feature) update the event to DB
+                    status = MatchState.STATE_MATCH_START;
+
+                }else
+                if(noDBcommenceTimeHistory && onMatchingStages.contains(stage)){
+                    commenceTime = new DateTimeEntity();
+                    //TODO (DB feature) insert the instant event to DB
+                    System.out.println("TODO: Threadname: " + threadName + matchId + " register to DB");
+
+                    long shortwait = 1000;
+                    scanPeriod = shortwait;
+                    status = MatchState.STATE_MATCH_LOGGING;
+                }
+                BoardCrawlee.RegisterWorker(this);
 
             } else if (status == MatchState.STATE_MATCH_START) {
-                //TODO (DB feature) update the acutal match start time
+                //TODO listen to the allodds xml, wait the MATCH_STAGE to "firsthalf", then
+                //TODO (DB feature) update the actual match start time
                 //TODO set the scanPeriod shorter
                 //TODO (DB feature) init relevant DB objects
-
                 System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_START");
-            } else if (status == MatchState.STATE_FUTURE_MATCH){
-                //TODO (DB feature) add the match registration to DB
+                status = MatchState.STATE_MATCH_ENDED;
 
             } else if (status == MatchState.STATE_MATCH_LOGGING){
                 System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
+                status = MatchState.STATE_MATCH_ENDED;
+
+            } else if (status == MatchState.STATE_FUTURE_MATCH){
+                //TODO (DB feature) add the match registration to DB
+
             }
 
 
             //System.out.println("Threadname: " + threadName + matchId);
 
            /* try {
-                sleep(2000);
+                sleep(scanPeriod);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }*/
@@ -235,5 +254,14 @@ public class MatchEventWorker extends baseCrawler {
 
     public void Kill() {
         //TODO: make sure detached from any pointing, and thread on this object is stopped()
+        BoardCrawlee.DetachWorker(this);
+    }
+
+    void registerOnDB() {
+        //TODO
+    }
+
+    void registerOnlocal() {
+
     }
 }

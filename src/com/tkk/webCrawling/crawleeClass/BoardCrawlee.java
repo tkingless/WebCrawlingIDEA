@@ -24,7 +24,6 @@ public class BoardCrawlee extends baseCrawlee {
 
     static String boardUrl = "http://bet.hkjc.com/football/odds/odds_inplay.aspx?ci=en-US";
     //TODO
-    static List<MatchEventWorker> livingWorkers;
 
     public BoardCrawlee(baseCrawler crawlerBelonged) {
         super(crawlerBelonged);
@@ -136,5 +135,24 @@ public class BoardCrawlee extends baseCrawlee {
         }
 
         return workerList;
+    }
+
+    static List<String> matchIDs = new ArrayList<String>();
+    public synchronized static boolean IsRegisteredByID(MatchEventWorker worker){
+        boolean isRegistered = false;
+        String ID = worker.getMatchId();
+
+        if(matchIDs.contains(ID))
+            isRegistered = true;
+
+        return isRegistered;
+    }
+
+    public synchronized static void RegisterWorker(MatchEventWorker worker){
+        matchIDs.add(worker.getMatchId());
+    }
+
+    public synchronized static void DetachWorker(MatchEventWorker worker) {
+        matchIDs.remove(worker.getMatchId());
     }
 }
