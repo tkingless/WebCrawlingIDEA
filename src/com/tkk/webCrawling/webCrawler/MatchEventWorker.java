@@ -218,6 +218,8 @@ public class MatchEventWorker extends baseCrawler {
             scanPeriod = longwait;
             System.out.println("Threadname: " + threadName + matchId + " enter long wait in PRE reg state");
             //TODO (DB feature) update the event to DB
+
+            //TODO check if crawlee return matchstate started, change to this state
             status = MatchState.STATE_MATCH_START;
 
         }else
@@ -298,7 +300,7 @@ public class MatchEventWorker extends baseCrawler {
      */
 
 
-
+    //Need to know what the crawlee should return for each state to the worker, so that worker know to coordinate
     /*
     MatchCrawlee functions()
      */
