@@ -20,9 +20,6 @@ import java.util.regex.Pattern;
 //this is class is to be long-live thread worker to log happening event
 public class MatchEventWorker extends baseCrawler {
 
-
-
-
     final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST,MatchStage.STAGE_HALFTIME,MatchStage.STAGE_SECOND);
     static final String threadName = "MatchEventWorker-thread";
 
@@ -96,7 +93,6 @@ public class MatchEventWorker extends baseCrawler {
 
             } else if (status == MatchState.STATE_FUTURE_MATCH){
                 //TODO (DB feature) add the match registration to DB
-
             }
 
             //System.out.println("Threadname: " + threadName + matchId);
@@ -198,6 +194,10 @@ public class MatchEventWorker extends baseCrawler {
                 status = MatchState.STATE_PRE_REGISTERED;
                 scanPeriod = 0;
             }
+            //there is possibility the match actual starting time is delayed a bit
+            else if (stage == MatchStage.STAGE_ESST){
+                status = MatchState.STATE_PRE_REGISTERED;
+            }
         }
         else{
             status = MatchState.STATE_INITIALIZATION_FAILURE;
@@ -212,6 +212,7 @@ public class MatchEventWorker extends baseCrawler {
         if(stage == MatchStage.STAGE_ESST){
             long longwait = commenceTime.CalTimeIntervalDiff(new DateTimeEntity()) + 1000 * 15;
             scanPeriod = longwait;
+            System.out.println("Threadname: " + threadName + matchId + " enter long wait in PRE reg state");
             //TODO (DB feature) update the event to DB
             status = MatchState.STATE_MATCH_START;
 
@@ -273,5 +274,32 @@ public class MatchEventWorker extends baseCrawler {
     }
     /*
     Subsidary functions(): end
+     */
+
+
+
+    /*
+    DB functions()
+     */
+    boolean ShouldUpdateDB(){
+        //TODO
+        return false;
+    }
+
+    void UpdateDB(){
+        //TODO
+    }
+    /*
+    DB functions(): end
+     */
+
+
+
+    /*
+    MatchCrawlee functions()
+     */
+
+    /*
+    MatchCrawlee functions(): end
      */
 }
