@@ -2,6 +2,8 @@ package com.tkk.webCrawling.webCrawler;
 
 import com.tkk.webCrawling.crawleeClass.BoardCrawlee;
 import com.tkk.webCrawling.utils.DateTimeEntity;
+import com.tkk.webCrawling.MatchCONSTANTS.*;
+
 import org.jsoup.nodes.Element;
 
 import java.text.ParseException;
@@ -19,33 +21,7 @@ import java.util.regex.Pattern;
 public class MatchEventWorker extends baseCrawler {
 
 
-    //TODO move out these enum to a static class
-    enum MatchState {
-        STATE_INITIALIZATION,
-        STATE_FUTURE_MATCH,
-        //only at state of pre_registered, the thread is launched
-        STATE_PRE_REGISTERED,
-        STATE_MATCH_START,
-        STATE_MATCH_LOGGING,
-        STATE_MATCH_ENDED,
-        STATE_INITIALIZATION_FAILURE,
-        STATE_ALREADY_REGISTERED
-    }
 
-    enum MatchStage {
-        STAGE_ESST,
-        STAGE_FIRST,
-        STAGE_HALFTIME,
-        STAGE_SECOND,
-    }
-
-    enum InplayPoolType {
-        HAD,
-        HIL,
-        NTS,
-        CHL,
-        CRS
-    }
 
     final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST,MatchStage.STAGE_HALFTIME,MatchStage.STAGE_SECOND);
     static final String threadName = "MatchEventWorker-thread";
