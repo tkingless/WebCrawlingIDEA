@@ -82,29 +82,6 @@ public class MatchEventWorker extends baseCrawler {
         this.StartRun();
     }
 
-
-
-    public boolean IsLive() {
-        return thread.isAlive();
-    }
-
-    public void LaunchProcess() {
-        //TODO, if fullfill criteria, start a monitoring thread
-    }
-
-    void EmitRequest() {
-        //TODO grab data periodically
-    }
-
-    public void run() {
-        try {
-            ////System.out.println("MatchEventWorker run() called");
-            Proc();
-        } catch (Exception e) {
-            System.err.println(e);
-        }
-    }
-
     Set<MatchState> terminateStates = EnumSet.of(MatchState.STATE_MATCH_ENDED,
             MatchState.STATE_FUTURE_MATCH,
             MatchState.STATE_INITIALIZATION_FAILURE,
@@ -143,30 +120,15 @@ public class MatchEventWorker extends baseCrawler {
 
             //System.out.println("Threadname: " + threadName + matchId);
 
-           /* try {
+            try {
                 sleep(scanPeriod);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }*/
+            }
         }
 
         System.out.println("[LOG] Threadname: " + threadName + matchId + " Proc() escaped, and the state is: " + status.toString());
     }
-
-    public void Kill() {
-        //TODO: make sure detached from any pointing, and thread on this object is stopped()
-        BoardCrawlee.DetachWorker(this);
-    }
-
-    void registerOnDB() {
-        //TODO
-    }
-
-    void registerOnlocal() {
-
-    }
-
-
 
     /*
     Constructor functions
@@ -285,5 +247,46 @@ public class MatchEventWorker extends baseCrawler {
     }
     /*
     OnState actions(): end
+     */
+
+
+    /*
+    Subsidary functions()
+     */
+    public boolean IsLive() {
+        return thread.isAlive();
+    }
+
+    public void LaunchProcess() {
+        //TODO, if fullfill criteria, start a monitoring thread
+    }
+
+    void EmitRequest() {
+        //TODO grab data periodically
+    }
+
+    public void run() {
+        try {
+            ////System.out.println("MatchEventWorker run() called");
+            Proc();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+
+    public void Kill() {
+        //TODO: make sure detached from any pointing, and thread on this object is stopped()
+        BoardCrawlee.DetachWorker(this);
+    }
+
+    void registerOnDB() {
+        //TODO
+    }
+
+    void registerOnlocal() {
+
+    }
+    /*
+    Subsidary functions(): end
      */
 }

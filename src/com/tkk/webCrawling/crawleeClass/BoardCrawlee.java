@@ -27,7 +27,7 @@ public class BoardCrawlee extends baseCrawlee {
     //callable callbacks
     public Document call() {
 
-        System.out.println("BoardCrawlee call() for callable called");
+        ////System.out.println("BoardCrawlee call() for callable called");
         try {
             Jdoc = JsoupHelper.GetDocumentFrom(boardUrl);
             GetChildNodes();
