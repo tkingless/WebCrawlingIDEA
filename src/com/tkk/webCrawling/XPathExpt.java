@@ -2,6 +2,7 @@ package com.tkk.webCrawling;
 
 import com.tkk.webCrawling.utils.JsoupHelper;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -14,8 +15,6 @@ import java.io.IOException;
 import org.apache.commons.io.*;
 
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,9 +25,9 @@ import java.util.List;
  */
 public class XPathExpt {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws XPathExpressionException {
 
-        String uri = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=103868";
+        String uri = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=103913";
 
         try {
             String source = JsoupHelper.GetDocumentFrom(uri).toString();
@@ -42,6 +41,14 @@ public class XPathExpt {
             doc.getDocumentElement().normalize();
             //System.out.println ("Root element of the doc is " + doc.getDocumentElement().getNodeName());
 
+           XPathFactory xpathFactory = XPathFactory.newInstance();
+            XPath xpath = xpathFactory.newXPath();
+            String ExistBoolonQuery = "//match";
+            XPathExpression existExpr = xpath.compile(ExistBoolonQuery);
+            Boolean nodeResult = (Boolean) existExpr.evaluate(doc, XPathConstants.BOOLEAN);
+
+            System.out.println("Boolon value:" + nodeResult);
+
             String HADhomeQuery = "//pool[@type=\"HAD\"]/@h";
             String HADdrawQuery = "//pool[@type=\"HAD\"]/@d";
             String HADawayQuery = "//pool[@type=\"HAD\"]/@a";
@@ -54,7 +61,7 @@ public class XPathExpt {
                     CornerTotalQuery,CornerLineQuery,CornerHighQuery,CornerLowQuery);
 
             for (String str : queries){
-                System.out.println(GetValueByQuery(str,doc));
+                //System.out.println(GetValueByQuery(str,doc));
             }
 
         } catch (IOException e) {
@@ -72,13 +79,9 @@ public class XPathExpt {
 
         try {
             XPathExpression expr = xpath.compile(aQuery);
-            NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            Node node = (Node) expr.evaluate(doc, XPathConstants.NODE);
 
-            /*for (int i = 0; i < nodes.getLength(); i++) {
-                System.out.println(nodes.item(i).getNodeValue());
-            }*/
-
-            return nodes.item(0).getNodeValue();
+            return node.getNodeValue();
 
         } catch (XPathExpressionException e) {
             e.printStackTrace();
