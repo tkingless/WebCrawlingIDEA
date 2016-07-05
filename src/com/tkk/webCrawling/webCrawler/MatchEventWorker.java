@@ -71,31 +71,35 @@ public class MatchEventWorker extends baseCrawler {
 
         while (!terminateStates.contains(status)) {
 
-            if (status == MatchState.STATE_INITIALIZATION) {
-                System.out.println("Threadname: " + threadName + matchId + " STATE_INITIALIZATION");
-                OnStateInitialization();
+            switch (status){
 
-            } else if (status == MatchState.STATE_PRE_REGISTERED) {
-                System.out.println("Threadname: " + threadName + matchId + " STATE_PRE_REGISTERED");
-                OnStatePreRegistered();
-
-            } else if (status == MatchState.STATE_MATCH_START) {
-                //TODO listen to the allodds xml, wait the MATCH_STAGE to "firsthalf", then
-                //TODO (DB feature) update the actual match start time
-                //TODO set the scanPeriod shorter
-                //TODO (DB feature) init relevant DB objects
-                System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_START");
-                status = MatchState.STATE_MATCH_ENDED;
-
-            } else if (status == MatchState.STATE_MATCH_LOGGING){
-                System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
-                status = MatchState.STATE_MATCH_ENDED;
-
-            } else if (status == MatchState.STATE_FUTURE_MATCH){
-                //TODO (DB feature) add the match registration to DB
+                case STATE_INITIALIZATION:
+                    System.out.println("Threadname: " + threadName + matchId + " STATE_INITIALIZATION");
+                    OnStateInitialization();
+                    break;
+                case STATE_PRE_REGISTERED:
+                    System.out.println("Threadname: " + threadName + matchId + " STATE_PRE_REGISTERED");
+                    OnStatePreRegistered();
+                    break;
+                case STATE_MATCH_START:
+                    //TODO listen to the allodds xml, wait the MATCH_STAGE to "firsthalf", then
+                    //TODO (DB feature) update the actual match start time
+                    //TODO set the scanPeriod shorter
+                    //TODO (DB feature) init relevant DB objects
+                    System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_START");
+                    status = MatchState.STATE_MATCH_ENDED;
+                    break;
+                case STATE_MATCH_LOGGING:
+                    System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
+                    status = MatchState.STATE_MATCH_ENDED;
+                    break;
+                case STATE_FUTURE_MATCH:
+                    //TODO (DB feature) add the match registration to DB
+                    break;
+                default:
+                    System.out.println("Threadname: " + threadName + matchId + " unknown state");
+                    break;
             }
-
-            //System.out.println("Threadname: " + threadName + matchId);
 
             try {
                 sleep(scanPeriod);
