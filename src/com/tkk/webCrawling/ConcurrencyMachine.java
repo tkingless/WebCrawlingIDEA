@@ -30,7 +30,7 @@ public class ConcurrencyMachine {
 		executorService = Executors.newFixedThreadPool(maxWorkerNumber);
 	}
 
-	public void InvokeQueue() {
+	public synchronized void InvokeQueue() {
 
 		@SuppressWarnings({ "unused" })
 		List<Future<Document>> handles = new ArrayList<Future<Document>>();
@@ -55,11 +55,11 @@ public class ConcurrencyMachine {
 
 	}
 
-	public void RegisterQueue(baseCrawlee request) {
+	public synchronized void RegisterQueue(baseCrawlee request) {
 			requests.add(request);
 	}
 
-	public void RegisterQueue(List<baseCrawlee> request) {
+	public synchronized void RegisterQueue(List<baseCrawlee> request) {
 			requests.addAll(request);
 	}
 }

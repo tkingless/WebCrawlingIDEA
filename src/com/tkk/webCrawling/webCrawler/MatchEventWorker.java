@@ -187,12 +187,15 @@ public class MatchEventWorker extends baseCrawler {
         }
 
         //only pass considered cases
-        if(timediff > 0 && stage == MatchStage.STAGE_ESST){
-            if(timediff < preRegperiod){
-                status = MatchState.STATE_PRE_REGISTERED;
-            }else if (timediff > preRegperiod){
-                status = MatchState.STATE_FUTURE_MATCH;
+        if(timediff > 0){
+            if(stage == MatchStage.STAGE_ESST) {
+                if (timediff < preRegperiod) {
+                    status = MatchState.STATE_PRE_REGISTERED;
+                } else if (timediff > preRegperiod) {
+                    status = MatchState.STATE_FUTURE_MATCH;
+                }
             }
+            status = MatchState.STATE_INITIALIZATION_FAILURE;
         }else if(timediff <= 0){
             if (onMatchingStages.contains(stage)){
                 status = MatchState.STATE_PRE_REGISTERED;
@@ -202,9 +205,6 @@ public class MatchEventWorker extends baseCrawler {
             else if (stage == MatchStage.STAGE_ESST){
                 status = MatchState.STATE_PRE_REGISTERED;
             }
-        }
-        else{
-            status = MatchState.STATE_INITIALIZATION_FAILURE;
         }
     }
 
