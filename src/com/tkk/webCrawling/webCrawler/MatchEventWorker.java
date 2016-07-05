@@ -38,13 +38,17 @@ public class MatchEventWorker extends baseCrawler {
         STAGE_HALFTIME,
         STAGE_SECOND,
     }
-    Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST,MatchStage.STAGE_HALFTIME,MatchStage.STAGE_SECOND);
 
-    static final String threadName = "MatchEventWorker-thread";
-
-    public String getMatchId() {
-        return matchId;
+    enum InplayPoolType {
+        HAD,
+        HIL,
+        NTS,
+        CHL,
+        CRS
     }
+
+    final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST,MatchStage.STAGE_HALFTIME,MatchStage.STAGE_SECOND);
+    static final String threadName = "MatchEventWorker-thread";
 
     //The unique id for this worker
     String matchId;
@@ -56,6 +60,7 @@ public class MatchEventWorker extends baseCrawler {
     DateTimeEntity endTime;
     MatchState status;
     MatchStage stage;
+    InplayPoolType matchPools;
     //the secondary key to be used
     String matchKey;
     String matchTeams;
@@ -285,6 +290,10 @@ public class MatchEventWorker extends baseCrawler {
 
     void registerOnlocal() {
 
+    }
+
+    public String getMatchId() {
+        return matchId;
     }
     /*
     Subsidary functions(): end
