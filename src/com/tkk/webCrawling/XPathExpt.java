@@ -63,12 +63,20 @@ public class XPathExpt {
             String HighLowStatQuery = "//pool[@type=\"HIL\"]/@line_status";
             String HighLowNoQuery = "//pool[@type=\"HIL\"]/@line_no";
             String HighLowMainlineQuery = "//pool[@type=\"HIL\"]/@mainline_flag";
+            String NTSHomeQuery = "//pool[@type=\"NTS\"]/@h";
+            String NTSAwayQuery = "//pool[@type=\"NTS\"]/@a";
+            String HighNoQuery = "//pool[@type=\"NTS\"]/@n";
+            //the number of goal to be in
+            String HighInQuery = "//pool[@type=\"NTS\"]/@in";
+
 
             List<String> queries = Arrays.asList(HADhomeQuery,HADdrawQuery,HADawayQuery,
-                    CornerTotalQuery,CornerLineQuery,CornerHighQuery,CornerLowQuery);
+                    CornerTotalQuery,CornerLineQuery,CornerHighQuery,CornerLowQuery,
+                    HighLowHQuery,HighLowLQuery,HighLowLineQuery,HighLowStatQuery,HighLowNoQuery,
+                    HighLowMainlineQuery);
 
             for (String str : queries){
-                //System.out.println(GetValueByQuery(str,doc));
+                System.out.println(GetValueByQuery(str,doc));
             }
 
         } catch (IOException e) {
