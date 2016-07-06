@@ -27,8 +27,45 @@ public class MatchCONSTANTS {
     public enum InplayPoolType {
         HAD,
         HIL,
+        TQL,
         NTS,
         CHL,
         CRS
+    }
+
+    public static InplayPoolType GetInplayPoolType(String input) {
+
+        String lowercase = input.toLowerCase();
+
+        if (lowercase == "had")
+            return InplayPoolType.HAD;
+        else if (lowercase == "hil")
+            return InplayPoolType.HIL;
+        else if (lowercase == "tql")
+            return InplayPoolType.TQL;
+        else if (lowercase == "nts")
+            return InplayPoolType.NTS;
+        else if (lowercase == "chl")
+            return InplayPoolType.CHL;
+        else
+            return InplayPoolType.CRS;
+    }
+
+    public static String GetCapPoolType(InplayPoolType type){
+
+        switch (type){
+            case HAD:
+                return "HAD";
+            case HIL:
+                return "HIL";
+            case TQL:
+                return "TQL";
+            case NTS:
+                return "NTS";
+            case CHL:
+                return "CHL";
+            default:
+                return "CRS";
+        }
     }
 }
