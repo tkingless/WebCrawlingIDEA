@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 //this is class is to be long-live thread worker to log happening event
 public class MatchEventWorker extends baseCrawler {
 
-    final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST,MatchStage.STAGE_HALFTIME,MatchStage.STAGE_SECOND);
+    final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST, MatchStage.STAGE_HALFTIME, MatchStage.STAGE_SECOND);
     static final String threadName = "MatchEventWorker-thread";
 
     //The unique id for this worker
@@ -71,7 +71,7 @@ public class MatchEventWorker extends baseCrawler {
 
         while (!terminateStates.contains(status)) {
 
-            switch (status){
+            switch (status) {
 
                 case STATE_INITIALIZATION:
                     System.out.println("Threadname: " + threadName + matchId + " STATE_INITIALIZATION");
@@ -121,6 +121,7 @@ public class MatchEventWorker extends baseCrawler {
     }
 
     private boolean noDBcommenceTimeHistory = false;
+
     void ExtractStatus(Element statusEle) throws ParseException {
         if (statusEle.text().contains("Expected In Play start selling time")) {
             String startTimeWeb = statusEle.childNode(3).toString();
@@ -142,11 +143,11 @@ public class MatchEventWorker extends baseCrawler {
             commenceTime = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
             System.out.println("ExtractStatus(),commenceTime: " + commenceTime.toString());
             stage = MatchStage.STAGE_ESST;
-        }else {
+        } else {
 
             //TODO (DB feature) try to load futureRecord to get the commenceTime
 
-            if(commenceTime == null) {
+            if (commenceTime == null) {
                 System.out.println("[Warning] commenceTime is null, set commenceTime to now()");
                 commenceTime = new DateTimeEntity();
                 noDBcommenceTimeHistory = true;
@@ -179,41 +180,42 @@ public class MatchEventWorker extends baseCrawler {
     /*
     OnState actions()
      */
-    void OnStateInitialization(){
+    void OnStateInitialization() {
         long timediff = 0;
-        if (!noDBcommenceTimeHistory){
+        if (!noDBcommenceTimeHistory) {
             timediff = commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
             System.out.println("timediff: " + timediff + " match id: " + matchId);
         }
 
         //only pass considered cases
-        if(timediff > 0){
-            if(stage == MatchStage.STAGE_ESST) {
+        if (timediff > 0) {
+            if (stage == MatchStage.STAGE_ESST) {
                 if (timediff < preRegperiod) {
                     status = MatchState.STATE_PRE_REGISTERED;
                 } else if (timediff > preRegperiod) {
                     status = MatchState.STATE_FUTURE_MATCH;
                 }
+            } else {
+                status = MatchState.STATE_INITIALIZATION_FAILURE;
             }
-            status = MatchState.STATE_INITIALIZATION_FAILURE;
-        }else if(timediff <= 0){
-            if (onMatchingStages.contains(stage)){
+        } else if (timediff <= 0) {
+            if (onMatchingStages.contains(stage)) {
                 status = MatchState.STATE_PRE_REGISTERED;
                 scanPeriod = 0;
             }
             //there is possibility the match actual starting time is delayed a bit
-            else if (stage == MatchStage.STAGE_ESST){
+            else if (stage == MatchStage.STAGE_ESST) {
                 status = MatchState.STATE_PRE_REGISTERED;
             }
         }
     }
 
-    void OnStatePreRegistered () {
-        if(BoardCrawlee.IsRegisteredByID(this)){
+    void OnStatePreRegistered() {
+        if (BoardCrawlee.IsRegisteredByID(this)) {
             status = MatchState.STATE_ALREADY_REGISTERED;
             return;
         }
-        if(stage == MatchStage.STAGE_ESST){
+        if (stage == MatchStage.STAGE_ESST) {
             long longwait = commenceTime.CalTimeIntervalDiff(new DateTimeEntity()) + 1000 * 15;
             scanPeriod = longwait;
             System.out.println("Threadname: " + threadName + matchId + " enter long wait in PRE reg state");
@@ -222,8 +224,7 @@ public class MatchEventWorker extends baseCrawler {
             //TODO check if crawlee return matchstate started, change to this state
             status = MatchState.STATE_MATCH_START;
 
-        }else
-        if(noDBcommenceTimeHistory && onMatchingStages.contains(stage)){
+        } else if (noDBcommenceTimeHistory && onMatchingStages.contains(stage)) {
             //TODO (DB feature) insert the instant event to DB
             System.out.println("TODO: Threadname: " + threadName + matchId + " register to DB");
 
@@ -283,16 +284,15 @@ public class MatchEventWorker extends baseCrawler {
      */
 
 
-
     /*
     DB functions()
      */
-    boolean ShouldUpdateDB(){
+    boolean ShouldUpdateDB() {
         //TODO
         return false;
     }
 
-    void UpdateDB(){
+    void UpdateDB() {
         //TODO
     }
     /*

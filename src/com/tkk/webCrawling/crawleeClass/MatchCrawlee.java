@@ -1,5 +1,6 @@
 package com.tkk.webCrawling.crawleeClass;
 
+import com.tkk.webCrawling.MatchCONSTANTS;
 import com.tkk.webCrawling.utils.DateTimeEntity;
 import com.tkk.webCrawling.webCrawler.baseCrawler;
 
@@ -20,6 +21,7 @@ import org.apache.commons.io.*;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by tkingless on 6/26/16.
@@ -35,10 +37,12 @@ public class MatchCrawlee extends baseCrawlee{
     final static String CornerLineQuery = "//pool[@type=\"CHL\"]/@line";
     final static String CornerHighQuery = "//pool[@type=\"CHL\"]/@h";
     final static String CornerLowQuery = "//pool[@type=\"CHL\"]/@l";
+    final static String ExistMatchQuery = "//match";
 
     private String linkAddr;
     private String baseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";
     private String matchID;
+    Set<MatchCONSTANTS.InplayPoolType> poolType;
 
     DateTimeEntity recordTime;
 
@@ -67,8 +71,12 @@ public class MatchCrawlee extends baseCrawlee{
             List<String> queries = Arrays.asList(HADhomeQuery,HADdrawQuery,HADawayQuery,
                     CornerTotalQuery,CornerLineQuery,CornerHighQuery,CornerLowQuery);
 
-            for (String str : queries){
-                System.out.println(GetValueByQuery(str,doc));
+            if(CheckMatchXMLValid(ExistMatchQuery,doc)) {
+                for (String str : queries) {
+                    System.out.println(GetValueByQuery(str, doc));
+                }
+            } else {
+                System.out.println("MatchCrawlee CheckMatchXMLValid() not valid.");
             }
 
         } catch (IOException e) {
@@ -77,11 +85,12 @@ public class MatchCrawlee extends baseCrawlee{
             e.printStackTrace();
         } catch (SAXException e) {
             e.printStackTrace();
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
         }
     }
 
     /*Considerations
-    (1) there is possibility the match ended, get null exception:
     http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=103913
     (2) there is possibility no corner high low at all
     (3)
@@ -103,5 +112,16 @@ public class MatchCrawlee extends baseCrawlee{
         }
 
         return "";
+    }
+
+    Boolean CheckMatchXMLValid(String aQuery, Document doc) throws XPathExpressionException {
+        boolean valid;
+
+        XPathFactory xpathFactory = XPathFactory.newInstance();
+        XPath xpath = xpathFactory.newXPath();
+        XPathExpression existExpr = xpath.compile(aQuery);
+        valid = (Boolean) existExpr.evaluate(doc, XPathConstants.BOOLEAN);
+
+        return valid;
     }
 }
