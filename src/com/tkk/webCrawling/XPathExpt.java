@@ -26,7 +26,7 @@ public class XPathExpt {
 
     public static void main(String[] args) throws XPathExpressionException {
 
-        String uri = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=103939";
+        String uri = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=103999";
 
         try {
             String source = JsoupHelper.GetDocumentFrom(uri).toString();
@@ -59,6 +59,7 @@ public class XPathExpt {
             String HADhomeQuery = "//pool[@type=\"HAD\"]/@h";
             String HADdrawQuery = "//pool[@type=\"HAD\"]/@d";
             String HADawayQuery = "//pool[@type=\"HAD\"]/@a";
+            String poolsTypeQuery = "//match/@inplay_pools";
             String CornerTotalQuery = "//match/@ninety_mins_total_corner";
             String CornerLineQuery = "//pool[@type=\"CHL\"]/@line";
             String CornerHighQuery = "//pool[@type=\"CHL\"]/@h";
@@ -78,7 +79,7 @@ public class XPathExpt {
 
 
             List<String> queries = Arrays.asList(HADhomeQuery,HADdrawQuery,HADawayQuery,
-                    CornerTotalQuery,CornerLineQuery,CornerHighQuery,CornerLowQuery,
+                    poolsTypeQuery,CornerTotalQuery,CornerLineQuery,CornerHighQuery,CornerLowQuery,
                     HighLowHQuery,HighLowLQuery,HighLowLineQuery,HighLowStatQuery,HighLowNoQuery,
                     HighLowMainlineQuery);
 

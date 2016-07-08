@@ -37,7 +37,11 @@ public class MatchCrawlee extends baseCrawlee{
     Set<InplayPoolType> poolType;
     private Document doc;
 
-    DateTimeEntity recordTime;
+    public DateTimeEntity getRecordTime() {
+        return recordTime;
+    }
+
+    private DateTimeEntity recordTime;
 
     public MatchCrawlee(baseCrawler crlr,String aMatchID){
         super(crlr);
@@ -69,6 +73,7 @@ public class MatchCrawlee extends baseCrawlee{
                 /*for (String str : queries) {
                     System.out.println(GetValueByQuery(str));
                 }*/
+                recordTime = new DateTimeEntity();
             } else {
                 System.out.println("MatchCrawlee CheckXMLNodeValid() not valid.");
             }
@@ -132,6 +137,17 @@ public class MatchCrawlee extends baseCrawlee{
 
         if(CheckXMLNodeValid(existQuery)){
             hmap.put("Exist","true");
+            switch (type){
+                case HAD:
+                    ExplainHADpool(hmap);
+                    break;
+                case CHL:
+                    ExplainCHIpool(hmap);
+                    break;
+                default:
+                    System.out.println("[Error] undefined pool type");
+                    break;
+            }
         } else {
             hmap.put("Exist","false");
         }
@@ -182,5 +198,11 @@ public class MatchCrawlee extends baseCrawlee{
             str = str.substring(str.lastIndexOf('@')+1);
         }
         return str;
+    }
+
+
+    //Helper functions
+    void ExtractMatchPools () {
+        String poolsQuery = "//match/@inplay_pools";
     }
 }
