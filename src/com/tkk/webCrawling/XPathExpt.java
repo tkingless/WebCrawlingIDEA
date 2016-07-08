@@ -3,7 +3,6 @@ package com.tkk.webCrawling;
 import com.tkk.webCrawling.utils.JsoupHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -27,7 +26,7 @@ public class XPathExpt {
 
     public static void main(String[] args) throws XPathExpressionException {
 
-        String uri = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=103918";
+        String uri = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=103939";
 
         try {
             String source = JsoupHelper.GetDocumentFrom(uri).toString();
@@ -41,13 +40,21 @@ public class XPathExpt {
             doc.getDocumentElement().normalize();
             //System.out.println ("Root element of the doc is " + doc.getDocumentElement().getNodeName());
 
-           XPathFactory xpathFactory = XPathFactory.newInstance();
-            XPath xpath = xpathFactory.newXPath();
+           XPathFactory xpathFactory2 = XPathFactory.newInstance();
+            XPath xpath2 = xpathFactory2.newXPath();
             String ExistBoolonQuery = "//match";
-            XPathExpression existExpr = xpath.compile(ExistBoolonQuery);
+            XPathExpression existExpr2 = xpath2.compile(ExistBoolonQuery);
+            Boolean nodeResult2 = (Boolean) existExpr2.evaluate(doc, XPathConstants.BOOLEAN);
+
+            System.out.println("Boolon value:" + nodeResult2);
+
+            XPathFactory xpathFactory = XPathFactory.newInstance();
+            XPath xpath = xpathFactory.newXPath();
+            String ExistPoolQuery = "//pool[@type=\"CHI\"]";
+            XPathExpression existExpr = xpath.compile(ExistPoolQuery);
             Boolean nodeResult = (Boolean) existExpr.evaluate(doc, XPathConstants.BOOLEAN);
 
-            System.out.println("Boolon value:" + nodeResult);
+            System.out.println("Pool value:" + nodeResult);
 
             String HADhomeQuery = "//pool[@type=\"HAD\"]/@h";
             String HADdrawQuery = "//pool[@type=\"HAD\"]/@d";
