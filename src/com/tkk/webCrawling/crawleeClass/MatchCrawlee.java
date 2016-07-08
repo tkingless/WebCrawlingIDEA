@@ -17,8 +17,10 @@ import javax.xml.xpath.*;
 import java.io.IOException;
 
 import org.apache.commons.io.*;
+import sun.invoke.empty.Empty;
 
 import java.io.InputStream;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -32,14 +34,18 @@ public class MatchCrawlee extends baseCrawlee{
     private String linkAddr;
     private String baseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";
     private String matchID;
-    Set<InplayPoolType> poolType;
-    private Document doc;
 
+    Set<InplayPoolType> poolType = EnumSet.noneOf(InplayPoolType.class);
+    public Set<InplayPoolType> getPoolType() {
+        return poolType;
+    }
+    private Document doc;
+    String source;
+
+    private DateTimeEntity recordTime;
     public DateTimeEntity getRecordTime() {
         return recordTime;
     }
-
-    private DateTimeEntity recordTime;
 
     public MatchCrawlee(baseCrawler crlr,String aMatchID){
         super(crlr);
@@ -48,11 +54,18 @@ public class MatchCrawlee extends baseCrawlee{
         linkAddr = baseUrl + matchID;
     }
 
+    public MatchCrawlee(String src){
+        source = src;
+    }
+
     public void run() {
         System.out.println("MatchCrawlee run() called");
 
         try {
-            String source = JsoupHelper.GetDocumentFrom(linkAddr).toString();
+
+            if(source == null){
+                 source = JsoupHelper.GetDocumentFrom(linkAddr).toString();
+            }
             //System.out.println(source);
             InputStream xml = IOUtils.toInputStream(source, "UTF-8");
 
@@ -68,6 +81,7 @@ public class MatchCrawlee extends baseCrawlee{
             final String ExistMatchQuery = "//match";
             if(CheckXMLNodeValid(ExistMatchQuery)) {
                 matchXmlValid = true;
+                ExtractMatchPools();
                 /*for (String str : queries) {
                     System.out.println(GetValueByQuery(str));
                 }*/

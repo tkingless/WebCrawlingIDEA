@@ -26,11 +26,11 @@ public class XPathExpt {
 
     public static void main(String[] args) throws XPathExpressionException {
 
-        String uri = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=103999";
+        String uri = "http://bet.hkjc.com/football/odds/odds_inplay.aspx?ci=en-US";
 
         try {
             String source = JsoupHelper.GetDocumentFrom(uri).toString();
-            //System.out.println(source);
+            System.out.println(source);
             InputStream xml = IOUtils.toInputStream(source, "UTF-8");
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

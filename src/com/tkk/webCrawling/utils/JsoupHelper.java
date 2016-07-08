@@ -1,5 +1,6 @@
 package com.tkk.webCrawling.utils;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -17,5 +18,9 @@ public class JsoupHelper {
     static public Document GetDocumentFrom(String url) throws IOException {
         return Jsoup.connect(url).data("query", "Java").userAgent("Mozilla")
                 .cookie("auth", "token").timeout(timeout).post();
+    }
+
+    static public Document GetDocumentFromStr(String str) {
+        return Jsoup.parse(str);
     }
 }
