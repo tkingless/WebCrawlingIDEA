@@ -31,12 +31,6 @@ import java.util.Set;
 //TODO not to use concurrencyMachine since there is no mass request to be sent
 public class MatchCrawlee extends baseCrawlee{
 
-    final static String CornerTotalQuery = "//match/@ninety_mins_total_corner";
-    final static String CornerLineQuery = "//pool[@type=\"CHL\"]/@line";
-    final static String CornerHighQuery = "//pool[@type=\"CHL\"]/@h";
-    final static String CornerLowQuery = "//pool[@type=\"CHL\"]/@l";
-    final static String ExistMatchQuery = "//match";
-
     private String linkAddr;
     private String baseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";
     private String matchID;
@@ -67,13 +61,14 @@ public class MatchCrawlee extends baseCrawlee{
             doc.getDocumentElement().normalize();
             //System.out.println ("Root element of the doc is " + doc.getDocumentElement().getNodeName());
 
-            List<String> queries = Arrays.asList(CornerTotalQuery,CornerLineQuery,CornerHighQuery,CornerLowQuery);
+            //List<String> queries = Arrays.asList(CornerTotalQuery,CornerLineQuery,CornerHighQuery,CornerLowQuery);
 
+            final String ExistMatchQuery = "//match";
             if(CheckXMLNodeValid(ExistMatchQuery)) {
                 matchXmlValid = true;
-                for (String str : queries) {
+                /*for (String str : queries) {
                     System.out.println(GetValueByQuery(str));
-                }
+                }*/
             } else {
                 System.out.println("MatchCrawlee CheckXMLNodeValid() not valid.");
             }
@@ -91,8 +86,6 @@ public class MatchCrawlee extends baseCrawlee{
 
     /*Considerations
     http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=103913
-    (2) there is possibility no corner high low at all
-    (3)
      */
 
     String GetValueByQuery(String aQuery) {
@@ -150,5 +143,44 @@ public class MatchCrawlee extends baseCrawlee{
         final String HADhomeQuery = "//pool[@type=\"HAD\"]/@h";
         final String HADdrawQuery = "//pool[@type=\"HAD\"]/@d";
         final String HADawayQuery = "//pool[@type=\"HAD\"]/@a";
+
+        String homeVal = GetValueByQuery(HADhomeQuery);
+        String drawVal = GetValueByQuery(HADdrawQuery);
+        String awayVal = GetValueByQuery(HADawayQuery);
+
+        homeVal = StrTrimAtChar(homeVal);
+        drawVal = StrTrimAtChar(drawVal);
+        awayVal = StrTrimAtChar(awayVal);
+
+        hmap.put("home",homeVal);
+        hmap.put("draw",drawVal);
+        hmap.put("away",awayVal);
+    }
+
+    void ExplainCHIpool(HashMap<String,String> hmap){
+        final String CornerTotalQuery = "//match/@ninety_mins_total_corner";
+        final String CornerLineQuery = "//pool[@type=\"CHL\"]/@line";
+        final String CornerHighQuery = "//pool[@type=\"CHL\"]/@h";
+        final String CornerLowQuery = "//pool[@type=\"CHL\"]/@l";
+
+        String totalVal = GetValueByQuery(CornerTotalQuery);
+        String lineVal = GetValueByQuery(CornerLineQuery);
+        String highVal = GetValueByQuery(CornerHighQuery);
+        String lowVal = GetValueByQuery(CornerLowQuery);
+
+        highVal = StrTrimAtChar(highVal);
+        lowVal = StrTrimAtChar(lowVal);
+
+        hmap.put("total", totalVal);
+        hmap.put("line", lineVal);
+        hmap.put("high",highVal);
+        hmap.put("low",lowVal);
+    }
+
+    String StrTrimAtChar (String str){
+        if(str.contains("@")){
+            str = str.substring(str.lastIndexOf('@')+1);
+        }
+        return str;
     }
 }
