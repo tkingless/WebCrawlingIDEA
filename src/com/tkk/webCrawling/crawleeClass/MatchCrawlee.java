@@ -1,13 +1,13 @@
 package com.tkk.webCrawling.crawleeClass;
 
 import com.tkk.webCrawling.MatchCONSTANTS;
+import com.tkk.webCrawling.MatchCONSTANTS.*;
 import com.tkk.webCrawling.utils.DateTimeEntity;
 import com.tkk.webCrawling.webCrawler.baseCrawler;
-
 import com.tkk.webCrawling.utils.JsoupHelper;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -20,6 +20,7 @@ import org.apache.commons.io.*;
 
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -30,9 +31,6 @@ import java.util.Set;
 //TODO not to use concurrencyMachine since there is no mass request to be sent
 public class MatchCrawlee extends baseCrawlee{
 
-    final static String HADhomeQuery = "//pool[@type=\"HAD\"]/@h";
-    final static String HADdrawQuery = "//pool[@type=\"HAD\"]/@d";
-    final static String HADawayQuery = "//pool[@type=\"HAD\"]/@a";
     final static String CornerTotalQuery = "//match/@ninety_mins_total_corner";
     final static String CornerLineQuery = "//pool[@type=\"CHL\"]/@line";
     final static String CornerHighQuery = "//pool[@type=\"CHL\"]/@h";
@@ -42,7 +40,8 @@ public class MatchCrawlee extends baseCrawlee{
     private String linkAddr;
     private String baseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";
     private String matchID;
-    Set<MatchCONSTANTS.InplayPoolType> poolType;
+    Set<InplayPoolType> poolType;
+    private Document doc;
 
     DateTimeEntity recordTime;
 
@@ -63,20 +62,20 @@ public class MatchCrawlee extends baseCrawlee{
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(xml);
+            doc = db.parse(xml);
 
             doc.getDocumentElement().normalize();
             //System.out.println ("Root element of the doc is " + doc.getDocumentElement().getNodeName());
 
-            List<String> queries = Arrays.asList(HADhomeQuery,HADdrawQuery,HADawayQuery,
-                    CornerTotalQuery,CornerLineQuery,CornerHighQuery,CornerLowQuery);
+            List<String> queries = Arrays.asList(CornerTotalQuery,CornerLineQuery,CornerHighQuery,CornerLowQuery);
 
-            if(CheckMatchXMLValid(ExistMatchQuery,doc)) {
+            if(CheckXMLNodeValid(ExistMatchQuery)) {
+                matchXmlValid = true;
                 for (String str : queries) {
-                    System.out.println(GetValueByQuery(str, doc));
+                    System.out.println(GetValueByQuery(str));
                 }
             } else {
-                System.out.println("MatchCrawlee CheckMatchXMLValid() not valid.");
+                System.out.println("MatchCrawlee CheckXMLNodeValid() not valid.");
             }
 
         } catch (IOException e) {
@@ -96,7 +95,7 @@ public class MatchCrawlee extends baseCrawlee{
     (3)
      */
 
-    String GetValueByQuery(String aQuery, Document doc) {
+    String GetValueByQuery(String aQuery) {
         XPathFactory xpathFactory = XPathFactory.newInstance();
         XPath xpath = xpathFactory.newXPath();
 
@@ -114,7 +113,13 @@ public class MatchCrawlee extends baseCrawlee{
         return "";
     }
 
-    Boolean CheckMatchXMLValid(String aQuery, Document doc) throws XPathExpressionException {
+    boolean matchXmlValid = false;
+
+    public boolean isMatchXmlValid() {
+        return matchXmlValid;
+    }
+
+    Boolean CheckXMLNodeValid(String aQuery) throws XPathExpressionException {
         boolean valid;
 
         XPathFactory xpathFactory = XPathFactory.newInstance();
@@ -123,5 +128,27 @@ public class MatchCrawlee extends baseCrawlee{
         valid = (Boolean) existExpr.evaluate(doc, XPathConstants.BOOLEAN);
 
         return valid;
+    }
+
+    HashMap<String,String> ExtractPoolTypeBody (InplayPoolType type) throws XPathExpressionException {
+        HashMap<String,String> hmap = new HashMap<String, String>();
+
+        String existQuery = String.format("//pool[@type=\"%s\"]", MatchCONSTANTS.GetCapPoolType(type));
+
+        System.out.println("Checking existQuery: " + existQuery);
+
+        if(CheckXMLNodeValid(existQuery)){
+            hmap.put("Exist","true");
+        } else {
+            hmap.put("Exist","false");
+        }
+        return hmap;
+    }
+
+    //Different explain functions
+    void ExplainHADpool(HashMap<String,String> hmap){
+        final String HADhomeQuery = "//pool[@type=\"HAD\"]/@h";
+        final String HADdrawQuery = "//pool[@type=\"HAD\"]/@d";
+        final String HADawayQuery = "//pool[@type=\"HAD\"]/@a";
     }
 }
