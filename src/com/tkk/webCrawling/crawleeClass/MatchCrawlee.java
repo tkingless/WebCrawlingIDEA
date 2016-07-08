@@ -19,9 +19,7 @@ import java.io.IOException;
 import org.apache.commons.io.*;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -204,5 +202,13 @@ public class MatchCrawlee extends baseCrawlee{
     //Helper functions
     void ExtractMatchPools () {
         String poolsQuery = "//match/@inplay_pools";
+
+        String poolsVal = GetValueByQuery(poolsQuery);
+
+        for (InplayPoolType aType : InplayPoolType.values()){
+            if(poolsVal.contains(aType.toString())){
+                poolType.add(aType);
+            }
+        }
     }
 }
