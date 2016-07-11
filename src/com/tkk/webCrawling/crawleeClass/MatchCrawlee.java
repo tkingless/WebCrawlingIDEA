@@ -212,7 +212,6 @@ public class MatchCrawlee extends baseCrawlee{
         return str;
     }
 
-
     //Helper functions
     void ExtractMatchPools () {
         String poolsQuery = "//match/@inplay_pools";

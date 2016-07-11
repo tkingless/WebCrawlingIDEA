@@ -65,7 +65,6 @@ public class MatchEventWorker extends baseCrawler {
             MatchState.STATE_INITIALIZATION_FAILURE,
             MatchState.STATE_ALREADY_REGISTERED);
 
-    //TODO split this larger in a more cleaner readable way
     //The main loop function
     void Proc() {
 
@@ -79,10 +78,12 @@ public class MatchEventWorker extends baseCrawler {
                     break;
                 case STATE_PRE_REGISTERED:
                     System.out.println("Threadname: " + threadName + matchId + " STATE_PRE_REGISTERED");
+                    //TODO check if crawlee return matchstate started, change to this state, call MatchCrawlee here
+                    //TODO listen to the allodds xml, wait the MATCH_STAGE to "firsthalf"
+
                     OnStatePreRegistered();
                     break;
                 case STATE_MATCH_START:
-                    //TODO listen to the allodds xml, wait the MATCH_STAGE to "firsthalf", then
                     //TODO (DB feature) update the actual match start time
                     //TODO set the scanPeriod shorter
                     //TODO (DB feature) init relevant DB objects
@@ -94,7 +95,8 @@ public class MatchEventWorker extends baseCrawler {
                     status = MatchState.STATE_MATCH_ENDED;
                     break;
                 case STATE_FUTURE_MATCH:
-                    //TODO (DB feature) add the match registration to DB
+                    //TODO (DB feature) check whether DB added the match/ or the match changed
+                    //TODO (DB feature) add/update the match registration to DB
                     break;
                 default:
                     System.out.println("Threadname: " + threadName + matchId + " unknown state");
@@ -181,6 +183,12 @@ public class MatchEventWorker extends baseCrawler {
     OnState actions()
      */
     void OnStateInitialization() {
+
+        if (BoardCrawlee.IsRegisteredByID(this)) {
+            status = MatchState.STATE_ALREADY_REGISTERED;
+            return;
+        }
+
         long timediff = 0;
         if (!noDBcommenceTimeHistory) {
             timediff = commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
@@ -190,8 +198,10 @@ public class MatchEventWorker extends baseCrawler {
         //only pass considered cases
         if (timediff > 0) {
             if (stage == MatchStage.STAGE_ESST) {
+                //Within the pre-wait interval
                 if (timediff < preRegperiod) {
                     status = MatchState.STATE_PRE_REGISTERED;
+                //Beyond the pre-wait interval
                 } else if (timediff > preRegperiod) {
                     status = MatchState.STATE_FUTURE_MATCH;
                 }
@@ -199,6 +209,7 @@ public class MatchEventWorker extends baseCrawler {
                 status = MatchState.STATE_INITIALIZATION_FAILURE;
             }
         } else if (timediff <= 0) {
+            //case that before registration, the event already started
             if (onMatchingStages.contains(stage)) {
                 status = MatchState.STATE_PRE_REGISTERED;
                 scanPeriod = 0;
@@ -211,27 +222,32 @@ public class MatchEventWorker extends baseCrawler {
     }
 
     void OnStatePreRegistered() {
-        if (BoardCrawlee.IsRegisteredByID(this)) {
-            status = MatchState.STATE_ALREADY_REGISTERED;
-            return;
+
+        long timediff = commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
+
+        if (timediff > 0){
+            if (stage == MatchStage.STAGE_ESST) {
+                long longwait = timediff + 1000 * 15;
+                scanPeriod = longwait;
+                System.out.println("Threadname: " + threadName + matchId + " enter long wait in PRE reg state");
+
+            }
+        } else if (timediff <= 0){
+            if( stage == MatchStage.STAGE_ESST) {
+                scanPeriod = 1000 * 7;
+                System.out.println("dry waiting for start state");
+            }
         }
-        if (stage == MatchStage.STAGE_ESST) {
-            long longwait = commenceTime.CalTimeIntervalDiff(new DateTimeEntity()) + 1000 * 15;
-            scanPeriod = longwait;
-            System.out.println("Threadname: " + threadName + matchId + " enter long wait in PRE reg state");
-            //TODO (DB feature) update the event to DB
 
-            //TODO check if crawlee return matchstate started, change to this state
-            status = MatchState.STATE_MATCH_START;
-
-        } else if (noDBcommenceTimeHistory && onMatchingStages.contains(stage)) {
-            //TODO (DB feature) insert the instant event to DB
-            System.out.println("TODO: Threadname: " + threadName + matchId + " register to DB");
-
+        if (onMatchingStages.contains(stage)){
             long shortwait = 1000;
             scanPeriod = shortwait;
-            status = MatchState.STATE_MATCH_LOGGING;
+            if (noDBcommenceTimeHistory){
+                //TODO (DB feature) update the event to DB
+            }
+            status = MatchState.STATE_MATCH_START;
         }
+
         BoardCrawlee.RegisterWorker(this);
     }
     /*
