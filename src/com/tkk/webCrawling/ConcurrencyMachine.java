@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-import com.tkk.webCrawling.crawleeClass.baseCrawlee;
+import com.tkk.webCrawling.crawlee.baseCrawlee;
 import org.jsoup.nodes.Document;
 import com.tkk.webCrawling.utils.Stopwatch;
 

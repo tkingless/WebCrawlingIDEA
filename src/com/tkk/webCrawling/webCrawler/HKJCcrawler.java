@@ -2,7 +2,7 @@ package com.tkk.webCrawling.webCrawler;
 
 
 import com.tkk.webCrawling.ConcurrencyMachine;
-import com.tkk.webCrawling.crawleeClass.BoardCrawlee;
+import com.tkk.webCrawling.crawlee.BoardCrawlee;
 
 public class HKJCcrawler extends baseCrawler {
 

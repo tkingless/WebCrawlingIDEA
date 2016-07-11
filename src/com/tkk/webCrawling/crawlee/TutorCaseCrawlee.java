@@ -1,4 +1,4 @@
-package com.tkk.webCrawling.crawleeClass;
+package com.tkk.webCrawling.crawlee;
 
 import java.io.IOException;
 import java.lang.String;

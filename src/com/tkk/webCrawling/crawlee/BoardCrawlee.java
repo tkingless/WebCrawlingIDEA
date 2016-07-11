@@ -1,4 +1,4 @@
-package com.tkk.webCrawling.crawleeClass;
+package com.tkk.webCrawling.crawlee;
 
 import com.tkk.webCrawling.webCrawler.MatchEventWorker;
 import com.tkk.webCrawling.webCrawler.baseCrawler;
