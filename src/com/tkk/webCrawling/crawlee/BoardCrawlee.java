@@ -19,10 +19,17 @@ import java.util.regex.Pattern;
 public class BoardCrawlee extends baseCrawlee {
 
     static String boardUrl = "http://bet.hkjc.com/football/odds/odds_inplay.aspx?ci=en-US";
+    Boolean caseTesting = false;
 
     public BoardCrawlee(baseCrawler crawlerBelonged) {
         super(crawlerBelonged);
     }
+
+    public BoardCrawlee(baseCrawler crawlerBelonged, Boolean test){
+        super(crawlerBelonged);
+        caseTesting = test;
+    }
+
 
     //callable callbacks
     public Document call() {
