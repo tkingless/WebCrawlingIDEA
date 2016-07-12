@@ -11,7 +11,6 @@ import org.junit.*;
 public class MatchEventWorkerTest {
 
     MatchEventWorker futureWorker;
-    MatchEventWorker preRegWorker;
     BoardCrawlee testBoardCrlr;
 
     @Before
@@ -21,10 +20,8 @@ public class MatchEventWorkerTest {
         ConcurrencyMachine.GetInstance().RegisterQueue(testBoardCrlr);
         synchronized (this) {
             ConcurrencyMachine.GetInstance().InvokeQueue();
-
         }
         futureWorker = testBoardCrlr.getParsedWorkers().get(0);
-        preRegWorker = testBoardCrlr.getParsedWorkers().get(1);
         System.out.println("[WorkerTester] the setUp() finished");
     }
 
