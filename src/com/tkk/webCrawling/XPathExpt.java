@@ -26,7 +26,7 @@ public class XPathExpt {
 
     public static void main(String[] args) throws XPathExpressionException {
 
-        String uri = "http://bet.hkjc.com/football/odds/odds_inplay.aspx?ci=en-US";
+        String uri = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=104030";
 
         try {
             String source = JsoupHelper.GetDocumentFrom(uri).toString();

@@ -50,6 +50,11 @@ public class BoardCrawlee extends baseCrawlee {
         return Jdoc;
     }
 
+    public List<MatchEventWorker> getParsedWorkers() {
+        return parsedWorkers;
+    }
+
+    List<MatchEventWorker> parsedWorkers;
     void GetChildNodes() throws ParseException {
 
         HashMap<String, String> searchNodes = new HashMap<String, String>();
@@ -70,7 +75,7 @@ public class BoardCrawlee extends baseCrawlee {
         cardinalityChecks.add(statuses);
 
         if (CardinalityChecking()) {
-            List<MatchEventWorker> parsedWorkers = ParsingDocIntoMatchWorker(onboardChildUrls,matchNos,matchTeams,statuses);
+             parsedWorkers = ParsingDocIntoMatchWorker(onboardChildUrls,matchNos,matchTeams,statuses);
         }
     }
 

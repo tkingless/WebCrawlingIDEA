@@ -15,7 +15,14 @@ public class MatchEventWorkerTest {
 
     @Before
     public void setUp() throws Exception {
-
+        HKJCcrawler hkjcCrlr = HKJCcrawler.GetInstance();
+        BoardCrawlee boardCrlr = new BoardCrawlee(hkjcCrlr, BoardCrawleeTestSample.testBoardhtml);
+        ConcurrencyMachine.GetInstance().RegisterQueue(boardCrlr);
+        synchronized (this) {
+            ConcurrencyMachine.GetInstance().InvokeQueue();
+        }
+        testWorker = boardCrlr.getParsedWorkers().get(0);
+        System.out.println(testWorker.getMatchId());
     }
 
     @After
@@ -25,12 +32,9 @@ public class MatchEventWorkerTest {
 
     @Test
     public void sandbox() throws Exception {
-        HKJCcrawler hkjcCrlr = HKJCcrawler.GetInstance();
-        BoardCrawlee boardCrlr = new BoardCrawlee(hkjcCrlr, BoardCrawleeTestSample.testBoardhtml);
-        ConcurrencyMachine.GetInstance().RegisterQueue(boardCrlr);
-        synchronized (this) {
-            ConcurrencyMachine.GetInstance().InvokeQueue();
-        }
+
+
+
     }
 
 }

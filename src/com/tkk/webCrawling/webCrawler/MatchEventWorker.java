@@ -324,4 +324,16 @@ public class MatchEventWorker extends baseCrawler {
     /*
     MatchCrawlee functions(): end
      */
+
+
+    /*
+    Test case useful methods()
+     */
+    void SetMatchCrawleeTarget(String testXml){
+
+    }
+    /*
+    Test case useful methods(): end
+     */
+
 }
