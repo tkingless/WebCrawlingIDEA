@@ -19,15 +19,14 @@ import java.util.regex.Pattern;
 public class BoardCrawlee extends baseCrawlee {
 
     static String boardUrl = "http://bet.hkjc.com/football/odds/odds_inplay.aspx?ci=en-US";
-    Boolean caseTesting = false;
 
     public BoardCrawlee(baseCrawler crawlerBelonged) {
         super(crawlerBelonged);
     }
 
-    public BoardCrawlee(baseCrawler crawlerBelonged, Boolean test){
+    public BoardCrawlee(baseCrawler crawlerBelonged, String testHtml){
         super(crawlerBelonged);
-        caseTesting = test;
+        Jdoc = JsoupHelper.GetDocumentFromStr(testHtml);
     }
 
 
@@ -36,7 +35,11 @@ public class BoardCrawlee extends baseCrawlee {
 
         ////System.out.println("BoardCrawlee call() for callable called");
         try {
-            Jdoc = JsoupHelper.GetDocumentFrom(boardUrl);
+            if(Jdoc == null) {
+                Jdoc = JsoupHelper.GetDocumentFrom(boardUrl);
+                //System.out.println("Jdoc is: ");
+                //System.out.println(Jdoc.toString());
+            }
             GetChildNodes();
         } catch (IOException e) {
             e.printStackTrace();
