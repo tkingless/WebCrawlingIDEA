@@ -129,8 +129,8 @@ public class MatchEventWorker extends baseCrawler {
         if (statusEle.text().contains("Expected In Play start selling time")) {
             String startTimeWeb = statusEle.childNode(3).toString();
 
-            Pattern dayPattern = Pattern.compile("[0-9]{2}/[0-9]{2}");
-            Pattern timePattern = Pattern.compile("[0-9]{2}:[0-9]{2}");
+            Pattern dayPattern = Pattern.compile("[0-9]{1,2}/[0-9]{1,2}");
+            Pattern timePattern = Pattern.compile("[0-9]{1,2}:[0-9]{1,2}");
 
             Matcher dayMatch = dayPattern.matcher(startTimeWeb);
             Matcher timeMatch = timePattern.matcher(startTimeWeb);
