@@ -5,7 +5,7 @@ package com.tkk.webCrawling;
  */
 public class MatchCONSTANTS {
 
-    public enum MatchState {
+    public enum MatchStatus {
         STATE_INITIALIZATION,
         STATE_FUTURE_MATCH,
         //only at state of pre_registered, the thread is launched

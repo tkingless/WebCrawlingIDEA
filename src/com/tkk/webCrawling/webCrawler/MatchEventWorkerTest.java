@@ -1,8 +1,10 @@
 package com.tkk.webCrawling.webCrawler;
 
 import com.tkk.webCrawling.ConcurrencyMachine;
+import com.tkk.webCrawling.MatchCONSTANTS;
 import com.tkk.webCrawling.crawlee.BoardCrawlee;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,30 +13,34 @@ import org.junit.Test;
  */
 public class MatchEventWorkerTest {
 
-    MatchEventWorker testWorker;
+    MatchEventWorker futureWorker;
+    BoardCrawlee testBoardCrlr;
 
     @Before
     public void setUp() throws Exception {
         HKJCcrawler hkjcCrlr = HKJCcrawler.GetInstance();
-        BoardCrawlee boardCrlr = new BoardCrawlee(hkjcCrlr, BoardCrawleeTestSample.testBoardhtml);
-        ConcurrencyMachine.GetInstance().RegisterQueue(boardCrlr);
+        testBoardCrlr = new BoardCrawlee(hkjcCrlr, BoardCrawleeTestSample.testBoardhtml);
+        ConcurrencyMachine.GetInstance().RegisterQueue(testBoardCrlr);
         synchronized (this) {
             ConcurrencyMachine.GetInstance().InvokeQueue();
         }
-        testWorker = boardCrlr.getParsedWorkers().get(0);
-        System.out.println(testWorker.getMatchId());
+        futureWorker = testBoardCrlr.getParsedWorkers().get(0);
+        System.out.println("[WorkerTester] the setUp() finished");
     }
 
     @After
     public void tearDown() throws Exception {
-
+        //TODO (DB feature) remove Future worker DB record
     }
 
     @Test
-    public void sandbox() throws Exception {
-
-
-
+    public void TestFutureWorkerState() throws Exception {
+        synchronized (this) {
+            MatchCONSTANTS.MatchStatus expectedState = MatchCONSTANTS.MatchStatus.STATE_FUTURE_MATCH;
+            //TODO (DB feature) test on DB has record
+            Assert.assertEquals(expectedState, futureWorker.getStatus());
+            Assert.assertEquals(false, futureWorker.isAlive());
+        }
     }
 
 }

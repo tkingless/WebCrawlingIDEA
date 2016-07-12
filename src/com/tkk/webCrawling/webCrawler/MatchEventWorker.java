@@ -31,7 +31,8 @@ public class MatchEventWorker extends baseCrawler {
 
     DateTimeEntity commenceTime;
     DateTimeEntity endTime;
-    MatchState status;
+
+    MatchStatus status;
     MatchStage stage;
     InplayPoolType matchPools;
     //the secondary key to be used
@@ -41,7 +42,7 @@ public class MatchEventWorker extends baseCrawler {
 
     public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element teamsEle) {
         super(CrawlerKeyBinding.MatchEvent, threadName + "-" + aMatchId);
-        status = MatchState.STATE_INITIALIZATION;
+        status = MatchStatus.STATE_INITIALIZATION;
         matchId = aMatchId;
         System.out.println("MatchEventWorker constructed, matchId:" + matchId);
         ///System.out.println("and allOddsLink: " + linkAddr);
@@ -60,10 +61,10 @@ public class MatchEventWorker extends baseCrawler {
         this.StartRun();
     }
 
-    Set<MatchState> terminateStates = EnumSet.of(MatchState.STATE_MATCH_ENDED,
-            MatchState.STATE_FUTURE_MATCH,
-            MatchState.STATE_INITIALIZATION_FAILURE,
-            MatchState.STATE_ALREADY_REGISTERED);
+    Set<MatchStatus> terminateStates = EnumSet.of(MatchStatus.STATE_MATCH_ENDED,
+            MatchStatus.STATE_FUTURE_MATCH,
+            MatchStatus.STATE_INITIALIZATION_FAILURE,
+            MatchStatus.STATE_ALREADY_REGISTERED);
 
     //The main loop function
     void Proc() {
@@ -88,11 +89,11 @@ public class MatchEventWorker extends baseCrawler {
                     //TODO set the scanPeriod shorter
                     //TODO (DB feature) init relevant DB objects
                     System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_START");
-                    status = MatchState.STATE_MATCH_ENDED;
+                    status = MatchStatus.STATE_MATCH_ENDED;
                     break;
                 case STATE_MATCH_LOGGING:
                     System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
-                    status = MatchState.STATE_MATCH_ENDED;
+                    status = MatchStatus.STATE_MATCH_ENDED;
                     break;
                 case STATE_FUTURE_MATCH:
                     //TODO (DB feature) check whether DB added the match/ or the match changed
@@ -185,7 +186,7 @@ public class MatchEventWorker extends baseCrawler {
     void OnStateInitialization() {
 
         if (BoardCrawlee.IsRegisteredByID(this)) {
-            status = MatchState.STATE_ALREADY_REGISTERED;
+            status = MatchStatus.STATE_ALREADY_REGISTERED;
             return;
         }
 
@@ -200,23 +201,23 @@ public class MatchEventWorker extends baseCrawler {
             if (stage == MatchStage.STAGE_ESST) {
                 //Within the pre-wait interval
                 if (timediff < preRegperiod) {
-                    status = MatchState.STATE_PRE_REGISTERED;
+                    status = MatchStatus.STATE_PRE_REGISTERED;
                 //Beyond the pre-wait interval
                 } else if (timediff > preRegperiod) {
-                    status = MatchState.STATE_FUTURE_MATCH;
+                    status = MatchStatus.STATE_FUTURE_MATCH;
                 }
             } else {
-                status = MatchState.STATE_INITIALIZATION_FAILURE;
+                status = MatchStatus.STATE_INITIALIZATION_FAILURE;
             }
         } else if (timediff <= 0) {
             //case that before registration, the event already started
             if (onMatchingStages.contains(stage)) {
-                status = MatchState.STATE_PRE_REGISTERED;
+                status = MatchStatus.STATE_PRE_REGISTERED;
                 scanPeriod = 0;
             }
             //there is possibility the match actual starting time is delayed a bit
             else if (stage == MatchStage.STAGE_ESST) {
-                status = MatchState.STATE_PRE_REGISTERED;
+                status = MatchStatus.STATE_PRE_REGISTERED;
             }
         }
     }
@@ -245,7 +246,7 @@ public class MatchEventWorker extends baseCrawler {
             if (noDBcommenceTimeHistory){
                 //TODO (DB feature) update the event to DB
             }
-            status = MatchState.STATE_MATCH_START;
+            status = MatchStatus.STATE_MATCH_START;
         }
 
         BoardCrawlee.RegisterWorker(this);
@@ -295,6 +296,18 @@ public class MatchEventWorker extends baseCrawler {
     public String getMatchId() {
         return matchId;
     }
+
+    public MatchStatus getStatus() {
+        return status;
+    }
+
+    public MatchStage getStage() {
+        return stage;
+    }
+
+    public InplayPoolType getMatchPools() {
+        return matchPools;
+    }
     /*
     Subsidary functions(): end
      */
@@ -326,12 +339,15 @@ public class MatchEventWorker extends baseCrawler {
      */
 
 
+
+
     /*
     Test case useful methods()
-     */
-    void SetMatchCrawleeTarget(String testXml){
-
+    */
+    public void setMatchCrleTarget(String matchCrleTarget) {
+        this.matchCrleTarget = matchCrleTarget;
     }
+    String matchCrleTarget;
     /*
     Test case useful methods(): end
      */
