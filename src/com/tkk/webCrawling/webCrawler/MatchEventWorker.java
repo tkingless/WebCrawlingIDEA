@@ -1,6 +1,7 @@
 package com.tkk.webCrawling.webCrawler;
 
 import com.tkk.webCrawling.crawlee.BoardCrawlee;
+import com.tkk.webCrawling.crawlee.MatchCrawlee;
 import com.tkk.webCrawling.utils.DateTimeEntity;
 import com.tkk.webCrawling.MatchCONSTANTS.*;
 
@@ -235,7 +236,7 @@ public class MatchEventWorker extends baseCrawler {
             }
         } else if (timediff <= 0){
             if( stage == MatchStage.STAGE_ESST) {
-                scanPeriod = 1000 * 7;
+                scanPeriod = 1000 * 2;
                 System.out.println("dry waiting for start state");
             }
         }
@@ -267,10 +268,6 @@ public class MatchEventWorker extends baseCrawler {
         //TODO, if fullfill criteria, start a monitoring thread
     }
 
-    void EmitRequest() {
-        //TODO grab data periodically
-    }
-
     public void run() {
         try {
             ////System.out.println("MatchEventWorker run() called");
@@ -293,19 +290,19 @@ public class MatchEventWorker extends baseCrawler {
 
     }
 
-    public String getMatchId() {
+    public synchronized String getMatchId() {
         return matchId;
     }
 
-    public MatchStatus getStatus() {
+    public synchronized MatchStatus getStatus() {
         return status;
     }
 
-    public MatchStage getStage() {
+    public synchronized MatchStage getStage() {
         return stage;
     }
 
-    public InplayPoolType getMatchPools() {
+    public synchronized InplayPoolType getMatchPools() {
         return matchPools;
     }
     /*
@@ -333,7 +330,22 @@ public class MatchEventWorker extends baseCrawler {
     /*
     MatchCrawlee functions()
      */
+    MatchCrawlee lastMatchCrle;
 
+    void EmitRequest() {
+        //TODO grab data periodically
+        if(matchCrleTarget == null){
+            //TODO do networking grab
+        }else{
+            lastMatchCrle = new MatchCrawlee(matchCrleTarget);
+        }
+
+        UpdateWorkerFromCrle(lastMatchCrle);
+    }
+
+    void UpdateWorkerFromCrle(MatchCrawlee crle){
+
+    }
     /*
     MatchCrawlee functions(): end
      */
@@ -344,7 +356,7 @@ public class MatchEventWorker extends baseCrawler {
     /*
     Test case useful methods()
     */
-    public void setMatchCrleTarget(String matchCrleTarget) {
+    public synchronized void setMatchCrleTarget(String matchCrleTarget) {
         this.matchCrleTarget = matchCrleTarget;
     }
     String matchCrleTarget;

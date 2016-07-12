@@ -3,10 +3,7 @@ package com.tkk.webCrawling.webCrawler;
 import com.tkk.webCrawling.ConcurrencyMachine;
 import com.tkk.webCrawling.MatchCONSTANTS;
 import com.tkk.webCrawling.crawlee.BoardCrawlee;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 /**
  * Created by tsangkk on 7/11/16.
@@ -14,6 +11,7 @@ import org.junit.Test;
 public class MatchEventWorkerTest {
 
     MatchEventWorker futureWorker;
+    MatchEventWorker preRegWorker;
     BoardCrawlee testBoardCrlr;
 
     @Before
@@ -23,8 +21,10 @@ public class MatchEventWorkerTest {
         ConcurrencyMachine.GetInstance().RegisterQueue(testBoardCrlr);
         synchronized (this) {
             ConcurrencyMachine.GetInstance().InvokeQueue();
+
         }
         futureWorker = testBoardCrlr.getParsedWorkers().get(0);
+        preRegWorker = testBoardCrlr.getParsedWorkers().get(1);
         System.out.println("[WorkerTester] the setUp() finished");
     }
 
@@ -33,14 +33,14 @@ public class MatchEventWorkerTest {
         //TODO (DB feature) remove Future worker DB record
     }
 
+    //@Ignore
     @Test
     public void TestFutureWorkerState() throws Exception {
-        synchronized (this) {
+            System.out.println("TestFutureWorkerState() called");
             MatchCONSTANTS.MatchStatus expectedState = MatchCONSTANTS.MatchStatus.STATE_FUTURE_MATCH;
             //TODO (DB feature) test on DB has record
             Assert.assertEquals(expectedState, futureWorker.getStatus());
             Assert.assertEquals(false, futureWorker.isAlive());
-        }
     }
 
 }
