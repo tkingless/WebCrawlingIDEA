@@ -82,7 +82,7 @@ public class BoardCrawlee extends baseCrawlee {
     }
 
     static List<MatchEventWorker> GetTestWorkers(MatchTestCONSTANTS.TestType test_type, Element jDoc) throws ParseException {
-        List<MatchEventWorker> workers = null;
+        List<MatchEventWorker> workers = new ArrayList<MatchEventWorker>();
         HashMap<String, String> searchNodes = new HashMap<String, String>();
         searchNodes.put("onboardChildUrls", "td[class$=cdAllIn] > a[href]");
         //searchNodes.put("MatchNo", "td[class$=\"cday ttgR2\"] > span > a[title$=\"All Odds\"]");
@@ -150,7 +150,8 @@ public class BoardCrawlee extends baseCrawlee {
 
     private static List<MatchEventWorker> ParsingDocIntoMatchWorker(Elements onboardChildUrls,
                                                                     Elements matchNos, Elements matchTeams,
-                                                                    Elements statuses, MatchTestCONSTANTS.TestType test_type) throws ParseException {
+                                                                    Elements statuses, MatchTestCONSTANTS.TestType test_type)
+            throws ParseException {
 
         List<MatchEventWorker> workerList = new ArrayList<MatchEventWorker>();
 
@@ -182,9 +183,7 @@ public class BoardCrawlee extends baseCrawlee {
                 crleWorker = new MatchEventWorker(matchId, matchNoIte.next(),
                         matchStatIte.next(), matchTeamIte.next(),test_type);
             }
-
             workerList.add(crleWorker);
-
         }
 
         return workerList;

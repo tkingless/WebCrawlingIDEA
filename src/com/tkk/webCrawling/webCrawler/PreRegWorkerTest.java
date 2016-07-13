@@ -4,6 +4,7 @@ import com.tkk.webCrawling.ConcurrencyMachine;
 import com.tkk.webCrawling.crawlee.BoardCrawlee;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
@@ -21,20 +22,24 @@ public class PreRegWorkerTest {
      */
     @Before
     public void setUp() throws Exception {
-        HKJCcrawler hkjcCrlr = HKJCcrawler.GetInstance();
-        testBoardCrlr = new BoardCrawlee(hkjcCrlr, BoardCrawleeTestSample.testBoardhtml);
-        ConcurrencyMachine.GetInstance().RegisterQueue(testBoardCrlr);
-        synchronized (this) {
-            ConcurrencyMachine.GetInstance().InvokeQueue();
-        }
-        //TODO make a cheating pre-reg worker
-        //preRegWorker = testBoardCrlr.getParsedWorkers().get(1);
+        //preRegWorker = BoardCrawlee.GenerateTestWorker(MatchTestCONSTANTS.TestType.TYPE_PRE_REG,BoardCrawleeTestSample.testBoardhtml).get(0);
         System.out.println("[WorkerTester] the setUp() finished");
     }
 
     @After
     public void tearDown() throws Exception {
 
+    }
+
+    @Test
+    public void Sandbox() throws Exception {
+
+        BoardCrawlee.GenerateTestWorker(MatchTestCONSTANTS.TestType.TYPE_PRE_REG, BoardCrawleeTestSample.testBoardhtml).get(0);
+
+        System.out.println("preRegWorker status: " + preRegWorker.getStatus());
+        System.out.println("preRegWorker state: " + preRegWorker.getState());
+        System.out.println("preRegWorker state: " + preRegWorker.getMatchId());
+        System.out.println("[WorkerTester] the setUp() finished");
     }
 
 }
