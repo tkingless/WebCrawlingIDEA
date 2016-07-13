@@ -10,7 +10,7 @@ import org.junit.*;
 /**
  * Created by tsangkk on 7/11/16.
  */
-public class MatchEventWorkerTest {
+public class FutureWorkerTest {
 
     MatchEventWorker futureWorker;
     BoardCrawlee testBoardCrlr;
