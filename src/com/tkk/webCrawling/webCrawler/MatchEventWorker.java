@@ -31,6 +31,8 @@ public class MatchEventWorker extends baseCrawler {
     long preRegperiod = 1000 * 60 * 5;
     final long matchIntervalLength = 1000 * 60 * 120;
 
+
+
     DateTimeEntity commenceTime;
     DateTimeEntity endTime;
 
@@ -343,6 +345,10 @@ public class MatchEventWorker extends baseCrawler {
 
     public synchronized InplayPoolType getMatchPools() {
         return matchPools;
+    }
+
+    public DateTimeEntity getCommenceTime() {
+        return commenceTime;
     }
     /*
     Subsidary functions(): end

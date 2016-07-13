@@ -26,6 +26,20 @@ public class BoardCrawleeTestSample {
             "                  <td class=\"codds\"><span class=\"dl\"><input type=\"checkbox\" disabled name=\"chkHAD\" id=\"104030_HAD_A_c\" value=\"\" onclick=\"tgTD(this);\" class=\"104030_HAD_A_0_c\"><a class=\"oddsLink noUL\"><span id=\"104030_HAD_A\">---</span></a></span></td>\n" +
             "                  <td class=\"cdAllIn\"><a href=\"/football/odds/odds_inplay_all.aspx?lang=EN&amp;tmatchid=104030&amp;tdate=13-07-2016&amp;tday=WED&amp;tnum=9\" title=\"All Odds\"><img src=\"/football/info/images/btn_odds.gif?CV=\" alt=\"All Odds\" title=\"All Odds\" onerror=\"errImg(this);\"></a></td>\n" +
             "               </tr>\n" +
+            "            </tbody>\n" +
+            "         </table>\n" +
+            "      </form>\n" +
+            "   </body>\n" +
+            "</html>\n" +
+            "\n";
+
+    static public String PreRegBoardhtml = "\n" +
+            "\n" +
+            "<html>\n" +
+            "   <body>\n" +
+            "      <form name=\"aspnetForm\" method=\"post\" action=\"odds_inplay.aspx?ci=en-US\" id=\"aspnetForm\">\n" +
+            "         <table class=\"tINPLAYHAD tOdds\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n" +
+            "            <tbody>\n" +
             "               <tr class=\"rAlt0 cou2 tgCou2\" id=\"rmid104031\">\n" +
             "                  <td class=\"cday ttgR2\"><span><a href=\"/football/odds/odds_allodds.aspx?lang=EN&amp;tmatchid=104031&amp;tdate=13-07-2016&amp;tday=WED&amp;tnum=9\" title=\"All Odds\">WED 10</a></span></td>\n" +
             "                  <td class=\"cflag ttgR2\"><span><img src=\"/nas/jcbwinfo/football/info/images/flag_JD1.gif?CV=L205R2g\" alt=\"Japanese Division 1\" title=\"Japanese Division 1\" class=\"cfJD1\" onerror=\"errImg(this);\"></span></td>\n" +
