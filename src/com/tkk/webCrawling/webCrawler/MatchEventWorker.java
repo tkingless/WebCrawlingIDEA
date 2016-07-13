@@ -73,8 +73,10 @@ public class MatchEventWorker extends baseCrawler {
         ExtractTeams(teamsEle);
 
         if(type == MatchTestCONSTANTS.TestType.TYPE_PRE_REG){
-            long rectTimestamp = (long) ((new DateTimeEntity()).GetTheInstant().getTime() - 0.5 * preRegperiod);
+            preRegperiod = 1000 * 10;
+            long rectTimestamp = (long) ((new DateTimeEntity()).GetTheInstant().getTime() + 0.5 * preRegperiod);
             commenceTime = new DateTimeEntity(rectTimestamp);
+            IdentifyStage(statusEle);
         } else {
             ExtractStatus(statusEle);
         }

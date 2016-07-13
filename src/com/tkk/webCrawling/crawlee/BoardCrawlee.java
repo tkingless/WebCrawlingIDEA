@@ -210,7 +210,7 @@ public class BoardCrawlee extends baseCrawlee {
         livingWorkerMatchIDs.remove(worker.getMatchId());
     }
 
-    public static List<MatchEventWorker> GenerateTestWorker (MatchTestCONSTANTS.TestType type, String testBoardHtml){
+    public synchronized static List<MatchEventWorker> GenerateTestWorker (MatchTestCONSTANTS.TestType type, String testBoardHtml){
         List<MatchEventWorker> outputs = null;
 
         Document doc = JsoupHelper.GetDocumentFromStr(testBoardHtml);

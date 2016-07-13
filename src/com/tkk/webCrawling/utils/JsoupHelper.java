@@ -15,12 +15,12 @@ public class JsoupHelper {
 
     static int timeout = 6000;
 
-    static public Document GetDocumentFrom(String url) throws IOException {
+    static synchronized public Document GetDocumentFrom(String url) throws IOException {
         return Jsoup.connect(url).data("query", "Java").userAgent("Mozilla")
                 .cookie("auth", "token").timeout(timeout).post();
     }
 
-    static public Document GetDocumentFromStr(String str) {
+    static synchronized public Document GetDocumentFromStr(String str) {
         return Jsoup.parse(str);
     }
 }

@@ -16,7 +16,7 @@ public class MatchEventWorkerTest {
     @Before
     public void setUp() throws Exception {
         HKJCcrawler hkjcCrlr = HKJCcrawler.GetInstance();
-        testBoardCrlr = new BoardCrawlee(hkjcCrlr, BoardCrawleeTestSample.testBoardhtml);
+        testBoardCrlr = new BoardCrawlee(hkjcCrlr, BoardCrawleeTestSample.FutureBoardhtml);
         ConcurrencyMachine.GetInstance().RegisterQueue(testBoardCrlr);
         synchronized (this) {
             ConcurrencyMachine.GetInstance().InvokeQueue();

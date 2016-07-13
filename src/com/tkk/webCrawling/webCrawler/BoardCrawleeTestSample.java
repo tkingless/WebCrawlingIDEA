@@ -5,7 +5,7 @@ package com.tkk.webCrawling.webCrawler;
  */
 public class BoardCrawleeTestSample {
 
-    static public String testBoardhtml = "\n" +
+    static public String FutureBoardhtml = "\n" +
             "\n" +
             "<html>\n" +
             "   <body>\n" +
