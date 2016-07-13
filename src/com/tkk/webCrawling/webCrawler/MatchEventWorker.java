@@ -31,8 +31,6 @@ public class MatchEventWorker extends baseCrawler {
     long preRegperiod = 1000 * 60 * 5;
     final long matchIntervalLength = 1000 * 60 * 120;
 
-
-
     DateTimeEntity commenceTime;
     DateTimeEntity endTime;
 
@@ -75,7 +73,8 @@ public class MatchEventWorker extends baseCrawler {
         ExtractMatcdKey(matchKeyEle);
         ExtractTeams(teamsEle);
 
-        if(type == MatchTestCONSTANTS.TestType.TYPE_PRE_REG){
+        if (type == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
+            testTypeSwitch = type;
             preRegperiod = 1000 * 10;
             long rectTimestamp = (long) ((new DateTimeEntity()).GetTheInstant().getTime() + 0.5 * preRegperiod);
             commenceTime = new DateTimeEntity(rectTimestamp);
@@ -158,7 +157,7 @@ public class MatchEventWorker extends baseCrawler {
 
         IdentifyStage(statusEle);
 
-        switch (stage){
+        switch (stage) {
             case STAGE_ESST:
                 String startTimeWeb = statusEle.childNode(3).toString();
 
@@ -197,7 +196,7 @@ public class MatchEventWorker extends baseCrawler {
     }
 
     private void IdentifyStage(Element statusEle) {
-        if (statusEle.text().contains("Expected In Play start selling time")){
+        if (statusEle.text().contains("Expected In Play start selling time")) {
             stage = MatchStage.STAGE_ESST;
         } else if (statusEle.text().contains("1st Half In Progress")) {
             //TODO something
@@ -244,7 +243,7 @@ public class MatchEventWorker extends baseCrawler {
                 //Within the pre-wait interval
                 if (timediff < preRegperiod) {
                     status = MatchStatus.STATE_PRE_REGISTERED;
-                //Beyond the pre-wait interval
+                    //Beyond the pre-wait interval
                 } else if (timediff > preRegperiod) {
                     status = MatchStatus.STATE_FUTURE_MATCH;
                 }
@@ -268,24 +267,24 @@ public class MatchEventWorker extends baseCrawler {
 
         long timediff = commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
 
-        if (timediff > 0){
+        if (timediff > 0) {
             if (stage == MatchStage.STAGE_ESST) {
                 long longwait = timediff + 1000 * 15;
                 scanPeriod = longwait;
                 System.out.println("Threadname: " + threadName + matchId + " enter long wait in PRE reg state");
 
             }
-        } else if (timediff <= 0){
-            if( stage == MatchStage.STAGE_ESST) {
+        } else if (timediff <= 0) {
+            if (stage == MatchStage.STAGE_ESST) {
                 scanPeriod = 1000 * 2;
                 System.out.println("dry waiting for start state");
             }
         }
 
-        if (onMatchingStages.contains(stage)){
+        if (onMatchingStages.contains(stage)) {
             long shortwait = 1000;
             scanPeriod = shortwait;
-            if (noDBcommenceTimeHistory){
+            if (noDBcommenceTimeHistory) {
                 //TODO (DB feature) update the event to DB
             }
             status = MatchStatus.STATE_MATCH_START;
@@ -375,20 +374,22 @@ public class MatchEventWorker extends baseCrawler {
     /*
     MatchCrawlee functions()
      */
-    MatchCrawlee lastMatchCrle;
+    private MatchCrawlee lastMatchCrle;
 
     void EmitRequest() {
         //TODO grab data periodically
-        if(matchCrleTarget == null){
+        if (testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
+            lastMatchCrle = new MatchCrawlee(matchCrleTestTarget);
+        } else {
             //TODO do networking grab
-        }else{
-            lastMatchCrle = new MatchCrawlee(matchCrleTarget);
+            lastMatchCrle = new MatchCrawlee(this, matchId);
         }
 
+        lastMatchCrle.run();
         UpdateWorkerFromCrle(lastMatchCrle);
     }
 
-    void UpdateWorkerFromCrle(MatchCrawlee crle){
+    void UpdateWorkerFromCrle(MatchCrawlee crle) {
 
     }
     /*
@@ -396,15 +397,15 @@ public class MatchEventWorker extends baseCrawler {
      */
 
 
-
-
     /*
     Test case useful methods()
     */
-    public synchronized void setMatchCrleTarget(String matchCrleTarget) {
-        this.matchCrleTarget = matchCrleTarget;
+    public synchronized void setMatchCrleTestTarget(String matchCrleTestTarget) {
+        this.matchCrleTestTarget = matchCrleTestTarget;
     }
-    String matchCrleTarget;
+
+    String matchCrleTestTarget;
+    MatchTestCONSTANTS.TestType testTypeSwitch = null;
     /*
     Test case useful methods(): end
      */

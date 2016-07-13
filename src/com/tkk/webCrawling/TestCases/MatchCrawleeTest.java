@@ -37,7 +37,6 @@ public class MatchCrawleeTest {
                 MatchCONSTANTS.InplayPoolType.CRS);
 
         Assert.assertEquals(expected,crle.getPoolType());
-
     }
 
 
