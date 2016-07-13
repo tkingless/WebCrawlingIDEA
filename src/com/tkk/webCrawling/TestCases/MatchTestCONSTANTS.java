@@ -1,4 +1,4 @@
-package com.tkk.webCrawling.webCrawler;
+package com.tkk.webCrawling.TestCases;
 
 /**
  * Created by tsangkk on 7/13/16.

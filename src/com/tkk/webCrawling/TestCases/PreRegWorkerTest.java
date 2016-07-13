@@ -1,6 +1,7 @@
-package com.tkk.webCrawling.webCrawler;
+package com.tkk.webCrawling.TestCases;
 
 import com.tkk.webCrawling.crawlee.BoardCrawlee;
+import com.tkk.webCrawling.webCrawler.MatchEventWorker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,13 +34,15 @@ public class PreRegWorkerTest {
     }
 
     @Test
-    public void Sandbox() throws Exception {
+    public void StateVerification() throws Exception {
         preRegWorker = workers.get(0);
 
-        Thread.sleep(1000 * 30);
+        Thread.sleep(500);
         System.out.println("preRegWorker status: " + preRegWorker.getStatus());
         System.out.println("preRegWorker stage: " + preRegWorker.getStage());
         System.out.println("preRegWorker matchid: " + preRegWorker.getMatchId());
+
+        Thread.sleep(1000 * 30);
         System.out.println("[WorkerTester] the setUp() finished");
     }
 
