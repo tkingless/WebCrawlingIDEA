@@ -62,13 +62,35 @@ public class MatchEventWorker extends baseCrawler {
         this.StartRun();
     }
 
-    Set<MatchStatus> terminateStates = EnumSet.of(MatchStatus.STATE_MATCH_ENDED,
+    public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element teamsEle, MatchTestCONSTANTS.TestType type) throws ParseException {
+        super(CrawlerKeyBinding.MatchEvent, threadName + "-" + aMatchId);
+        status = MatchStatus.STATE_INITIALIZATION;
+        matchId = aMatchId;
+        System.out.println("MatchEventWorker constructed, matchId:" + matchId);
+        ///System.out.println("and allOddsLink: " + linkAddr);
+
+        ExtractMatcdKey(matchKeyEle);
+        ExtractTeams(teamsEle);
+
+        if(type == MatchTestCONSTANTS.TestType.TYPE_PRE_REG){
+            long rectTimestamp = (long) ((new DateTimeEntity()).GetTheInstant().getTime() - 0.5 * preRegperiod);
+            commenceTime = new DateTimeEntity(rectTimestamp);
+        } else {
+            ExtractStatus(statusEle);
+        }
+
+        System.out.println("MatcherEventWorker finished constructer.");
+
+        this.StartRun();
+    }
+
+    private Set<MatchStatus> terminateStates = EnumSet.of(MatchStatus.STATE_MATCH_ENDED,
             MatchStatus.STATE_FUTURE_MATCH,
             MatchStatus.STATE_INITIALIZATION_FAILURE,
             MatchStatus.STATE_ALREADY_REGISTERED);
 
     //The main loop function
-    void Proc() {
+    private void Proc() {
 
         while (!terminateStates.contains(status)) {
 
@@ -119,58 +141,72 @@ public class MatchEventWorker extends baseCrawler {
     Constructor functions
      */
 
-    void ExtractMatcdKey(Element matchKeyEle) {
+    private void ExtractMatcdKey(Element matchKeyEle) {
         matchKey = matchKeyEle.text();
         System.out.println("GetChildNodes(), matchKey: " + matchKey);
     }
 
     private boolean noDBcommenceTimeHistory = false;
 
-    void ExtractStatus(Element statusEle) throws ParseException {
-        if (statusEle.text().contains("Expected In Play start selling time")) {
-            String startTimeWeb = statusEle.childNode(3).toString();
+    //This function now only concern about commenceTime
+    private void ExtractStatus(Element statusEle) throws ParseException {
 
-            Pattern dayPattern = Pattern.compile("[0-9]{1,2}/[0-9]{1,2}");
-            Pattern timePattern = Pattern.compile("[0-9]{1,2}:[0-9]{1,2}");
+        IdentifyStage(statusEle);
 
-            Matcher dayMatch = dayPattern.matcher(startTimeWeb);
-            Matcher timeMatch = timePattern.matcher(startTimeWeb);
+        switch (stage){
+            case STAGE_ESST:
+                String startTimeWeb = statusEle.childNode(3).toString();
 
-            dayMatch.find();
-            timeMatch.find();
+                Pattern dayPattern = Pattern.compile("[0-9]{1,2}/[0-9]{1,2}");
+                Pattern timePattern = Pattern.compile("[0-9]{1,2}:[0-9]{1,2}");
 
-            StringBuilder dateTimeBuilder = new StringBuilder(timeMatch.group()).append(":00 ");
-            dateTimeBuilder.append(dayMatch.group());
-            dateTimeBuilder.append("/");
-            dateTimeBuilder.append(DateTimeEntity.GetCurrentYear());
+                Matcher dayMatch = dayPattern.matcher(startTimeWeb);
+                Matcher timeMatch = timePattern.matcher(startTimeWeb);
 
-            commenceTime = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
-            System.out.println("ExtractStatus(),commenceTime: " + commenceTime.toString());
-            stage = MatchStage.STAGE_ESST;
-        } else {
+                dayMatch.find();
+                timeMatch.find();
 
-            //TODO (DB feature) try to load futureRecord to get the commenceTime
+                StringBuilder dateTimeBuilder = new StringBuilder(timeMatch.group()).append(":00 ");
+                dateTimeBuilder.append(dayMatch.group());
+                dateTimeBuilder.append("/");
+                dateTimeBuilder.append(DateTimeEntity.GetCurrentYear());
 
-            if (commenceTime == null) {
-                System.out.println("[Warning] commenceTime is null, set commenceTime to now()");
-                commenceTime = new DateTimeEntity();
-                noDBcommenceTimeHistory = true;
-            }
+                commenceTime = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
+                System.out.println("ExtractStatus(),commenceTime: " + commenceTime.toString());
+                break;
+            case STAGE_FIRST:
+            case STAGE_HALFTIME:
+            case STAGE_SECOND:
+                //TODO (DB feature) try to load futureRecord to get the commenceTime
 
-            if (statusEle.text().contains("1st Half In Progress")) {
-                //TODO something
-                stage = MatchStage.STAGE_FIRST;
-            } else if (statusEle.text().contains("Half Time")) {
-                //TODO something
-                stage = MatchStage.STAGE_HALFTIME;
-            } else if (statusEle.text().contains("2nd Half In Progress")) {
-                //TODO something
-                stage = MatchStage.STAGE_SECOND;
-            }
+                if (commenceTime == null) {
+                    System.out.println("[Warning] commenceTime is null, set commenceTime to now()");
+                    commenceTime = new DateTimeEntity();
+                    noDBcommenceTimeHistory = true;
+                }
+                break;
+            default:
+                System.out.println("[Error] no proper type input");
+                break;
         }
     }
 
-    void ExtractTeams(Element teamsEle) {
+    private void IdentifyStage(Element statusEle) {
+        if (statusEle.text().contains("Expected In Play start selling time")){
+            stage = MatchStage.STAGE_ESST;
+        } else if (statusEle.text().contains("1st Half In Progress")) {
+            //TODO something
+            stage = MatchStage.STAGE_FIRST;
+        } else if (statusEle.text().contains("Half Time")) {
+            //TODO something
+            stage = MatchStage.STAGE_HALFTIME;
+        } else if (statusEle.text().contains("2nd Half In Progress")) {
+            //TODO something
+            stage = MatchStage.STAGE_SECOND;
+        }
+    }
+
+    private void ExtractTeams(Element teamsEle) {
         matchTeams = teamsEle.text();
         System.out.println("GetChildNodes(), matchTeams: " + matchTeams);
     }

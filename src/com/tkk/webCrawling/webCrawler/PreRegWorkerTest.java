@@ -15,6 +15,10 @@ public class PreRegWorkerTest {
     MatchEventWorker preRegWorker;
     BoardCrawlee testBoardCrlr;
 
+    /*
+    The setUp generate PreRegWorker ignoring the actual input commence, it forcefully sets the event start time
+    to half of pre-reg time just right before current time
+     */
     @Before
     public void setUp() throws Exception {
         HKJCcrawler hkjcCrlr = HKJCcrawler.GetInstance();
@@ -23,7 +27,8 @@ public class PreRegWorkerTest {
         synchronized (this) {
             ConcurrencyMachine.GetInstance().InvokeQueue();
         }
-        preRegWorker = testBoardCrlr.getParsedWorkers().get(1);
+        //TODO make a cheating pre-reg worker
+        //preRegWorker = testBoardCrlr.getParsedWorkers().get(1);
         System.out.println("[WorkerTester] the setUp() finished");
     }
 

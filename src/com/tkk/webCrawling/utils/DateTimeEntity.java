@@ -57,6 +57,11 @@ public class DateTimeEntity {
         ConfigZoneDatetime();
     }
 
+    public DateTimeEntity(long timestampRectification){
+        instant = new Date(timestampRectification);
+        ConfigZoneDatetime();
+    }
+
     void ConfigZoneDatetime(){
         LocalDateTime ldt = LocalDateTime.ofInstant(instant.toInstant(),timezone.toZoneId());
         zonedInstant = ZonedDateTime.of(ldt,timezone.toZoneId());
