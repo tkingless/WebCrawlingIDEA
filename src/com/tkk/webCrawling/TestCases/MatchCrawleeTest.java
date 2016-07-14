@@ -39,5 +39,12 @@ public class MatchCrawleeTest {
         Assert.assertEquals(expected,crle.getPoolType());
     }
 
+    @Test
+    public void extractMatchStage() throws Exception {
+        MatchCONSTANTS.MatchStage expected = MatchCONSTANTS.MatchStage.STAGE_ESST;
+
+        Assert.assertEquals(expected,crle.getMatchStage());
+    }
+
 
 }

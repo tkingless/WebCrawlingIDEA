@@ -39,10 +39,10 @@ public class MatchCrawlee extends baseCrawlee{
         return poolType;
     }
 
-    public String getMatchStage() {
+    public MatchCONSTANTS.MatchStage getMatchStage() {
         return matchStage;
     }
-    String matchStage;
+    MatchCONSTANTS.MatchStage matchStage;
     private Document doc;
     String strSource;
 
@@ -229,6 +229,10 @@ public class MatchCrawlee extends baseCrawlee{
     }
 
     private void ExtractStage () {
-        String stageQuery = "";
+        final String stageQuery = "//match/@match_stage";
+
+        String stageVal = GetValueByQuery(stageQuery);
+        System.out.println("StageVal: " + stageVal);
+        matchStage = MatchCONSTANTS.GetMatchStage(stageVal);
     }
 }

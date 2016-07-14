@@ -22,6 +22,7 @@ public class MatchCONSTANTS {
         STAGE_FIRST,
         STAGE_HALFTIME,
         STAGE_SECOND,
+        STAGE_UNDEFINED
     }
 
     public enum InplayPoolType {
@@ -37,15 +38,15 @@ public class MatchCONSTANTS {
 
         String lowercase = input.toLowerCase();
 
-        if (lowercase == "had")
+        if (lowercase.equals("had"))
             return InplayPoolType.HAD;
-        else if (lowercase == "hil")
+        else if (lowercase.equals("hil"))
             return InplayPoolType.HIL;
-        else if (lowercase == "tql")
+        else if (lowercase.equals("tql"))
             return InplayPoolType.TQL;
-        else if (lowercase == "nts")
+        else if (lowercase.equals("nts"))
             return InplayPoolType.NTS;
-        else if (lowercase == "chl")
+        else if (lowercase.equals("chl"))
             return InplayPoolType.CHL;
         else
             return InplayPoolType.CRS;
@@ -67,5 +68,23 @@ public class MatchCONSTANTS {
             default:
                 return "CRS";
         }
+    }
+
+    public static MatchStage GetMatchStage(String str){
+
+        String lowercase = str.toLowerCase();
+
+        System.out.println("lowercase: " + lowercase);
+
+        if(lowercase.equals("inplayesst_nobr"))
+            return MatchStage.STAGE_ESST;
+        if(lowercase.equals("firsthalf") )
+            return MatchStage.STAGE_FIRST;
+        if(lowercase.equals("halftimecompleted"))
+            return MatchStage.STAGE_HALFTIME;
+        if(lowercase.equals("secondhalf"))
+            return MatchStage.STAGE_SECOND;
+        else
+            return MatchStage.STAGE_UNDEFINED;
     }
 }
