@@ -38,12 +38,22 @@ public class MatchCrawlee extends baseCrawlee{
     public Set<InplayPoolType> getPoolType() {
         return poolType;
     }
+
+    public String getMatchStage() {
+        return matchStage;
+    }
+    String matchStage;
     private Document doc;
     String strSource;
 
     private DateTimeEntity recordTime;
     public DateTimeEntity getRecordTime() {
         return recordTime;
+    }
+
+    boolean matchXmlValid = false;
+    public boolean isMatchXmlValid() {
+        return matchXmlValid;
     }
 
     public MatchCrawlee(baseCrawler crlr,String aMatchID){
@@ -84,6 +94,7 @@ public class MatchCrawlee extends baseCrawlee{
             if(CheckXMLNodeValid(ExistMatchQuery)) {
                 matchXmlValid = true;
                 ExtractMatchPools();
+                ExtractStage();
                 /*for (String str : queries) {
                     System.out.println(GetValueByQuery(str));
                 }*/
@@ -103,10 +114,6 @@ public class MatchCrawlee extends baseCrawlee{
         }
     }
 
-    /*Considerations
-    http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=103913
-     */
-
     String GetValueByQuery(String aQuery) {
         XPathFactory xpathFactory = XPathFactory.newInstance();
         XPath xpath = xpathFactory.newXPath();
@@ -123,12 +130,6 @@ public class MatchCrawlee extends baseCrawlee{
         }
 
         return "";
-    }
-
-    boolean matchXmlValid = false;
-
-    public boolean isMatchXmlValid() {
-        return matchXmlValid;
     }
 
     Boolean CheckXMLNodeValid(String aQuery) throws XPathExpressionException {
@@ -215,7 +216,7 @@ public class MatchCrawlee extends baseCrawlee{
     }
 
     //Helper functions
-    void ExtractMatchPools () {
+    private void ExtractMatchPools () {
         String poolsQuery = "//match/@inplay_pools";
 
         String poolsVal = GetValueByQuery(poolsQuery);
@@ -225,5 +226,9 @@ public class MatchCrawlee extends baseCrawlee{
                 poolType.add(aType);
             }
         }
+    }
+
+    private void ExtractStage () {
+        String stageQuery = "";
     }
 }

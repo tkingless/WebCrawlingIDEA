@@ -36,7 +36,7 @@ public class MatchEventWorker extends baseCrawler {
 
     MatchStatus status;
     MatchStage stage;
-    InplayPoolType matchPools;
+    Set<InplayPoolType> matchPools = null;
     //the secondary key to be used
     String matchKey;
     String matchTeams;
@@ -343,7 +343,7 @@ public class MatchEventWorker extends baseCrawler {
         return stage;
     }
 
-    public synchronized InplayPoolType getMatchPools() {
+    public synchronized Set<InplayPoolType> getMatchPools() {
         return matchPools;
     }
 
@@ -377,20 +377,35 @@ public class MatchEventWorker extends baseCrawler {
      */
     private MatchCrawlee lastMatchCrle;
 
-    void EmitRequest() {
+    private void EmitRequest() {
         //TODO grab data periodically
+        MatchCrawlee newMatchCrle;
+
         if (testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
-                lastMatchCrle = new MatchCrawlee(matchCrleTestTarget);
+            newMatchCrle = new MatchCrawlee(matchCrleTestTarget);
         } else {
             //TODO do networking grab
-            lastMatchCrle = new MatchCrawlee(this, matchId);
+            newMatchCrle = new MatchCrawlee(this, matchId);
         }
 
-        lastMatchCrle.run();
-        UpdateWorkerFromCrle(lastMatchCrle);
+        newMatchCrle.run();
+
+        //TODO create MatchCrawlee as comparable, and compare last and new ones
+        //TODO if different, then update from new one, and replace last crle with new one
+        if(lastMatchCrle == null){
+            lastMatchCrle = newMatchCrle;
+        }
+
+        UpdateWorkerFromCrle(newMatchCrle);
     }
 
-    void UpdateWorkerFromCrle(MatchCrawlee crle) {
+    private void UpdateWorkerFromCrle(MatchCrawlee crle) {
+
+        if(matchPools == null){
+            //TODO (DB feature) update the pooltypes
+            matchPools = crle.getPoolType();
+            System.out.println("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());
+        }
 
     }
     /*
