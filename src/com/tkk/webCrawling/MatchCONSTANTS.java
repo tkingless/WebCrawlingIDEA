@@ -31,7 +31,8 @@ public class MatchCONSTANTS {
         TQL,
         NTS,
         CHL,
-        CRS
+        CRS,
+        UNDEFINED
     }
 
     public static InplayPoolType GetInplayPoolType(String input) {
@@ -48,8 +49,10 @@ public class MatchCONSTANTS {
             return InplayPoolType.NTS;
         else if (lowercase.equals("chl"))
             return InplayPoolType.CHL;
-        else
+        else if(lowercase.equals("crs"))
             return InplayPoolType.CRS;
+        else
+            return InplayPoolType.UNDEFINED;
     }
 
     public static String GetCapPoolType(InplayPoolType type){
@@ -65,8 +68,10 @@ public class MatchCONSTANTS {
                 return "NTS";
             case CHL:
                 return "CHL";
-            default:
+            case CRS:
                 return "CRS";
+            default:
+                return "undefined";
         }
     }
 
