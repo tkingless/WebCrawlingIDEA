@@ -269,7 +269,8 @@ public class MatchEventWorker extends baseCrawler {
 
         if (timediff > 0) {
             if (stage == MatchStage.STAGE_ESST) {
-                long longwait = timediff + 1000 * 15;
+                //TODO finetune this longwait, sometime it can be even an half hour long!
+                long longwait = timediff + 1000 * 3;
                 scanPeriod = longwait;
                 System.out.println("Threadname: " + threadName + matchId + " enter long wait in PRE reg state");
 
@@ -379,7 +380,7 @@ public class MatchEventWorker extends baseCrawler {
     void EmitRequest() {
         //TODO grab data periodically
         if (testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
-            lastMatchCrle = new MatchCrawlee(matchCrleTestTarget);
+                lastMatchCrle = new MatchCrawlee(matchCrleTestTarget);
         } else {
             //TODO do networking grab
             lastMatchCrle = new MatchCrawlee(this, matchId);

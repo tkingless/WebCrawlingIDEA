@@ -39,7 +39,7 @@ public class MatchCrawlee extends baseCrawlee{
         return poolType;
     }
     private Document doc;
-    String source;
+    String strSource;
 
     private DateTimeEntity recordTime;
     public DateTimeEntity getRecordTime() {
@@ -54,16 +54,19 @@ public class MatchCrawlee extends baseCrawlee{
     }
 
     public MatchCrawlee(String src){
-        source = src;
+        strSource = src;
     }
 
     public void run() {
         System.out.println("MatchCrawlee run() called");
 
         try {
+            String source;
 
-            if(source == null){
+            if(strSource == null){
                  source = JsoupHelper.GetDocumentFrom(linkAddr).toString();
+            }else{
+                source = JsoupHelper.GetDocumentFromStr(strSource).toString();
             }
             //System.out.println(source);
             InputStream xml = IOUtils.toInputStream(source, "UTF-8");

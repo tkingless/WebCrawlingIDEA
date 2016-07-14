@@ -40,6 +40,7 @@ public class PreRegWorkerTest {
     @Test
     public void StateVerification() throws Exception {
         preRegWorker = workers.get(0);
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.preReg103904NotStartYet;
         preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
 
         Thread.sleep(500);
@@ -51,9 +52,8 @@ public class PreRegWorkerTest {
         Assert.assertEquals(expectedStatJustAfterInit,preRegWorker.getStatus());
         Assert.assertEquals(expectedStageJustAfterInit,preRegWorker.getStage());
 
-        simulatedMatchCrleSrc = MatchCrawleeTestSample.preReg104031NotStartYet;
-
-        Thread.sleep(1000 * 30);
+        Thread.sleep(1000 * 15);
+        System.out.println("Now feed the match turned to start: ");
 
 
 
