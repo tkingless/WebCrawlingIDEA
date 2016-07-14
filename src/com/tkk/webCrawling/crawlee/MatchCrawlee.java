@@ -3,6 +3,7 @@ package com.tkk.webCrawling.crawlee;
 import com.tkk.webCrawling.MatchCONSTANTS;
 import com.tkk.webCrawling.MatchCONSTANTS.*;
 import com.tkk.webCrawling.utils.DateTimeEntity;
+import com.tkk.webCrawling.utils.MapComparator;
 import com.tkk.webCrawling.webCrawler.baseCrawler;
 import com.tkk.webCrawling.utils.JsoupHelper;
 
@@ -28,13 +29,14 @@ import java.util.Set;
  */
 
 //TODO not to use concurrencyMachine since there is no mass request to be sent
-public class MatchCrawlee extends baseCrawlee{
+public class MatchCrawlee extends baseCrawlee {
 
     private String linkAddr;
     private String baseUrl = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=";
     private String matchID;
 
     Set<InplayPoolType> poolType = EnumSet.noneOf(InplayPoolType.class);
+
     public Set<InplayPoolType> getPoolType() {
         return poolType;
     }
@@ -42,28 +44,31 @@ public class MatchCrawlee extends baseCrawlee{
     public MatchCONSTANTS.MatchStage getMatchStage() {
         return matchStage;
     }
+
     MatchCONSTANTS.MatchStage matchStage;
     private Document doc;
     String strSource;
 
     private DateTimeEntity recordTime;
+
     public DateTimeEntity getRecordTime() {
         return recordTime;
     }
 
     boolean matchXmlValid = false;
+
     public boolean isMatchXmlValid() {
         return matchXmlValid;
     }
 
-    public MatchCrawlee(baseCrawler crlr,String aMatchID){
+    public MatchCrawlee(baseCrawler crlr, String aMatchID) {
         super(crlr);
         //TODO
         matchID = aMatchID;
         linkAddr = baseUrl + matchID;
     }
 
-    public MatchCrawlee(String src){
+    public MatchCrawlee(String src) {
         strSource = src;
     }
 
@@ -73,9 +78,9 @@ public class MatchCrawlee extends baseCrawlee{
         try {
             String source;
 
-            if(strSource == null){
-                 source = JsoupHelper.GetDocumentFrom(linkAddr).toString();
-            }else{
+            if (strSource == null) {
+                source = JsoupHelper.GetDocumentFrom(linkAddr).toString();
+            } else {
                 source = JsoupHelper.GetDocumentFromStr(strSource).toString();
             }
             //System.out.println(source);
@@ -91,7 +96,7 @@ public class MatchCrawlee extends baseCrawlee{
             //List<String> queries = Arrays.asList(CornerTotalQuery,CornerLineQuery,CornerHighQuery,CornerLowQuery);
 
             final String ExistMatchQuery = "//match";
-            if(CheckXMLNodeValid(ExistMatchQuery)) {
+            if (CheckXMLNodeValid(ExistMatchQuery)) {
                 matchXmlValid = true;
                 ExtractMatchPools();
                 ExtractStage();
@@ -143,16 +148,16 @@ public class MatchCrawlee extends baseCrawlee{
         return valid;
     }
 
-    HashMap<String,String> ExtractPoolTypeBody (InplayPoolType type) throws XPathExpressionException {
-        HashMap<String,String> hmap = new HashMap<String, String>();
+    HashMap<String, String> ExtractPoolTypeBody(InplayPoolType type) throws XPathExpressionException {
+        HashMap<String, String> hmap = new HashMap<String, String>();
 
         String existQuery = String.format("//pool[@type=\"%s\"]", MatchCONSTANTS.GetCapPoolType(type));
 
         System.out.println("Checking existQuery: " + existQuery);
 
-        if(CheckXMLNodeValid(existQuery)){
-            hmap.put("Exist","true");
-            switch (type){
+        if (CheckXMLNodeValid(existQuery)) {
+            hmap.put("Exist", "true");
+            switch (type) {
                 case HAD:
                     ExplainHADpool(hmap);
                     break;
@@ -160,17 +165,17 @@ public class MatchCrawlee extends baseCrawlee{
                     ExplainCHIpool(hmap);
                     break;
                 default:
-                    System.out.println("[Error] undefined pool type");
+                    System.out.println("[Error] undefined pool type: " + type.toString());
                     break;
             }
         } else {
-            hmap.put("Exist","false");
+            hmap.put("Exist", "false");
         }
         return hmap;
     }
 
     //Different explain functions
-    void ExplainHADpool(HashMap<String,String> hmap){
+    void ExplainHADpool(HashMap<String, String> hmap) {
         final String HADhomeQuery = "//pool[@type=\"HAD\"]/@h";
         final String HADdrawQuery = "//pool[@type=\"HAD\"]/@d";
         final String HADawayQuery = "//pool[@type=\"HAD\"]/@a";
@@ -183,12 +188,12 @@ public class MatchCrawlee extends baseCrawlee{
         drawVal = StrTrimAtChar(drawVal);
         awayVal = StrTrimAtChar(awayVal);
 
-        hmap.put("home",homeVal);
-        hmap.put("draw",drawVal);
-        hmap.put("away",awayVal);
+        hmap.put("home", homeVal);
+        hmap.put("draw", drawVal);
+        hmap.put("away", awayVal);
     }
 
-    void ExplainCHIpool(HashMap<String,String> hmap){
+    void ExplainCHIpool(HashMap<String, String> hmap) {
         final String CornerTotalQuery = "//match/@ninety_mins_total_corner";
         final String CornerLineQuery = "//pool[@type=\"CHL\"]/@line";
         final String CornerHighQuery = "//pool[@type=\"CHL\"]/@h";
@@ -204,35 +209,63 @@ public class MatchCrawlee extends baseCrawlee{
 
         hmap.put("total", totalVal);
         hmap.put("line", lineVal);
-        hmap.put("high",highVal);
-        hmap.put("low",lowVal);
+        hmap.put("high", highVal);
+        hmap.put("low", lowVal);
     }
 
-    String StrTrimAtChar (String str){
-        if(str.contains("@")){
-            str = str.substring(str.lastIndexOf('@')+1);
+    String StrTrimAtChar(String str) {
+        if (str.contains("@")) {
+            str = str.substring(str.lastIndexOf('@') + 1);
         }
         return str;
     }
 
     //Helper functions
-    private void ExtractMatchPools () {
+    private void ExtractMatchPools() {
         String poolsQuery = "//match/@inplay_pools";
 
         String poolsVal = GetValueByQuery(poolsQuery);
 
-        for (InplayPoolType aType : InplayPoolType.values()){
-            if(poolsVal.contains(aType.toString())){
+        for (InplayPoolType aType : InplayPoolType.values()) {
+            if (poolsVal.contains(aType.toString())) {
                 poolType.add(aType);
             }
         }
     }
 
-    private void ExtractStage () {
+    private void ExtractStage() {
         final String stageQuery = "//match/@match_stage";
 
         String stageVal = GetValueByQuery(stageQuery);
         System.out.println("StageVal: " + stageVal);
         matchStage = MatchCONSTANTS.GetMatchStage(stageVal);
     }
+
+    public static boolean HasUpdate(MatchCrawlee oldCrle, MatchCrawlee newCrle) throws XPathExpressionException {
+        boolean toUpdate = true;
+
+        if (newCrle == null)
+            return false;
+        if (oldCrle == null)
+            return true;
+
+        if (newCrle.getRecordTime().GetTheInstant().getTime() <= oldCrle.getRecordTime().GetTheInstant().getTime())
+            return false;
+
+        if (oldCrle.getMatchStage() == newCrle.getMatchStage())
+            if (oldCrle.getPoolType().equals(newCrle.getPoolType())) {
+                toUpdate = false;
+                for (InplayPoolType aType : oldCrle.getPoolType()) {
+                    if (MapComparator.CompareMapsDifferent(oldCrle.ExtractPoolTypeBody(aType)
+                            , newCrle.ExtractPoolTypeBody(aType))) {
+                        toUpdate = true;
+                        break;
+                    }
+                }
+            }
+
+
+        return toUpdate;
+    }
+
 }

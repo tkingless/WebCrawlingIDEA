@@ -7,7 +7,7 @@ import java.util.Map;
  */
 public class MapComparator {
 
-    public static boolean CompareMaps(Map<String,String> mapA, Map<String,String>  mapB){
+    public static boolean CompareMapsDifferent(Map<String,String> mapA, Map<String,String>  mapB){
         if(mapA == null || mapB == null){
             return false;
         }

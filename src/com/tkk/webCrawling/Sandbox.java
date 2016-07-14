@@ -1,6 +1,5 @@
 package com.tkk.webCrawling;
 
-import com.tkk.webCrawling.utils.DateTimeEntity;
 import com.tkk.webCrawling.utils.MapComparator;
 
 import java.util.HashMap;
@@ -26,18 +25,18 @@ public class Sandbox {
         HashMap<String,String> hmapA = new HashMap<String, String>();
         HashMap<String,String> hmapB = new HashMap<String, String>();
 
-        System.out.println(MapComparator.CompareMaps(hmapA,hmapB));
+        System.out.println(MapComparator.CompareMapsDifferent(hmapA,hmapB));
 
         hmapA.put("Akey","Aval");
         hmapB.put("Akey","Aval");
-        System.out.println(MapComparator.CompareMaps(hmapA,hmapB));
+        System.out.println(MapComparator.CompareMapsDifferent(hmapA,hmapB));
 
         hmapA.put("Bkey","Bval");
-        System.out.println(MapComparator.CompareMaps(hmapA,hmapB));
+        System.out.println(MapComparator.CompareMapsDifferent(hmapA,hmapB));
 
         hmapA.remove("Bkey");
         hmapA.put("Akey","Bval");
-        System.out.println(MapComparator.CompareMaps(hmapA,hmapB));
+        System.out.println(MapComparator.CompareMapsDifferent(hmapA,hmapB));
 
     }
 }
