@@ -2,7 +2,6 @@ package com.tkk.webCrawling.TestCases;
 
 import com.tkk.webCrawling.MatchCONSTANTS;
 import com.tkk.webCrawling.crawlee.BoardCrawlee;
-import com.tkk.webCrawling.crawlee.MatchCrawlee;
 import com.tkk.webCrawling.utils.DateTimeEntity;
 import com.tkk.webCrawling.webCrawler.MatchEventWorker;
 import org.junit.After;
@@ -41,6 +40,7 @@ public class PreRegWorkerTest {
     @Test
     public void StateVerification() throws Exception {
         preRegWorker = workers.get(0);
+        preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
 
         Thread.sleep(500);
         System.out.println("preRegWorker matchid: " + preRegWorker.getMatchId());
@@ -50,7 +50,13 @@ public class PreRegWorkerTest {
         MatchCONSTANTS.MatchStage expectedStageJustAfterInit = MatchCONSTANTS.MatchStage.STAGE_ESST;
         Assert.assertEquals(expectedStatJustAfterInit,preRegWorker.getStatus());
         Assert.assertEquals(expectedStageJustAfterInit,preRegWorker.getStage());
+
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.preReg104031NotStartYet;
+
         Thread.sleep(1000 * 30);
+
+
+
         System.out.println("[WorkerTester] the setUp() finished");
     }
 

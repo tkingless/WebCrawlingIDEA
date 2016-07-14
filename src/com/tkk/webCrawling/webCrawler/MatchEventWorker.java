@@ -107,8 +107,8 @@ public class MatchEventWorker extends baseCrawler {
                 case STATE_PRE_REGISTERED:
                     System.out.println("Threadname: " + threadName + matchId + " STATE_PRE_REGISTERED");
                     //TODO check if crawlee return matchstate started, change to this state, call MatchCrawlee here
+                    EmitRequest();
                     //TODO listen to the allodds xml, wait the MATCH_STAGE to "firsthalf"
-
                     OnStatePreRegistered();
                     break;
                 case STATE_MATCH_START:
