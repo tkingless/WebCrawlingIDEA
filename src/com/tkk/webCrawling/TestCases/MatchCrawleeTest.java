@@ -46,5 +46,9 @@ public class MatchCrawleeTest {
         Assert.assertEquals(expected,crle.getMatchStage());
     }
 
+    @Test
+    public void comparableTest() throws Exception {
+        //crle.equals()
+    }
 
 }
