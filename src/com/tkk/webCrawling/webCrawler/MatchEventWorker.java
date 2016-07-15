@@ -8,6 +8,7 @@ import com.tkk.webCrawling.MatchCONSTANTS.*;
 
 import org.jsoup.nodes.Element;
 
+import javax.xml.xpath.XPathExpressionException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.EnumSet;
@@ -94,7 +95,7 @@ public class MatchEventWorker extends baseCrawler {
             MatchStatus.STATE_ALREADY_REGISTERED);
 
     //The main loop function
-    private void Proc() {
+    private void Proc() throws XPathExpressionException {
 
         while (!terminateStates.contains(status)) {
 
@@ -106,7 +107,6 @@ public class MatchEventWorker extends baseCrawler {
                     break;
                 case STATE_PRE_REGISTERED:
                     System.out.println("Threadname: " + threadName + matchId + " STATE_PRE_REGISTERED");
-                    //TODO check if crawlee return matchstate started, change to this state, call MatchCrawlee here
                     EmitRequest();
                     //TODO listen to the allodds xml, wait the MATCH_STAGE to "firsthalf"
                     OnStatePreRegistered();
@@ -199,13 +199,10 @@ public class MatchEventWorker extends baseCrawler {
         if (statusEle.text().contains("Expected In Play start selling time")) {
             stage = MatchStage.STAGE_ESST;
         } else if (statusEle.text().contains("1st Half In Progress")) {
-            //TODO something
             stage = MatchStage.STAGE_FIRST;
         } else if (statusEle.text().contains("Half Time")) {
-            //TODO something
             stage = MatchStage.STAGE_HALFTIME;
         } else if (statusEle.text().contains("2nd Half In Progress")) {
-            //TODO something
             stage = MatchStage.STAGE_SECOND;
         }
     }
@@ -375,24 +372,20 @@ public class MatchEventWorker extends baseCrawler {
     /*
     MatchCrawlee functions()
      */
-    private MatchCrawlee lastMatchCrle;
+    private MatchCrawlee lastMatchCrle=null;
 
-    private void EmitRequest() {
-        //TODO grab data periodically
+    private void EmitRequest() throws XPathExpressionException {
         MatchCrawlee newMatchCrle;
 
         if (testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
             newMatchCrle = new MatchCrawlee(matchCrleTestTarget);
         } else {
-            //TODO do networking grab
             newMatchCrle = new MatchCrawlee(this, matchId);
         }
 
         newMatchCrle.run();
 
-        //TODO create MatchCrawlee as comparable, and compare last and new ones
-        //TODO if different, then update from new one, and replace last crle with new one
-        if(lastMatchCrle == null){
+        if(MatchCrawlee.HasUpdate(lastMatchCrle,newMatchCrle)){
             lastMatchCrle = newMatchCrle;
         }
 
@@ -407,6 +400,8 @@ public class MatchEventWorker extends baseCrawler {
             System.out.println("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());
         }
 
+        stage = crle.getMatchStage();
+        //TODO other things (DB feature)
     }
     /*
     MatchCrawlee functions(): end

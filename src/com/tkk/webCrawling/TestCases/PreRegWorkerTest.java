@@ -2,6 +2,7 @@ package com.tkk.webCrawling.TestCases;
 
 import com.tkk.webCrawling.MatchCONSTANTS;
 import com.tkk.webCrawling.crawlee.BoardCrawlee;
+import com.tkk.webCrawling.crawlee.MatchCrawlee;
 import com.tkk.webCrawling.utils.DateTimeEntity;
 import com.tkk.webCrawling.webCrawler.MatchEventWorker;
 import org.junit.After;
@@ -55,7 +56,12 @@ public class PreRegWorkerTest {
         Thread.sleep(1000 * 15);
         System.out.println("Now feed the match turned to start: ");
 
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.preReg103904firstHalf;
+        preRegWorker.setMatchCrleTestTarget((simulatedMatchCrleSrc));
 
+        Thread.sleep(1000 * 5);
+        MatchCONSTANTS.MatchStatus expectedStatJustAfterPreReg = MatchCONSTANTS.MatchStatus.STATE_MATCH_START;
+        Assert.assertEquals(expectedStatJustAfterPreReg,preRegWorker.getStatus());
 
         System.out.println("[WorkerTester] the setUp() finished");
     }
