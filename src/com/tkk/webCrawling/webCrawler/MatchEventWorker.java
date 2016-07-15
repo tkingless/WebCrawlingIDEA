@@ -33,6 +33,7 @@ public class MatchEventWorker extends baseCrawler {
     final long matchIntervalLength = 1000 * 60 * 120;
 
     DateTimeEntity commenceTime;
+    DateTimeEntity actualCommence;
     DateTimeEntity endTime;
 
     MatchStatus status;
@@ -41,28 +42,6 @@ public class MatchEventWorker extends baseCrawler {
     //the secondary key to be used
     String matchKey;
     String matchTeams;
-
-
-    public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element teamsEle) {
-        super(CrawlerKeyBinding.MatchEvent, threadName + "-" + aMatchId);
-        status = MatchStatus.STATE_INITIALIZATION;
-        matchId = aMatchId;
-        System.out.println("MatchEventWorker constructed, matchId:" + matchId);
-        ///System.out.println("and allOddsLink: " + linkAddr);
-
-        ExtractMatcdKey(matchKeyEle);
-        ExtractTeams(teamsEle);
-
-        try {
-            ExtractStatus(statusEle);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("MatcherEventWorker finished constructer.");
-
-        this.StartRun();
-    }
 
     public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element teamsEle, MatchTestCONSTANTS.TestType type) throws ParseException {
         super(CrawlerKeyBinding.MatchEvent, threadName + "-" + aMatchId);
@@ -98,9 +77,7 @@ public class MatchEventWorker extends baseCrawler {
     private void Proc() throws XPathExpressionException {
 
         while (!terminateStates.contains(status)) {
-
             switch (status) {
-
                 case STATE_INITIALIZATION:
                     System.out.println("Threadname: " + threadName + matchId + " STATE_INITIALIZATION");
                     OnStateInitialization();
@@ -108,19 +85,16 @@ public class MatchEventWorker extends baseCrawler {
                 case STATE_PRE_REGISTERED:
                     System.out.println("Threadname: " + threadName + matchId + " STATE_PRE_REGISTERED");
                     EmitRequest();
-                    //TODO listen to the allodds xml, wait the MATCH_STAGE to "firsthalf"
                     OnStatePreRegistered();
                     break;
                 case STATE_MATCH_START:
-                    //TODO (DB feature) update the actual match start time
-                    //TODO set the scanPeriod shorter
-                    //TODO (DB feature) init relevant DB objects
                     System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_START");
-                    status = MatchStatus.STATE_MATCH_ENDED;
+                    OnStateMatchStart();
                     break;
                 case STATE_MATCH_LOGGING:
                     System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
-                    status = MatchStatus.STATE_MATCH_ENDED;
+                    EmitRequest();
+                    OnStateMatchLogging();
                     break;
                 case STATE_FUTURE_MATCH:
                     //TODO (DB feature) check whether DB added the match/ or the match changed
@@ -290,6 +264,31 @@ public class MatchEventWorker extends baseCrawler {
 
         BoardCrawlee.RegisterWorker(this);
     }
+
+    void OnStateMatchStart() {
+        //TODO (DB feature) update the actual match start time
+        //TODO (DB feature) init relevant DB objects
+
+        actualCommence = lastMatchCrle.getRecordTime();
+        scanPeriod = 1000;
+
+        status = MatchStatus.STATE_MATCH_LOGGING;
+    }
+
+    void OnStateMatchLogging() {
+
+
+
+        //TODO check some stopping case if in secondhalf or accidental stop like no match
+        /*
+        if(no match tag)
+            to match end
+        if(in secondhalf)
+            if(betting closed)
+                to match end
+         */
+    }
+
     /*
     OnState actions(): end
      */
@@ -387,9 +386,9 @@ public class MatchEventWorker extends baseCrawler {
 
         if(MatchCrawlee.HasUpdate(lastMatchCrle,newMatchCrle)){
             lastMatchCrle = newMatchCrle;
+            UpdateWorkerFromCrle(newMatchCrle);
         }
 
-        UpdateWorkerFromCrle(newMatchCrle);
     }
 
     private void UpdateWorkerFromCrle(MatchCrawlee crle) {

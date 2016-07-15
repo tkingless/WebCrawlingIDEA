@@ -178,7 +178,7 @@ public class BoardCrawlee extends baseCrawlee {
 
             if(test_type == null) {
                 crleWorker = new MatchEventWorker(matchId, matchNoIte.next(),
-                        matchStatIte.next(), matchTeamIte.next());
+                        matchStatIte.next(), matchTeamIte.next(),null);
             } else {
                 crleWorker = new MatchEventWorker(matchId, matchNoIte.next(),
                         matchStatIte.next(), matchTeamIte.next(),test_type);
