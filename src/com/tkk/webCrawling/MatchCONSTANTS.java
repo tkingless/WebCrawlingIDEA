@@ -14,7 +14,8 @@ public class MatchCONSTANTS {
         STATE_MATCH_LOGGING,
         STATE_MATCH_ENDED,
         STATE_INITIALIZATION_FAILURE,
-        STATE_ALREADY_REGISTERED
+        STATE_ALREADY_REGISTERED,
+        STATE_TERMINATED
     }
 
     public enum MatchStage {
@@ -89,5 +90,25 @@ public class MatchCONSTANTS {
             return MatchStage.STAGE_SECOND;
         else
             return MatchStage.STAGE_UNDEFINED;
+    }
+
+    public enum MatchPoolStatus {
+        STATUS_START_SELL,
+        STATUS_SUSPENDED,
+        STATUS_CLOSED,
+        STATUS_UNDEFINED
+    }
+
+    public static MatchPoolStatus GetMatchPoolStage (String str){
+        String lowercase = str.toLowerCase();
+
+        if(lowercase.equals("start-sell"))
+            return MatchPoolStatus.STATUS_START_SELL;
+        if(lowercase.equals("suspended"))
+            return MatchPoolStatus.STATUS_SUSPENDED;
+        if(lowercase.equals("bettingclosed"))
+            return MatchPoolStatus.STATUS_CLOSED;
+        else
+            return MatchPoolStatus.STATUS_UNDEFINED;
     }
 }

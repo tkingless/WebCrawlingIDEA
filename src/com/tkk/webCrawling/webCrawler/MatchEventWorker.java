@@ -16,6 +16,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.tkk.webCrawling.MatchCONSTANTS.MatchStatus.*;
+
 /**
  * Created by tkingless on 6/26/16.
  */
@@ -65,13 +67,11 @@ public class MatchEventWorker extends baseCrawler {
 
         System.out.println("MatcherEventWorker finished constructer.");
 
-        this.StartRun();
+        this.run();
     }
 
-    private Set<MatchStatus> terminateStates = EnumSet.of(MatchStatus.STATE_MATCH_ENDED,
-            MatchStatus.STATE_FUTURE_MATCH,
-            MatchStatus.STATE_INITIALIZATION_FAILURE,
-            MatchStatus.STATE_ALREADY_REGISTERED);
+    private Set<MatchStatus> terminateStates = EnumSet.of(STATE_MATCH_ENDED, STATE_FUTURE_MATCH,
+            STATE_INITIALIZATION_FAILURE, STATE_ALREADY_REGISTERED,STATE_TERMINATED);
 
     //The main loop function
     private void Proc() throws XPathExpressionException {
@@ -110,6 +110,10 @@ public class MatchEventWorker extends baseCrawler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+
+        if(status == MatchStatus.STATE_MATCH_ENDED || status == MatchStatus.STATE_TERMINATED){
+            BoardCrawlee.DetachWorker(this);
         }
 
         System.out.println("[LOG] Threadname: " + threadName + matchId + " Proc() escaped, and the state is: " + status.toString());
@@ -198,7 +202,7 @@ public class MatchEventWorker extends baseCrawler {
     void OnStateInitialization() {
 
         if (BoardCrawlee.IsRegisteredByID(this)) {
-            status = MatchStatus.STATE_ALREADY_REGISTERED;
+            status = STATE_ALREADY_REGISTERED;
             return;
         }
 
@@ -221,7 +225,7 @@ public class MatchEventWorker extends baseCrawler {
                     status = MatchStatus.STATE_FUTURE_MATCH;
                 }
             } else {
-                status = MatchStatus.STATE_INITIALIZATION_FAILURE;
+                status = STATE_INITIALIZATION_FAILURE;
             }
         } else if (timediff <= 0) {
             //case that before registration, the event already started
@@ -268,7 +272,7 @@ public class MatchEventWorker extends baseCrawler {
     }
 
     void OnStateMatchStart() {
-        //TODO (DB feature) update the actual match start time
+        //TODO (DB feature) update the actual match start time and odds
         //TODO (DB feature) init relevant DB objects
 
         actualCommence = lastMatchCrle.getRecordTime();
@@ -309,10 +313,6 @@ public class MatchEventWorker extends baseCrawler {
         return thread.isAlive();
     }
 
-    public void LaunchProcess() {
-        //TODO, if fullfill criteria, start a monitoring thread
-    }
-
     public void run() {
         try {
             ////System.out.println("MatchEventWorker run() called");
@@ -324,7 +324,7 @@ public class MatchEventWorker extends baseCrawler {
 
     public void Kill() {
         //TODO: make sure detached from any pointing, and thread on this object is stopped()
-        BoardCrawlee.DetachWorker(this);
+        status = MatchStatus.STATE_TERMINATED;
     }
 
     void registerOnDB() {
@@ -389,6 +389,12 @@ public class MatchEventWorker extends baseCrawler {
         }
 
         newMatchCrle.run();
+
+        if(!newMatchCrle.isMatchXmlValid()){
+            System.out.println("[Error] the grabbed xml is not valid");
+            status = MatchStatus.STATE_TERMINATED;
+            return;
+        }
 
         if(MatchCrawlee.HasUpdate(lastMatchCrle,newMatchCrle)){
             lastMatchCrle = newMatchCrle;

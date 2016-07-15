@@ -28,7 +28,6 @@ import java.util.Set;
  * Created by tkingless on 6/26/16.
  */
 
-//TODO not to use concurrencyMachine since there is no mass request to be sent
 public class MatchCrawlee extends baseCrawlee {
 
     private String linkAddr;
@@ -54,6 +53,12 @@ public class MatchCrawlee extends baseCrawlee {
     public DateTimeEntity getRecordTime() {
         return recordTime;
     }
+
+    public String getScores() {
+        return scores;
+    }
+
+    private String scores;
 
     boolean matchXmlValid = false;
 
@@ -100,6 +105,7 @@ public class MatchCrawlee extends baseCrawlee {
                 matchXmlValid = true;
                 ExtractMatchPools();
                 ExtractStage();
+                ExtractScores();
                 /*for (String str : queries) {
                     System.out.println(GetValueByQuery(str));
                 }*/
@@ -152,9 +158,11 @@ public class MatchCrawlee extends baseCrawlee {
         HashMap<String, String> hmap = new HashMap<String, String>();
 
         String existQuery = String.format("//pool[@type=\"%s\"]", MatchCONSTANTS.GetCapPoolType(type));
+        String poolStatQuery = String.format("//pool[@type=\"%s\"]/@match_pool_status", MatchCONSTANTS.GetCapPoolType(type));
 
         if (CheckXMLNodeValid(existQuery)) {
             hmap.put("Exist", "true");
+            hmap.put("PoolStat",GetValueByQuery(poolStatQuery));
             switch (type) {
                 case HAD:
                     ExplainHADpool(hmap);
@@ -239,6 +247,11 @@ public class MatchCrawlee extends baseCrawlee {
         matchStage = MatchCONSTANTS.GetMatchStage(stageVal);
     }
 
+    private void ExtractScores() {
+        final String scoreQuery = "//match/@score";
+        scores = GetValueByQuery(scoreQuery);
+    }
+
     public static boolean HasUpdate(MatchCrawlee oldCrle, MatchCrawlee newCrle) throws XPathExpressionException {
         boolean toUpdate = true;
 
@@ -271,6 +284,9 @@ public class MatchCrawlee extends baseCrawlee {
     @Override
     public String toString() {
         StringBuilder tmp = new StringBuilder();
+
+        tmp.append("stage: ").append(matchStage).append("\n");
+        tmp.append("score: ").append(scores).append("\n");
 
         for(InplayPoolType aType : this.getPoolType()){
             try {

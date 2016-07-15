@@ -35,7 +35,6 @@ public class PreRegWorkerTest {
 
     @After
     public void tearDown() throws Exception {
-
     }
 
     @Test
@@ -59,9 +58,16 @@ public class PreRegWorkerTest {
         simulatedMatchCrleSrc = MatchCrawleeTestSample.preReg103904firstHalf;
         preRegWorker.setMatchCrleTestTarget((simulatedMatchCrleSrc));
 
-        Thread.sleep(1000 * 5);
-        MatchCONSTANTS.MatchStatus expectedStatJustAfterPreReg = MatchCONSTANTS.MatchStatus.STATE_MATCH_START;
+        Thread.sleep(2000);
+        MatchCONSTANTS.MatchStatus expectedStatJustAfterPreReg = MatchCONSTANTS.MatchStatus.STATE_MATCH_LOGGING;
         Assert.assertEquals(expectedStatJustAfterPreReg,preRegWorker.getStatus());
+
+        Thread.sleep(1000 * 6);
+
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.preReg103904firstHalf2;
+        preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
+
+        Thread.sleep(1000 * 5);
 
         System.out.println("[WorkerTester] the setUp() finished");
     }
