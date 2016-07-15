@@ -202,6 +202,8 @@ public class MatchEventWorker extends baseCrawler {
             return;
         }
 
+        //TODO (DB feature) if the event ended, set status to ENDED
+
         long timediff = 0;
         if (!noDBcommenceTimeHistory) {
             timediff = commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
@@ -277,7 +279,11 @@ public class MatchEventWorker extends baseCrawler {
 
     void OnStateMatchLogging() {
 
-
+        if(shouldUpdateDB){
+            UpdateDB();
+            System.out.println(lastMatchCrle.toString());
+            shouldUpdateDB = false;
+        }
 
         //TODO check some stopping case if in secondhalf or accidental stop like no match
         /*
@@ -287,6 +293,8 @@ public class MatchEventWorker extends baseCrawler {
             if(betting closed)
                 to match end
          */
+
+        //TODO de-register the worker from boardcrawlee if ended
     }
 
     /*
@@ -354,10 +362,8 @@ public class MatchEventWorker extends baseCrawler {
     /*
     DB functions()
      */
-    boolean ShouldUpdateDB() {
-        //TODO
-        return false;
-    }
+
+    boolean shouldUpdateDB = false;
 
     void UpdateDB() {
         //TODO
@@ -387,6 +393,7 @@ public class MatchEventWorker extends baseCrawler {
         if(MatchCrawlee.HasUpdate(lastMatchCrle,newMatchCrle)){
             lastMatchCrle = newMatchCrle;
             UpdateWorkerFromCrle(newMatchCrle);
+            shouldUpdateDB = true;
         }
 
     }

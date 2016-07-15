@@ -256,7 +256,7 @@ public class MatchCrawlee extends baseCrawlee {
                 for (InplayPoolType aType : oldCrle.getPoolType()) {
                     if (MapComparator.CompareMapsDifferent(oldCrle.ExtractPoolTypeBody(aType)
                             , newCrle.ExtractPoolTypeBody(aType))) {
-                        System.out.println("oldCrle body: "+oldCrle.ExtractPoolTypeBody(aType));
+                        System.out.println("oldCrle body: " + oldCrle.ExtractPoolTypeBody(aType));
                         System.out.println("newCrle body: " + newCrle.ExtractPoolTypeBody(aType));
                         toUpdate = true;
                         break;
@@ -268,4 +268,19 @@ public class MatchCrawlee extends baseCrawlee {
         return toUpdate;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder tmp = new StringBuilder();
+
+        for(InplayPoolType aType : this.getPoolType()){
+            try {
+                tmp.append(ExtractPoolTypeBody(aType).toString());
+                tmp.append("\n");
+            } catch (XPathExpressionException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return tmp.toString();
+    }
 }
