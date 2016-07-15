@@ -153,8 +153,6 @@ public class MatchCrawlee extends baseCrawlee {
 
         String existQuery = String.format("//pool[@type=\"%s\"]", MatchCONSTANTS.GetCapPoolType(type));
 
-        System.out.println("Checking existQuery: " + existQuery);
-
         if (CheckXMLNodeValid(existQuery)) {
             hmap.put("Exist", "true");
             switch (type) {
@@ -165,8 +163,7 @@ public class MatchCrawlee extends baseCrawlee {
                     ExplainCHIpool(hmap);
                     break;
                 default:
-                    System.out.println("[Error] undefined pool type: " + type.toString());
-                    hmap.put("Exist", "false");
+                    //System.out.println("[Error] undefined pool type: " + type.toString());
                     hmap.put("Error","true");
                     break;
             }
