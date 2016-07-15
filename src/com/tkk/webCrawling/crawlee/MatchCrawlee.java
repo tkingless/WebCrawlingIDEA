@@ -166,6 +166,8 @@ public class MatchCrawlee extends baseCrawlee {
                     break;
                 default:
                     System.out.println("[Error] undefined pool type: " + type.toString());
+                    hmap.put("Exist", "false");
+                    hmap.put("Error","true");
                     break;
             }
         } else {
@@ -237,7 +239,6 @@ public class MatchCrawlee extends baseCrawlee {
         final String stageQuery = "//match/@match_stage";
 
         String stageVal = GetValueByQuery(stageQuery);
-        System.out.println("StageVal: " + stageVal);
         matchStage = MatchCONSTANTS.GetMatchStage(stageVal);
     }
 
@@ -258,6 +259,8 @@ public class MatchCrawlee extends baseCrawlee {
                 for (InplayPoolType aType : oldCrle.getPoolType()) {
                     if (MapComparator.CompareMapsDifferent(oldCrle.ExtractPoolTypeBody(aType)
                             , newCrle.ExtractPoolTypeBody(aType))) {
+                        System.out.println("oldCrle body: "+oldCrle.ExtractPoolTypeBody(aType));
+                        System.out.println("newCrle body: " + newCrle.ExtractPoolTypeBody(aType));
                         toUpdate = true;
                         break;
                     }

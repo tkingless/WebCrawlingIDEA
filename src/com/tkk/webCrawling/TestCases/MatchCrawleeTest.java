@@ -48,7 +48,18 @@ public class MatchCrawleeTest {
 
     @Test
     public void comparableTest() throws Exception {
-        //crle.equals()
+        MatchCrawlee preRegCrle = new MatchCrawlee(MatchCrawleeTestSample.preReg103904NotStartYet);
+        MatchCrawlee startCrle = new MatchCrawlee(MatchCrawleeTestSample.preReg103904firstHalf);
+
+        preRegCrle.run();
+        startCrle.run();
+
+        System.out.println(MatchCrawlee.HasUpdate(preRegCrle,startCrle));
+
+        MatchCrawlee preRegCrle2 = new MatchCrawlee(MatchCrawleeTestSample.preReg103904NotStartYet);
+        preRegCrle2.run();
+
+        System.out.println(MatchCrawlee.HasUpdate(preRegCrle,preRegCrle2));
     }
 
 }

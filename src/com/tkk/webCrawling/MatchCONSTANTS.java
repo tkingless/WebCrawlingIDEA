@@ -79,8 +79,6 @@ public class MatchCONSTANTS {
 
         String lowercase = str.toLowerCase();
 
-        System.out.println("lowercase: " + lowercase);
-
         if(lowercase.equals("inplayesst_nobr"))
             return MatchStage.STAGE_ESST;
         if(lowercase.equals("firsthalf") )

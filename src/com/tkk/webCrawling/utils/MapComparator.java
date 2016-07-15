@@ -18,18 +18,18 @@ public class MapComparator {
 
         try{
             for(String k : mapB.keySet()){
-                if(mapA.get(k) != mapB.get(k)){
-                    return false;
+                if(!mapA.get(k).equals(mapB.get(k)) ){
+                    return true;
                 }
             }
             for(String y : mapA.keySet()){
                 if(!mapB.containsKey(y)){
-                    return false;
+                    return true;
                 }
             }
         } catch (NullPointerException np){
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 }
