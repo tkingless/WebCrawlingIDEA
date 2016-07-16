@@ -67,7 +67,8 @@ public class MatchEventWorker extends baseCrawler {
 
         System.out.println("MatcherEventWorker finished constructer.");
 
-        this.run();
+        //do not use run(), to create worker threads
+        this.StartRun();
     }
 
     private Set<MatchStatus> terminateStates = EnumSet.of(STATE_MATCH_ENDED, STATE_FUTURE_MATCH,
