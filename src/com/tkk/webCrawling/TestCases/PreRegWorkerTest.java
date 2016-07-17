@@ -112,7 +112,7 @@ public class PreRegWorkerTest {
         simulatedMatchCrleSrc = MatchCrawleeTestSample.secondHalf103904AllpoolsEnd;
         preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
 
-        Thread.sleep(1000 * 15);
+        Thread.sleep(1000 * 5);
 
         System.out.println("[WorkerTester] the setUp() finished");
     }
