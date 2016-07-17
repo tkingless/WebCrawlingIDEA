@@ -154,6 +154,22 @@ public class MatchCrawlee extends baseCrawlee {
         return valid;
     }
 
+    public Boolean isAllPoolClosed() {
+        Boolean allPoolClosed = true;
+
+        if (isMatchXmlValid())
+            if (!poolType.isEmpty()) {
+                for (InplayPoolType aType : poolType) {
+                    String poolStatQuery = String.format("//pool[@type=\"%s\"]/@match_pool_status", MatchCONSTANTS.GetCapPoolType(aType));
+                    if (!MatchCONSTANTS.GetPoolStatusStr(MatchPoolStatus.STATUS_CLOSED).equals(GetValueByQuery(poolStatQuery)))
+                        allPoolClosed = false;
+                    break;
+                }
+            }
+
+        return allPoolClosed;
+    }
+
     HashMap<String, String> ExtractPoolTypeBody(InplayPoolType type) throws XPathExpressionException {
         HashMap<String, String> hmap = new HashMap<String, String>();
 
@@ -162,7 +178,7 @@ public class MatchCrawlee extends baseCrawlee {
 
         if (CheckXMLNodeValid(existQuery)) {
             hmap.put("Exist", "true");
-            hmap.put("PoolStat",GetValueByQuery(poolStatQuery));
+            hmap.put("PoolStat", GetValueByQuery(poolStatQuery));
             switch (type) {
                 case HAD:
                     ExplainHADpool(hmap);
@@ -172,7 +188,7 @@ public class MatchCrawlee extends baseCrawlee {
                     break;
                 default:
                     //System.out.println("[Error] undefined pool type: " + type.toString());
-                    hmap.put("Error","true");
+                    hmap.put("Error", "true");
                     break;
             }
         } else {
@@ -264,18 +280,19 @@ public class MatchCrawlee extends baseCrawlee {
             return false;
 
         if (oldCrle.getMatchStage() == newCrle.getMatchStage())
-            if (oldCrle.getPoolType().equals(newCrle.getPoolType())) {
-                toUpdate = false;
-                for (InplayPoolType aType : oldCrle.getPoolType()) {
-                    if (MapComparator.CompareMapsDifferent(oldCrle.ExtractPoolTypeBody(aType)
-                            , newCrle.ExtractPoolTypeBody(aType))) {
-                        System.out.println("oldCrle body: " + oldCrle.ExtractPoolTypeBody(aType));
-                        System.out.println("newCrle body: " + newCrle.ExtractPoolTypeBody(aType));
-                        toUpdate = true;
-                        break;
+            if (oldCrle.getPoolType().equals(newCrle.getPoolType()))
+                if (oldCrle.getScores().equals(newCrle.getScores())) {
+                    toUpdate = false;
+                    for (InplayPoolType aType : oldCrle.getPoolType()) {
+                        if (MapComparator.CompareMapsDifferent(oldCrle.ExtractPoolTypeBody(aType)
+                                , newCrle.ExtractPoolTypeBody(aType))) {
+                            System.out.println("oldCrle body: " + oldCrle.ExtractPoolTypeBody(aType));
+                            System.out.println("newCrle body: " + newCrle.ExtractPoolTypeBody(aType));
+                            toUpdate = true;
+                            break;
+                        }
                     }
                 }
-            }
 
 
         return toUpdate;
@@ -288,8 +305,9 @@ public class MatchCrawlee extends baseCrawlee {
         tmp.append("stage: ").append(matchStage).append("\n");
         tmp.append("score: ").append(scores).append("\n");
 
-        for(InplayPoolType aType : this.getPoolType()){
+        for (InplayPoolType aType : this.getPoolType()) {
             try {
+                tmp.append("Type, ").append(aType.toString()).append(": ");
                 tmp.append(ExtractPoolTypeBody(aType).toString());
                 tmp.append("\n");
             } catch (XPathExpressionException e) {

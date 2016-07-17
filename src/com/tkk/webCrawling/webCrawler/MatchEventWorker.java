@@ -68,11 +68,11 @@ public class MatchEventWorker extends baseCrawler {
         System.out.println("MatcherEventWorker finished constructer.");
 
         //do not use run(), to create worker threads
-        this.StartRun();
+        this.NewThreadRun();
     }
 
-    private Set<MatchStatus> terminateStates = EnumSet.of(STATE_MATCH_ENDED, STATE_FUTURE_MATCH,
-            STATE_INITIALIZATION_FAILURE, STATE_ALREADY_REGISTERED,STATE_TERMINATED);
+    private Set<MatchStatus> terminateStates = EnumSet.of(STATE_MATCH_ENDED,
+            STATE_INITIALIZATION_FAILURE, STATE_ALREADY_REGISTERED, STATE_TERMINATED);
 
     //The main loop function
     private void Proc() throws XPathExpressionException {
@@ -98,8 +98,8 @@ public class MatchEventWorker extends baseCrawler {
                     OnStateMatchLogging();
                     break;
                 case STATE_FUTURE_MATCH:
-                    //TODO (DB feature) check whether DB added the match/ or the match changed
-                    //TODO (DB feature) add/update the match registration to DB
+                    System.out.println("Threadname: " + threadName + matchId + " STATE_FUTURE_MATCH");
+                    OnStateFuture();
                     break;
                 default:
                     System.out.println("Threadname: " + threadName + matchId + " unknown state");
@@ -113,7 +113,7 @@ public class MatchEventWorker extends baseCrawler {
             }
         }
 
-        if(status == MatchStatus.STATE_MATCH_ENDED || status == MatchStatus.STATE_TERMINATED){
+        if (status == MatchStatus.STATE_MATCH_ENDED || status == MatchStatus.STATE_TERMINATED) {
             BoardCrawlee.DetachWorker(this);
         }
 
@@ -284,22 +284,26 @@ public class MatchEventWorker extends baseCrawler {
 
     void OnStateMatchLogging() {
 
-        if(shouldUpdateDB){
+        if (shouldUpdateDB) {
             UpdateDB();
             System.out.println(lastMatchCrle.toString());
             shouldUpdateDB = false;
         }
 
-        //TODO check some stopping case if in secondhalf or accidental stop like no match
-        /*
-        if(no match tag)
-            to match end
-        if(in secondhalf)
-            if(betting closed)
-                to match end
-         */
+        if(!lastMatchCrle.isMatchXmlValid())
+            status = MatchStatus.STATE_MATCH_ENDED;
 
-        //TODO de-register the worker from boardcrawlee if ended
+        if(stage == MatchStage.STAGE_HALFTIME){
+            if(lastMatchCrle.isAllPoolClosed())
+                status = MatchStatus.STATE_MATCH_ENDED;
+        }
+
+    }
+
+    void OnStateFuture(){
+        //TODO (DB feature) check whether DB added the match/ or the match changed
+        //TODO (DB feature) add/update the match registration to DB
+        status = STATE_TERMINATED;
     }
 
     /*
@@ -378,7 +382,7 @@ public class MatchEventWorker extends baseCrawler {
     /*
     MatchCrawlee functions()
      */
-    private MatchCrawlee lastMatchCrle=null;
+    private MatchCrawlee lastMatchCrle = null;
 
     private void EmitRequest() throws XPathExpressionException {
         MatchCrawlee newMatchCrle;
@@ -391,13 +395,13 @@ public class MatchEventWorker extends baseCrawler {
 
         newMatchCrle.run();
 
-        if(!newMatchCrle.isMatchXmlValid()){
+        if (!newMatchCrle.isMatchXmlValid()) {
             System.out.println("[Error] the grabbed xml is not valid");
             status = MatchStatus.STATE_TERMINATED;
             return;
         }
 
-        if(MatchCrawlee.HasUpdate(lastMatchCrle,newMatchCrle)){
+        if (MatchCrawlee.HasUpdate(lastMatchCrle, newMatchCrle)) {
             lastMatchCrle = newMatchCrle;
             UpdateWorkerFromCrle(newMatchCrle);
             shouldUpdateDB = true;
@@ -407,7 +411,7 @@ public class MatchEventWorker extends baseCrawler {
 
     private void UpdateWorkerFromCrle(MatchCrawlee crle) {
 
-        if(matchPools == null){
+        if (matchPools == null) {
             //TODO (DB feature) update the pooltypes
             matchPools = crle.getPoolType();
             System.out.println("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());

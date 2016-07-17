@@ -71,4 +71,15 @@ public class MatchCrawleeTest {
         Assert.assertEquals(true,MatchCrawlee.HasUpdate(startCrle,startCrle2));
     }
 
+    @Test
+    public void BettingAllClosed() throws Exception {
+        MatchCrawlee aCrle = new MatchCrawlee(MatchCrawleeTestSample.secondHalf103904AllpoolsEnd);
+        MatchCrawlee aCrle2 = new MatchCrawlee(MatchCrawleeTestSample.preReg103904firstHalf2);
+        aCrle.run();
+        aCrle2.run();
+
+        Assert.assertEquals(true,aCrle.isAllPoolClosed());
+        Assert.assertEquals(false,aCrle2.isAllPoolClosed());
+    }
+
 }

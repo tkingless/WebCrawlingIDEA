@@ -19,7 +19,7 @@ public class WebCrawlingMain {
 		crawlers.add(HKJCcrawler.GetInstance());
 
 		for (baseCrawler crlr : crawlers) {
-				crlr.StartRun();
+				crlr.NewThreadRun();
 				//to make current thread join the crlr thread, i.e. wait crlr thread finished to continue.
 				crlr.JoinThread();
 		}

@@ -99,7 +99,7 @@ public class MatchCONSTANTS {
         STATUS_UNDEFINED
     }
 
-    public static MatchPoolStatus GetMatchPoolStage (String str){
+    public static MatchPoolStatus GetMatchPoolStatus (String str){
         String lowercase = str.toLowerCase();
 
         if(lowercase.equals("start-sell"))
@@ -110,5 +110,19 @@ public class MatchCONSTANTS {
             return MatchPoolStatus.STATUS_CLOSED;
         else
             return MatchPoolStatus.STATUS_UNDEFINED;
+    }
+
+    public static String GetPoolStatusStr(MatchPoolStatus stat){
+
+        switch (stat){
+            case STATUS_START_SELL:
+                return "start-sell";
+            case STATUS_SUSPENDED:
+                return "suspended";
+            case STATUS_CLOSED:
+                return "bettingclosed";
+            default:
+                return "undefined";
+        }
     }
 }

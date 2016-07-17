@@ -201,12 +201,18 @@ public class BoardCrawlee extends baseCrawlee {
     }
 
     public synchronized static void RegisterWorker(MatchEventWorker worker){
-        livingWorkerMatchIDs.add(worker.getMatchId());
+        if(!livingWorkerMatchIDs.contains(worker.getMatchId())) {
+            livingWorkerMatchIDs.add(worker.getMatchId());
+        }else
+        {
+            System.err.println("replicated local registration");
+        }
     }
 
 
     //TODO at somewhere appropriate, call this function
     public synchronized static void DetachWorker(MatchEventWorker worker) {
+        if(livingWorkerMatchIDs.contains(worker.getMatchId()))
         livingWorkerMatchIDs.remove(worker.getMatchId());
     }
 

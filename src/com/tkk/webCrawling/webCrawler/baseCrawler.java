@@ -37,7 +37,7 @@ public abstract class baseCrawler extends Thread {
     }
 
     //to be called externally, to ask inherited to run run(), with creating a new thread
-    public void StartRun() {
+    public void NewThreadRun() {
         if(thread != null){
             thread.start(); //jump to the run function to see what to do
         }else{
