@@ -269,7 +269,7 @@ public class MatchEventWorker extends baseCrawler {
             status = MatchStatus.STATE_MATCH_START;
         }
 
-        BoardCrawlee.RegisterWorker(this);
+        registerOnlocal();
     }
 
     void OnStateMatchStart() {
@@ -328,16 +328,15 @@ public class MatchEventWorker extends baseCrawler {
     }
 
     public void Kill() {
-        //TODO: make sure detached from any pointing, and thread on this object is stopped()
         status = MatchStatus.STATE_TERMINATED;
     }
 
     void registerOnDB() {
-        //TODO
+        //TODO (DB feature)
     }
 
     void registerOnlocal() {
-
+        BoardCrawlee.RegisterWorker(this);
     }
 
     public synchronized String getMatchId() {
@@ -371,7 +370,7 @@ public class MatchEventWorker extends baseCrawler {
     boolean shouldUpdateDB = false;
 
     void UpdateDB() {
-        //TODO
+        //TODO (DB feature)
     }
     /*
     DB functions(): end
