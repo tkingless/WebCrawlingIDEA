@@ -69,6 +69,51 @@ public class PreRegWorkerTest {
 
         Thread.sleep(1000 * 5);
 
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.PreReg103904CornerSuspend;
+        preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
+
+        Thread.sleep(1000 * 5);
+
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.PreReg103904firstHalf3;
+        preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
+
+        Thread.sleep(1000 * 5);
+
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.PreReg103904AllSuspend;
+        preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
+
+        Thread.sleep(1000 * 5);
+
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.PreReg103904HalfTime;
+        preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
+
+        Thread.sleep(1000 * 5);
+
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.PreReg103904secondhalfStart;
+        preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
+
+        Thread.sleep(1000 * 5);
+
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.PreReg103904AllSuspend2;
+        preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
+
+        Thread.sleep(1000 * 5);
+
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.PreReg103904HADbettingClosed;
+        preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
+
+        Thread.sleep(1000 * 5);
+
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.PreReg103904allBettingClosed;
+        preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
+
+        Thread.sleep(1000 * 5);
+
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.secondHalf103904AllpoolsEnd;
+        preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
+
+        Thread.sleep(1000 * 15);
+
         System.out.println("[WorkerTester] the setUp() finished");
     }
 

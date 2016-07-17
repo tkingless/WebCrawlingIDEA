@@ -116,6 +116,7 @@ public class MatchEventWorker extends baseCrawler {
             if(status == MatchStatus.STATE_MATCH_ENDED){
                 //TODO (DB feature) mark the actual end time
                 endTime = new DateTimeEntity();
+                System.out.println("Actual end time: "+ endTime.toString());
             }
             BoardCrawlee.DetachWorker(this);
         }
@@ -272,7 +273,9 @@ public class MatchEventWorker extends baseCrawler {
             status = MatchStatus.STATE_MATCH_START;
         }
 
-        registerOnlocal();
+        if(!BoardCrawlee.IsRegisteredByID(this)) {
+            registerOnlocal();
+        }
     }
 
     void OnStateMatchStart() {
@@ -296,7 +299,7 @@ public class MatchEventWorker extends baseCrawler {
         if(!lastMatchCrle.isMatchXmlValid())
             status = MatchStatus.STATE_MATCH_ENDED;
 
-        if(stage == MatchStage.STAGE_HALFTIME){
+        if(stage == MatchStage.STAGE_SECOND){
             if(lastMatchCrle.isAllPoolClosed())
                 status = MatchStatus.STATE_MATCH_ENDED;
         }
