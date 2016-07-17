@@ -25,14 +25,13 @@ import static com.tkk.webCrawling.MatchCONSTANTS.MatchStatus.*;
 //this is class is to be long-live thread worker to log happening event
 public class MatchEventWorker extends baseCrawler {
 
-    final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST, MatchStage.STAGE_HALFTIME, MatchStage.STAGE_SECOND);
-    static final String threadName = "MatchEventWorker-thread";
+    private final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST, MatchStage.STAGE_HALFTIME, MatchStage.STAGE_SECOND);
+    private static final String threadName = "MatchEventWorker-thread";
 
     //The unique id for this worker
-    String matchId;
-    long scanPeriod = 0;
-    long preRegperiod = 1000 * 60 * 5;
-    final long matchIntervalLength = 1000 * 60 * 120;
+    private String matchId;
+    private long scanPeriod = 0;
+    private long preRegperiod = 1000 * 60 * 5;
 
     DateTimeEntity commenceTime;
     DateTimeEntity actualCommence;
@@ -114,6 +113,10 @@ public class MatchEventWorker extends baseCrawler {
         }
 
         if (status == MatchStatus.STATE_MATCH_ENDED || status == MatchStatus.STATE_TERMINATED) {
+            if(status == MatchStatus.STATE_MATCH_ENDED){
+                //TODO (DB feature) mark the actual end time
+                endTime = new DateTimeEntity();
+            }
             BoardCrawlee.DetachWorker(this);
         }
 

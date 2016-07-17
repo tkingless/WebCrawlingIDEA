@@ -25,7 +25,7 @@ public class BoardCrawlee extends baseCrawlee {
         super(crawlerBelonged);
     }
 
-    public BoardCrawlee(baseCrawler crawlerBelonged, String testHtml){
+    public BoardCrawlee(baseCrawler crawlerBelonged, String testHtml) {
         super(crawlerBelonged);
         Jdoc = JsoupHelper.GetDocumentFromStr(testHtml);
     }
@@ -36,7 +36,7 @@ public class BoardCrawlee extends baseCrawlee {
 
         ////System.out.println("BoardCrawlee call() for callable called");
         try {
-            if(Jdoc == null) {
+            if (Jdoc == null) {
                 Jdoc = JsoupHelper.GetDocumentFrom(boardUrl);
                 //System.out.println("Jdoc is: ");
                 //System.out.println(Jdoc.toString());
@@ -56,6 +56,7 @@ public class BoardCrawlee extends baseCrawlee {
     }
 
     List<MatchEventWorker> parsedWorkers;
+
     void GetChildNodes() throws ParseException {
 
         HashMap<String, String> searchNodes = new HashMap<String, String>();
@@ -77,7 +78,7 @@ public class BoardCrawlee extends baseCrawlee {
         cardinalityChecks.add(statuses);
 
         if (CardinalityChecking(cardinalityChecks)) {
-             parsedWorkers = ParsingDocIntoMatchWorker(onboardChildUrls,matchNos,matchTeams,statuses);
+            parsedWorkers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, matchTeams, statuses);
         }
     }
 
@@ -103,9 +104,9 @@ public class BoardCrawlee extends baseCrawlee {
         checks.add(statuses);
 
         if (CardinalityChecking(checks)) {
-            if(test_type == MatchTestCONSTANTS.TestType.TYPE_PRE_REG){
-                workers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, matchTeams, statuses,test_type);
-            }else {
+            if (test_type == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
+                workers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, matchTeams, statuses, test_type);
+            } else {
                 workers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, matchTeams, statuses);
             }
         }
@@ -145,7 +146,7 @@ public class BoardCrawlee extends baseCrawlee {
     private static List<MatchEventWorker> ParsingDocIntoMatchWorker(Elements onboardChildUrls,
                                                                     Elements matchNos, Elements matchTeams,
                                                                     Elements statuses) throws ParseException {
-        return ParsingDocIntoMatchWorker(onboardChildUrls,matchNos,matchTeams,statuses,null);
+        return ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, matchTeams, statuses, null);
     }
 
     private static List<MatchEventWorker> ParsingDocIntoMatchWorker(Elements onboardChildUrls,
@@ -176,12 +177,12 @@ public class BoardCrawlee extends baseCrawlee {
 
             MatchEventWorker crleWorker = null;
 
-            if(test_type == null) {
+            if (test_type == null) {
                 crleWorker = new MatchEventWorker(matchId, matchNoIte.next(),
-                        matchStatIte.next(), matchTeamIte.next(),null);
+                        matchStatIte.next(), matchTeamIte.next(), null);
             } else {
                 crleWorker = new MatchEventWorker(matchId, matchNoIte.next(),
-                        matchStatIte.next(), matchTeamIte.next(),test_type);
+                        matchStatIte.next(), matchTeamIte.next(), test_type);
             }
             workerList.add(crleWorker);
         }
@@ -190,21 +191,21 @@ public class BoardCrawlee extends baseCrawlee {
     }
 
     private static List<String> livingWorkerMatchIDs = new ArrayList<String>();
-    public synchronized static boolean IsRegisteredByID(MatchEventWorker worker){
+
+    public synchronized static boolean IsRegisteredByID(MatchEventWorker worker) {
         boolean isRegistered = false;
         String ID = worker.getMatchId();
 
-        if(livingWorkerMatchIDs.contains(ID))
+        if (livingWorkerMatchIDs.contains(ID))
             isRegistered = true;
 
         return isRegistered;
     }
 
-    public synchronized static void RegisterWorker(MatchEventWorker worker){
-        if(!livingWorkerMatchIDs.contains(worker.getMatchId())) {
+    public synchronized static void RegisterWorker(MatchEventWorker worker) {
+        if (!livingWorkerMatchIDs.contains(worker.getMatchId())) {
             livingWorkerMatchIDs.add(worker.getMatchId());
-        }else
-        {
+        } else {
             System.err.println("replicated local registration");
         }
     }
@@ -212,16 +213,18 @@ public class BoardCrawlee extends baseCrawlee {
 
     //TODO at somewhere appropriate, call this function
     public synchronized static void DetachWorker(MatchEventWorker worker) {
-        if(livingWorkerMatchIDs.contains(worker.getMatchId()))
-        livingWorkerMatchIDs.remove(worker.getMatchId());
+        if (livingWorkerMatchIDs.contains(worker.getMatchId()))
+            livingWorkerMatchIDs.remove(worker.getMatchId());
+        else
+            System.err.println("No such local registration before");
     }
 
-    public synchronized static List<MatchEventWorker> GenerateTestWorker (MatchTestCONSTANTS.TestType type, String testBoardHtml){
+    public synchronized static List<MatchEventWorker> GenerateTestWorker(MatchTestCONSTANTS.TestType type, String testBoardHtml) {
         List<MatchEventWorker> outputs = null;
 
         Document doc = JsoupHelper.GetDocumentFromStr(testBoardHtml);
         try {
-            outputs = GetTestWorkers(type,doc);
+            outputs = GetTestWorkers(type, doc);
         } catch (ParseException e) {
             e.printStackTrace();
         }
