@@ -7,3 +7,39 @@ OLD_DB/
 .idea/workspace.xml
 AntBuild/
 target/
+.idea/gradle.xml
+.idea/libraries/Gradle__junit_junit_4_11.xml
+.idea/libraries/Gradle__org_hamcrest_hamcrest_core_1_3.xml
+.idea/modules/
+
+# Android built artifacts
+*.apk
+*.ap_
+*.dex
+
+# Java build artifacts class files
+*.class
+
+# other generated files
+bin/
+gen/
+build/
+
+# local configuration file (for Android sdk path, etc)
+local.properties
+
+# OSX files
+.DS_Store
+
+# Eclipse project files
+.classpath
+.project
+
+# Android Studio
+*.iml
+.idea
+.gradle
+
+
+#NDK
+obj/
