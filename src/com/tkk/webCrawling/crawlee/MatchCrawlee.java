@@ -78,7 +78,7 @@ public class MatchCrawlee extends baseCrawlee {
     }
 
     public void run() {
-        System.out.println("MatchCrawlee run() called");
+        //System.out.println("MatchCrawlee run() called");
 
         try {
             String source;
@@ -302,6 +302,7 @@ public class MatchCrawlee extends baseCrawlee {
     public String toString() {
         StringBuilder tmp = new StringBuilder();
 
+        tmp.append("match id: ").append(matchID).append("\n");
         tmp.append("stage: ").append(matchStage).append("\n");
         tmp.append("score: ").append(scores).append("\n");
 

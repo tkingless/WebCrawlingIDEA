@@ -92,7 +92,7 @@ public class MatchEventWorker extends baseCrawler {
                     OnStateMatchStart();
                     break;
                 case STATE_MATCH_LOGGING:
-                    System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
+                    //System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
                     EmitRequest();
                     OnStateMatchLogging();
                     break;
@@ -283,6 +283,7 @@ public class MatchEventWorker extends baseCrawler {
         //TODO (DB feature) init relevant DB objects
 
         actualCommence = lastMatchCrle.getRecordTime();
+        System.out.println("Match id: " + matchId + " actual commence time: "+ actualCommence.toString());
         scanPeriod = 1000;
 
         status = MatchStatus.STATE_MATCH_LOGGING;
