@@ -1,8 +1,7 @@
-package com.tkk.webCrawling.TestCases;
+package com.tkk.test.TestCases;
 
 import com.tkk.webCrawling.MatchCONSTANTS;
 import com.tkk.webCrawling.crawlee.BoardCrawlee;
-import com.tkk.webCrawling.crawlee.MatchCrawlee;
 import com.tkk.webCrawling.utils.DateTimeEntity;
 import com.tkk.webCrawling.webCrawler.MatchEventWorker;
 import org.junit.After;

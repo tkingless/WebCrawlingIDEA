@@ -1,7 +1,7 @@
 package com.tkk.webCrawling.crawlee;
 
 import com.tkk.webCrawling.webCrawler.MatchEventWorker;
-import com.tkk.webCrawling.TestCases.MatchTestCONSTANTS;
+import com.tkk.test.TestCases.MatchTestCONSTANTS;
 import com.tkk.webCrawling.webCrawler.baseCrawler;
 import com.tkk.webCrawling.utils.JsoupHelper;
 import org.jsoup.nodes.Document;

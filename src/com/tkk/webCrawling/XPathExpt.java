@@ -1,6 +1,6 @@
 package com.tkk.webCrawling;
 
-import com.tkk.webCrawling.TestCases.MatchCrawleeTestSample;
+import com.tkk.test.TestCases.MatchCrawleeTestSample;
 import com.tkk.webCrawling.utils.JsoupHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

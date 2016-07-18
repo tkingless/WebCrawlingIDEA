@@ -1,4 +1,4 @@
-package com.tkk.webCrawling.TestCases;
+package com.tkk.test.TestCases;
 
 import com.tkk.webCrawling.ConcurrencyMachine;
 import com.tkk.webCrawling.MatchCONSTANTS;

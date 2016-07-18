@@ -1,6 +1,6 @@
 package com.tkk.webCrawling.webCrawler;
 
-import com.tkk.webCrawling.TestCases.MatchTestCONSTANTS;
+import com.tkk.test.TestCases.MatchTestCONSTANTS;
 import com.tkk.webCrawling.crawlee.BoardCrawlee;
 import com.tkk.webCrawling.crawlee.MatchCrawlee;
 import com.tkk.webCrawling.utils.DateTimeEntity;
