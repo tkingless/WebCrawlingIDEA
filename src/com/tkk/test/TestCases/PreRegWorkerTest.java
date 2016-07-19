@@ -1,10 +1,14 @@
 package com.tkk.test.TestCases;
 
+import com.tkk.webCrawling.MatchCONSTANTS;
 import com.tkk.webCrawling.MatchTestCONSTANTS;
 import com.tkk.webCrawling.crawlee.BoardCrawlee;
+import com.tkk.webCrawling.utils.DateTimeEntity;
 import com.tkk.webCrawling.webCrawler.MatchEventWorker;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +37,7 @@ public class PreRegWorkerTest {
     public void tearDown() throws Exception {
     }
 
-    /*@Test
+    @Test
     public void StateVerification() throws Exception {
         preRegWorker = workers.get(0);
         simulatedMatchCrleSrc = MatchCrawleeTestSample.preReg103904NotStartYet;
@@ -111,6 +115,6 @@ public class PreRegWorkerTest {
         Thread.sleep(1000 * 5);
 
         System.out.println("[WorkerTester] the setUp() finished");
-    }*/
+    }
 
 }
