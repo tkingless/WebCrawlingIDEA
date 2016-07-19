@@ -33,13 +33,13 @@ public class FutureWorkerTest {
     }
 
     //@Ignore
-    @Test
+    /*@Test
     public void TestFutureWorkerState() throws Exception {
             System.out.println("TestFutureWorkerState() called");
             MatchCONSTANTS.MatchStatus expectedState = MatchCONSTANTS.MatchStatus.STATE_FUTURE_MATCH;
             //TODO (DB feature) test on DB has record
             Assert.assertEquals(expectedState, futureWorker.getStatus());
             Assert.assertEquals(false, futureWorker.isAlive());
-    }
+    }*/
 
 }
