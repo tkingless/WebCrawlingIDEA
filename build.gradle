@@ -9,13 +9,13 @@ version = '0.1'
 sourceSets {
     main {
         java {
-            srcDir 'src/com/tkk/'
+            srcDir 'src/'
             //exclude 'src/com/tkk/test/**'
         }
     }
     test {
         java {
-            srcDir 'src/com/tkk/test'
+            srcDir 'src/'
         }
     }
 }
