@@ -80,3 +80,11 @@ task taskY << {
 
 defaultTasks 'taskX'
 
+uploadArchives {
+    repositories {
+        flatDir {
+            dirs 'Outputs/jar'
+        }
+    }
+}
+
