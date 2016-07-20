@@ -6,10 +6,11 @@ mainClassName = 'com.tkk.webCrawling.WebCrawlingMain'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-version = '0.1'
+version = '0.1-snapshot'
 
 //noinspection GroovyAssignabilityCheck
 sourceSets {
+    //TODO arrange the sources according to Gradle's pattern
     main {
         java {
             srcDir 'src/'
@@ -84,4 +85,6 @@ task taskY << {
         println "I'm task number $counter"
     }
 }
+
+defaultTasks 'taskX'
 
