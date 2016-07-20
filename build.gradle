@@ -10,7 +10,6 @@ version = '0.1-snapshot'
 
 //noinspection GroovyAssignabilityCheck
 sourceSets {
-    //TODO arrange the sources according to Gradle's pattern
     main {
         java {
             srcDir 'src/main/java/'
@@ -42,13 +41,9 @@ dependencies {
     //MongoDB
     compile 'org.mongodb:mongodb-driver:3.2.2'
 
-    //wrong compile
-    compile 'junit:junit:4.12'
-    compile 'org.hamcrest:java-hamcrest:2.0.0.0'
-
     //For test case
-    //testCompile 'junit:junit:4.12'
-    //testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
 }
 
 //noinspection GroovyAssignabilityCheck
@@ -60,8 +55,6 @@ jar {
 }
 
 //TODO subgroup projects
-//TODO testing on Gradle
-
 
 //Tutorials
 //TODO put these tasks in a "tutorial" tag
