@@ -59,5 +59,12 @@ jar {
     }
 }
 
+//Tutorials
+task hello {
+    doLast {
+        println 'Hello world!'
+    }
+}
+
 
 
