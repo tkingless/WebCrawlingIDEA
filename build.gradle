@@ -49,6 +49,7 @@ dependencies {
 //noinspection GroovyAssignabilityCheck
 jar {
     //include the external libraries to jar
+    //TODO check usage of configurations and it
     from {
 
         configurations.runtime.collect {
@@ -70,6 +71,7 @@ jar {
 }
 
 //TODO subgroup projects
+//TODO simple web projects
 
 //Tutorials
 //TODO put these tasks in a "tutorial" tag
