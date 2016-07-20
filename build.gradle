@@ -48,11 +48,23 @@ dependencies {
 
 //noinspection GroovyAssignabilityCheck
 jar {
-    //TODO include the external libraries to jar
+    //include the external libraries to jar
+    from {
+
+        configurations.runtime.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+
     manifest {
         attributes 'Implementation-Title': 'HKJC Quickstart',
                 'Implementation-Version': version,
                 //'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                //Main-Class attribute needed for Java -jar to look for the main class
                 'Main-Class': mainClassName
     }
 }
