@@ -13,13 +13,12 @@ sourceSets {
     //TODO arrange the sources according to Gradle's pattern
     main {
         java {
-            srcDir 'src/'
-            //exclude 'src/com/tkk/test/**'
+            srcDir 'src/main/java/'
         }
     }
     test {
         java {
-            srcDir 'src/'
+            srcDir 'src/test/java/'
         }
     }
 }

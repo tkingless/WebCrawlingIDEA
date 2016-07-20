@@ -1,6 +1,6 @@
 package com.tkk.webCrawling;
 
-import com.tkk.test.TestCases.MatchCrawleeTestSample;
+//import com.tkk.test.TestCases.MatchCrawleeTestSample;
 import com.tkk.webCrawling.utils.JsoupHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -30,8 +30,8 @@ public class XPathExpt {
         String uri = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=104049";
 
         try {
-            //String source = JsoupHelper.GetDocumentFrom(uri).toString();
-            String source = JsoupHelper.GetDocumentFromStr(MatchCrawleeTestSample.preReg103904firstHalf).toString();
+            String source = JsoupHelper.GetDocumentFrom(uri).toString();
+            //String source = JsoupHelper.GetDocumentFromStr(MatchCrawleeTestSample.preReg103904firstHalf).toString();
             System.out.println(source);
             InputStream xml = IOUtils.toInputStream(source, "UTF-8");
 
