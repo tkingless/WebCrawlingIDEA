@@ -48,9 +48,12 @@ dependencies {
 
 //noinspection GroovyAssignabilityCheck
 jar {
+    //TODO include the external libraries to jar
     manifest {
         attributes 'Implementation-Title': 'HKJC Quickstart',
-                'Implementation-Version': version
+                'Implementation-Version': version,
+                //'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': mainClassName
     }
 }
 
