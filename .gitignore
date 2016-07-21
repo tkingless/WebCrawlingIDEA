@@ -39,3 +39,4 @@ obj/
 Outputs/
 /.idea/modules.xml
 /.idea/workspace.xml
+AppServer/logs/

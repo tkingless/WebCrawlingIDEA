@@ -18,4 +18,27 @@ dependencies {
     tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
         exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
     }
+
+    compile project(':WebCrawling')
+    //runtime project(':api')
+}
+
+/*tomcatRun {
+    daemon = true
+    httpPort = 5000
+    stopKey = 'rbi'
+    outputFile = file('logs/tomcat.log')
+    webDefaultXml = file('src/main/webapp/WEB-INF/web.xml')
+}
+
+tomcatStop {
+    stopKey = 'rbi'
+}*/
+
+tomcatRunWar {
+    daemon = true
+    httpPort = 8088
+    stopKey = 'rbi'
+    outputFile = file('logs/tomcat.log')
+    //webDefaultXml = file('src/main/webapp/WEB-INF/web.xml')
 }
