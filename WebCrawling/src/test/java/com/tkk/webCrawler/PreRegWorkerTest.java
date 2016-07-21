@@ -4,7 +4,6 @@ import com.tkk.MatchCONSTANTS;
 import com.tkk.MatchTestCONSTANTS;
 import com.tkk.crawlee.BoardCrawlee;
 import com.tkk.utils.DateTimeEntity;
-import com.tkk.webCrawler.MatchEventWorker;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
