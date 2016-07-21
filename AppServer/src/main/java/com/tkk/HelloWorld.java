@@ -17,5 +17,10 @@ public class HelloWorld extends HttpServlet {
     }
 
     //TODO how appserver connect to WebCrawling
+
+    //TODO make a class of Appeserver can run the codes of WebCrawling when Tomcat startup, and the hooking worker properly shutdown when server down
+
+    //REF: http://crunchify.com/how-to-start-embedded-http-jersey-server-during-java-application-startup/
+    //REF: http://crunchify.com/how-to-run-java-program-automatically-on-tomcat-startup/
 }
 
