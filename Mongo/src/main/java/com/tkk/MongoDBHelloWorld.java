@@ -1,4 +1,4 @@
-package com.tkk.mongodb;
+package com.tkk;
 import com.mongodb.*;
 import java.net.UnknownHostException;
 

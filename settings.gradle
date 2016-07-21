@@ -19,3 +19,5 @@ include 'services:webservice'
 rootProject.name = 'WebCrawlingIDEA'
 
 include 'WebCrawling'
+include 'Mongo'
+
