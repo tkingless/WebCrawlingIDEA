@@ -20,4 +20,5 @@ rootProject.name = 'WebCrawlingIDEA'
 
 include 'WebCrawling'
 include 'Mongo'
+include 'GradleTutorials'
 

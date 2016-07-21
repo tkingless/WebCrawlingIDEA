@@ -1,21 +1,24 @@
 //Tutorials
-//TODO put these tasks in a "tutorial" tag
+
 task hello {
+    description 'My first hello world task'
+    //put these tasks in a "tutorial" tag
+    group 'Tutorials'
     doLast {
         println 'Hello world!'
     }
 }
 
-task taskX (dependsOn: 'taskY') << {
+task taskX (dependsOn: 'taskY', group: 'Tutorials') << {
     println 'taskX'
 }
 
-task taskY << {
+task taskY (group: 'Tutorials') << {
     println 'taskY'
 }
 
 4.times { counter ->
-    task "task$counter" << {
+    task "task$counter" (group: 'Tutorials') << {
         println "I'm task number $counter"
     }
 }
@@ -23,13 +26,13 @@ task taskY << {
 defaultTasks 'taskX'
 
 //cannot use as no application of plugins: java or application
-/*uploadArchives {
+uploadArchives {
     repositories {
         flatDir {
             dirs 'Outputs/jar'
         }
     }
-}*/
+}
 
 //Gradle buildscript can use complicated library like:
 /*

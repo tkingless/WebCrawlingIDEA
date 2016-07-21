@@ -19,6 +19,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="GradleTutorials_main" target="1.8" />
+      <module name="GradleTutorials_test" target="1.8" />
       <module name="Mongo_main" target="1.8" />
       <module name="Mongo_test" target="1.8" />
       <module name="WebCrawling_main" target="1.8" />
