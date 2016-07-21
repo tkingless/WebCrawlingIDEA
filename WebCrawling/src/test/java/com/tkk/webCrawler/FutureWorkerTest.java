@@ -3,8 +3,6 @@ package com.tkk.webCrawler;
 import com.tkk.ConcurrencyMachine;
 import com.tkk.MatchCONSTANTS;
 import com.tkk.crawlee.BoardCrawlee;
-import com.tkk.webCrawler.HKJCcrawler;
-import com.tkk.webCrawler.MatchEventWorker;
 import org.junit.*;
 
 /**
