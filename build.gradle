@@ -49,7 +49,7 @@ dependencies {
 //noinspection GroovyAssignabilityCheck
 jar {
     //include the external libraries to jar
-    //TODO check usage of configurations and it
+
     from {
 
         configurations.runtime.collect {
@@ -104,4 +104,45 @@ uploadArchives {
         }
     }
 }
+
+//Gradle buildscript can use complicated library like:
+/*
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'commons-math:commons-math:1.1'
+    }
+}
+
+// We want to test if commons-math was properly added to the build script classpath
+org.apache.commons.math.fraction.Fraction lhs = new org.apache.commons.math.fraction.Fraction(1, 3);
+ */
+
+//usage of configuration
+/*
+Project A:
+==============================================
+configurations {
+   spi
+}
+
+task spiJar(type: Jar) {
+    appendix = 'spi'
+    from sourceSets.main.output
+    include 'org/gradle/api/'
+}
+
+artifacts {
+  spi spiJar
+}
+
+Project B:
+==============================================
+dependencies {
+    compile project(path: ':api', configuration: 'spi')
+    runtime project(':api')
+}
+ */
 

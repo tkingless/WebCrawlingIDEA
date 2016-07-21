@@ -5,6 +5,8 @@ package com.tkk.webCrawler;
  */
 public class MatchCrawleeTestSample {
 
+    //TODO refer to Gradle samples, java/multiprojects/sharing, use resources to parse xml instead
+
     public static String testMatchHtml = "<!--?xml version='1.0' ?-->\n" +
             "<html>\n" +
             " <head></head>\n" +
