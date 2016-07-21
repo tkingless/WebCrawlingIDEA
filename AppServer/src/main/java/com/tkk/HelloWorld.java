@@ -15,5 +15,7 @@ public class HelloWorld extends HttpServlet {
         req.getRequestDispatcher("hello.jsp")
                 .forward(req, resp);
     }
+
+    //TODO how appserver connect to WebCrawling
 }
 
