@@ -1,4 +1,3 @@
-//TODO subgroup projects
 subprojects {
     // Apply the java plugin to add support for Java
     apply plugin: 'java'
@@ -34,5 +33,4 @@ subprojects {
     }
 }
 
-
-
+//TODO refer to buildSrc sample in gradle samples, to get idea of how different modules rely on one another

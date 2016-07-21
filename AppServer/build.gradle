@@ -1,4 +1,5 @@
 apply plugin: 'tomcat'
+apply plugin: 'war'
 
 buildscript {
     repositories {
@@ -41,4 +42,14 @@ tomcatRunWar {
     stopKey = 'rbi'
     outputFile = file('logs/tomcat.log')
     //webDefaultXml = file('src/main/webapp/WEB-INF/web.xml')
+}
+
+
+//TODO configure war
+war {
+    from 'src/rootContent' // adds a file-set to the root of the archive
+    //webInf { from 'src/additionalWebInf' } // adds a file-set to the WEB-INF dir.
+    //classpath fileTree('additionalLibs') // adds a file-set to the WEB-INF/lib dir.
+    //classpath configurations.moreLibs // adds a configuration to the WEB-INF/lib dir.
+    webXml = file('src/web.xml') // copies a file to WEB-INF/web.xml
 }
