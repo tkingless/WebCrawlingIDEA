@@ -1,10 +1,10 @@
 package com.tkk.webCrawler;
 
-import com.tkk.webCrawling.MatchCONSTANTS;
-import com.tkk.webCrawling.MatchTestCONSTANTS;
-import com.tkk.webCrawling.crawlee.BoardCrawlee;
-import com.tkk.webCrawling.utils.DateTimeEntity;
-import com.tkk.webCrawling.webCrawler.MatchEventWorker;
+import com.tkk.WebCrawling.MatchCONSTANTS;
+import com.tkk.WebCrawling.MatchTestCONSTANTS;
+import com.tkk.WebCrawling.crawlee.BoardCrawlee;
+import com.tkk.WebCrawling.utils.DateTimeEntity;
+import com.tkk.WebCrawling.webCrawler.MatchEventWorker;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

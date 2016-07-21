@@ -1,10 +1,10 @@
 package com.tkk.webCrawler;
 
-import com.tkk.webCrawling.ConcurrencyMachine;
-import com.tkk.webCrawling.MatchCONSTANTS;
-import com.tkk.webCrawling.crawlee.BoardCrawlee;
-import com.tkk.webCrawling.webCrawler.HKJCcrawler;
-import com.tkk.webCrawling.webCrawler.MatchEventWorker;
+import com.tkk.WebCrawling.ConcurrencyMachine;
+import com.tkk.WebCrawling.MatchCONSTANTS;
+import com.tkk.WebCrawling.crawlee.BoardCrawlee;
+import com.tkk.WebCrawling.webCrawler.HKJCcrawler;
+import com.tkk.WebCrawling.webCrawler.MatchEventWorker;
 import org.junit.*;
 
 /**

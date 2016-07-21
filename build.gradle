@@ -2,7 +2,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'com.tkk.webCrawling.WebCrawlingMain'
+mainClassName = 'com.tkk.WebCrawling.WebCrawlingMain'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -32,7 +32,7 @@ dependencies {
     // The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.13'
 
-    //Main webCrawling needed
+    //Main WebCrawling needed
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
     compile group: 'commons-io', name: 'commons-io', version: '2.4'
     compile group: 'org.apache.commons', name: 'commons-csv', version: '1.1'

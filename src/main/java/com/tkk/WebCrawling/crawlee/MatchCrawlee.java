@@ -1,11 +1,11 @@
-package com.tkk.webCrawling.crawlee;
+package com.tkk.WebCrawling.crawlee;
 
-import com.tkk.webCrawling.MatchCONSTANTS;
-import com.tkk.webCrawling.MatchCONSTANTS.*;
-import com.tkk.webCrawling.utils.DateTimeEntity;
-import com.tkk.webCrawling.utils.MapComparator;
-import com.tkk.webCrawling.webCrawler.baseCrawler;
-import com.tkk.webCrawling.utils.JsoupHelper;
+import com.tkk.WebCrawling.MatchCONSTANTS;
+import com.tkk.WebCrawling.MatchCONSTANTS.*;
+import com.tkk.WebCrawling.utils.DateTimeEntity;
+import com.tkk.WebCrawling.utils.MapComparator;
+import com.tkk.WebCrawling.webCrawler.baseCrawler;
+import com.tkk.WebCrawling.utils.JsoupHelper;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

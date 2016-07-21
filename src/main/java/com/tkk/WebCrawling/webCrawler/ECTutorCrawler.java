@@ -1,4 +1,4 @@
-package com.tkk.webCrawling.webCrawler;
+package com.tkk.WebCrawling.webCrawler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.tkk.webCrawling.crawlee.TutorCaseCrawlee;
+import com.tkk.WebCrawling.crawlee.TutorCaseCrawlee;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;

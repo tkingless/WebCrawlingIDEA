@@ -1,11 +1,11 @@
-package com.tkk.webCrawling.webCrawler;
+package com.tkk.WebCrawling.webCrawler;
 import java.lang.String;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.tkk.webCrawling.utils.*;
-import com.tkk.webCrawling.crawlee.TutorCaseCrawlee;
+import com.tkk.WebCrawling.utils.*;
+import com.tkk.WebCrawling.crawlee.TutorCaseCrawlee;
 
 import org.apache.commons.collections4.*;
 import org.apache.commons.collections4.map.MultiValueMap;

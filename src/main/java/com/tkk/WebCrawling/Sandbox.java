@@ -1,6 +1,6 @@
-package com.tkk.webCrawling;
+package com.tkk.WebCrawling;
 
-import com.tkk.webCrawling.utils.MapComparator;
+import com.tkk.WebCrawling.utils.MapComparator;
 
 import java.util.HashMap;
 

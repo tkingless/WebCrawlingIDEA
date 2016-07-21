@@ -1,4 +1,4 @@
-package com.tkk.webCrawling;
+package com.tkk.WebCrawling;
 
 /**
  * Created by tsangkk on 7/13/16.

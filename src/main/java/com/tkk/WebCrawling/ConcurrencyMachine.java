@@ -1,12 +1,12 @@
-package com.tkk.webCrawling;
+package com.tkk.WebCrawling;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-import com.tkk.webCrawling.crawlee.baseCrawlee;
+import com.tkk.WebCrawling.crawlee.baseCrawlee;
 import org.jsoup.nodes.Document;
-import com.tkk.webCrawling.utils.Stopwatch;
+import com.tkk.WebCrawling.utils.Stopwatch;
 
 public class ConcurrencyMachine {
 

@@ -1,8 +1,8 @@
-package com.tkk.webCrawling.webCrawler;
+package com.tkk.WebCrawling.webCrawler;
 
 
-import com.tkk.webCrawling.ConcurrencyMachine;
-import com.tkk.webCrawling.crawlee.BoardCrawlee;
+import com.tkk.WebCrawling.ConcurrencyMachine;
+import com.tkk.WebCrawling.crawlee.BoardCrawlee;
 
 public class HKJCcrawler extends baseCrawler {
 

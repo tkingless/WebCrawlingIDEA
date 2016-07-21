@@ -1,4 +1,4 @@
-package com.tkk.webCrawling;
+package com.tkk.WebCrawling;
 
 import java.io.*;
 import java.lang.String;
@@ -7,9 +7,9 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import com.tkk.webCrawling.crawlee.TutorCaseCrawlee;
-import com.tkk.webCrawling.utils.CSVmanager;
-import com.tkk.webCrawling.utils.FileManager;
+import com.tkk.WebCrawling.crawlee.TutorCaseCrawlee;
+import com.tkk.WebCrawling.utils.CSVmanager;
+import com.tkk.WebCrawling.utils.FileManager;
 import org.apache.commons.csv.*;
 
 /*

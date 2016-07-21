@@ -1,10 +1,10 @@
-package com.tkk.webCrawling.webCrawler;
+package com.tkk.WebCrawling.webCrawler;
 
-import com.tkk.webCrawling.MatchTestCONSTANTS;
-import com.tkk.webCrawling.crawlee.BoardCrawlee;
-import com.tkk.webCrawling.crawlee.MatchCrawlee;
-import com.tkk.webCrawling.utils.DateTimeEntity;
-import com.tkk.webCrawling.MatchCONSTANTS.*;
+import com.tkk.WebCrawling.MatchTestCONSTANTS;
+import com.tkk.WebCrawling.crawlee.BoardCrawlee;
+import com.tkk.WebCrawling.crawlee.MatchCrawlee;
+import com.tkk.WebCrawling.utils.DateTimeEntity;
+import com.tkk.WebCrawling.MatchCONSTANTS.*;
 
 import org.jsoup.nodes.Element;
 
@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.tkk.webCrawling.MatchCONSTANTS.MatchStatus.*;
+import static com.tkk.WebCrawling.MatchCONSTANTS.MatchStatus.*;
 
 /**
  * Created by tkingless on 6/26/16.

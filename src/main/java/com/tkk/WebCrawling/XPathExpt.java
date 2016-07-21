@@ -1,7 +1,7 @@
-package com.tkk.webCrawling;
+package com.tkk.WebCrawling;
 
 //import com.tkk.test.TestCases.MatchCrawleeTestSample;
-import com.tkk.webCrawling.utils.JsoupHelper;
+import com.tkk.WebCrawling.utils.JsoupHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;

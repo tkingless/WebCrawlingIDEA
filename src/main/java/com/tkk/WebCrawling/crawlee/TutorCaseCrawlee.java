@@ -1,4 +1,4 @@
-package com.tkk.webCrawling.crawlee;
+package com.tkk.WebCrawling.crawlee;
 
 import java.io.IOException;
 import java.lang.String;
@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import com.tkk.webCrawling.webCrawler.*;
+import com.tkk.WebCrawling.webCrawler.*;
 
 public class TutorCaseCrawlee extends baseCrawlee {
 

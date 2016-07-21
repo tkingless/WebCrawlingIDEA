@@ -1,4 +1,4 @@
-package com.tkk.webCrawling.utils;
+package com.tkk.WebCrawling.utils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

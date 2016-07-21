@@ -1,7 +1,7 @@
 package com.tkk.webCrawler;
 
-import com.tkk.webCrawling.MatchCONSTANTS;
-import com.tkk.webCrawling.crawlee.MatchCrawlee;
+import com.tkk.WebCrawling.MatchCONSTANTS;
+import com.tkk.WebCrawling.crawlee.MatchCrawlee;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

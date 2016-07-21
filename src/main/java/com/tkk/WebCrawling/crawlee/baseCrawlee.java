@@ -1,6 +1,6 @@
-package com.tkk.webCrawling.crawlee;
+package com.tkk.WebCrawling.crawlee;
 
-import com.tkk.webCrawling.webCrawler.baseCrawler;
+import com.tkk.WebCrawling.webCrawler.baseCrawler;
 import org.jsoup.nodes.Document;
 
 import java.util.concurrent.Callable;
