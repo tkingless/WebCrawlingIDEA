@@ -4,13 +4,9 @@ config.csv
 result.csv
 case_DB.csv
 OLD_DB/
-.idea/workspace.xml
 AntBuild/
 target/
-.idea/gradle.xml
-.idea/libraries/Gradle__junit_junit_4_11.xml
-.idea/libraries/Gradle__org_hamcrest_hamcrest_core_1_3.xml
-.idea/modules/
+
 
 # Android built artifacts
 *.apk
