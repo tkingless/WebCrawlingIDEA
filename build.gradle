@@ -1,26 +1,42 @@
-// Apply the java plugin to add support for Java
-apply plugin: 'java'
-apply plugin: 'application'
+//TODO subgroup projects
+subprojects {
+    // Apply the java plugin to add support for Java
+    apply plugin: 'java'
+    apply plugin: 'application'
 
-mainClassName = 'com.tkk.WebCrawling.WebCrawlingMain'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-version = '0.1-snapshot'
-
-//noinspection GroovyAssignabilityCheck
-sourceSets {
-    main {
-        java {
-            srcDir 'src/main/java/'
-        }
+    repositories {
+        mavenCentral()
     }
-    test {
-        java {
-            srcDir 'src/test/java/'
+
+    dependencies {
+
+        // The production code uses the SLF4J logging API at compile time
+        compile 'org.slf4j:slf4j-api:1.7.13'
+
+        //For test case
+        testCompile 'junit:junit:4.12'
+        testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
+    }
+
+    version = '0.1-snapshot'
+
+    //noinspection GroovyAssignabilityCheck
+    jar {
+        manifest {
+            attributes 'Implementation-Title': 'HKJC Quickstart',
+                    'Implementation-Version': version,
+                    provider: 'gradle'
         }
     }
 }
+
+
+
+
+
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -29,48 +45,17 @@ repositories {
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
-    // The production code uses the SLF4J logging API at compile time
-    compile 'org.slf4j:slf4j-api:1.7.13'
 
-    //Main WebCrawling needed
-    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
-    compile group: 'commons-io', name: 'commons-io', version: '2.4'
-    compile group: 'org.apache.commons', name: 'commons-csv', version: '1.1'
-    compile 'org.jsoup:jsoup:1.8.2'
 
     //MongoDB
-    compile 'org.mongodb:mongodb-driver:3.2.2'
+    //compile 'org.mongodb:mongodb-driver:3.2.2'
 
-    //For test case
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
+
 }
 
-//noinspection GroovyAssignabilityCheck
-jar {
-    //include the external libraries to jar
 
-    from {
 
-        configurations.runtime.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
 
-        configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
-
-    manifest {
-        attributes 'Implementation-Title': 'HKJC Quickstart',
-                'Implementation-Version': version,
-                //'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                //Main-Class attribute needed for Java -jar to look for the main class
-                'Main-Class': mainClassName
-    }
-}
-
-//TODO subgroup projects
 //TODO simple web projects
 
 //Tutorials
@@ -97,13 +82,14 @@ task taskY << {
 
 defaultTasks 'taskX'
 
-uploadArchives {
+//cannot use as no application of plugins: java or application
+/*uploadArchives {
     repositories {
         flatDir {
             dirs 'Outputs/jar'
         }
     }
-}
+}*/
 
 //Gradle buildscript can use complicated library like:
 /*
