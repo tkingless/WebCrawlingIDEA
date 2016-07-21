@@ -9,6 +9,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
@@ -32,29 +33,6 @@ subprojects {
         }
     }
 }
-
-
-
-
-
-
-// In this section you declare where to find the dependencies of your project
-repositories {
-    jcenter()
-}
-
-// In this section you declare the dependencies for your production and test code
-dependencies {
-
-
-    //MongoDB
-    //compile 'org.mongodb:mongodb-driver:3.2.2'
-
-
-}
-
-
-
 
 //TODO simple web projects
 

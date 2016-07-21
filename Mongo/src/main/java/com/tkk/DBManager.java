@@ -1,4 +1,4 @@
-package com.tkk.mongodb;
+package com.tkk;
 
 /**
  * Created by tsangkk on 6/27/16.
