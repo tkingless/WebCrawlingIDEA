@@ -24,9 +24,6 @@ build/
 # local configuration file (for Android sdk path, etc)
 local.properties
 
-# OSX files
-.DS_Store
-
 # Eclipse project files
 .classpath
 .project
