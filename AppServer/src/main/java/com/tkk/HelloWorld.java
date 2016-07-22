@@ -34,6 +34,8 @@ public class HelloWorld extends HttpServlet {
         //TODO get System.out to a log file
 
         logger.debug("This is debug");
+        logger.trace("Entering application.");
+        logger.error("Didn't do it.");
     }
 
     @PreDestroy
