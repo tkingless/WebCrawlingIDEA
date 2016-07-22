@@ -14,7 +14,7 @@ public class logTest {
 
         logger.debug("This is debug");
         logger.trace("Entering application.");
-        logger.error("Didn't do it.");
+        logger.error("Hello world demo: error.");
 
     }
 }

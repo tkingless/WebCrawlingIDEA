@@ -4,10 +4,7 @@ import com.tkk.MatchCONSTANTS;
 import com.tkk.MatchTestCONSTANTS;
 import com.tkk.crawlee.BoardCrawlee;
 import com.tkk.utils.DateTimeEntity;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +33,8 @@ public class PreRegWorkerTest {
     public void tearDown() throws Exception {
     }
 
-    @Test
+    //@Test
+    @Ignore
     public void StateVerification() throws Exception {
         preRegWorker = workers.get(0);
         simulatedMatchCrleSrc = MatchCrawleeTestSample.preReg103904NotStartYet;

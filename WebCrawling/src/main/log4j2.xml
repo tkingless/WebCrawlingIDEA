@@ -1,4 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="filename">target/test.log</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <File name="File" fileName="${filename}">
+            <PatternLayout>
+                <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <Root level="error">
+            <AppenderRef ref="Console"/>
+        </Root>
+        <Root level="trace">
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>
+
+<!-- To make this config work, according to documentation, need to place in classpath, i.e. by hand, at
+build/classes/com/main -->
+
+<!--
+<?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="debug" strict="true" name="XMLConfigTest"
                packages="org.apache.logging.log4j.test">
     <Properties>
@@ -15,10 +45,10 @@
             </Filters>
         </Appender>
         <Appender type="Console" name="FLOW">
-            <Layout type="PatternLayout" pattern="%C{1}.%M %m %ex%n"/><!-- class and line number -->
+            <Layout type="PatternLayout" pattern="%C{1}.%M %m %ex%n"/>
             <Filters>
-                <Filter type="MarkerFilter" marker="FLOW" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
-                <Filter type="MarkerFilter" marker="EXCEPTION" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Filter type="MarkerFilter" marker="FLOW" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+            <Filter type="MarkerFilter" marker="EXCEPTION" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
         </Appender>
         <Appender type="File" name="File" fileName="${filename}">
@@ -48,3 +78,4 @@
     </Loggers>
 
 </Configuration>
+-->
