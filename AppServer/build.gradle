@@ -42,6 +42,8 @@ tomcatRunWar {
     stopKey = 'rbi'
     outputFile = file('logs/tomcat.log')
     //webDefaultXml = file('src/main/webapp/WEB-INF/web.xml')
+    //this is default context.xml refered from Tomcat, here just for reminding for listing out
+    configFile = file('src/main/webapp/META-INF/context.xml')
 }
 
 
