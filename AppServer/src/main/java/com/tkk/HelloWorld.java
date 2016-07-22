@@ -7,8 +7,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.servlet.http.HttpServlet;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 @WebServlet(urlPatterns = {"/hello"})
 public class HelloWorld extends HttpServlet {
+
+    final static Logger logger = LogManager.getLogger(HelloWorld.class);
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -22,19 +28,17 @@ public class HelloWorld extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        System.out.println("----------");
         System.out.println("---------- HelloWorld servlet Initialized successfully ----------");
-        System.out.println("----------");
         //TODO do something meaningful
 
         //TODO get System.out to a log file
+
+        logger.debug("This is debug");
     }
 
     @PreDestroy
     public void OnDestroy() {
-        System.out.println("----------");
         System.out.println("---------- HelloWorld servlet destroyed ----------");
-        System.out.println("----------");
 
         /*
           log.info("Signaling worker to stop current job/not begin another.");

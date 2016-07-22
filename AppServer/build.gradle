@@ -20,6 +20,10 @@ dependencies {
         exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
     }
 
+    //Using log4j
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.6.2'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.6.2'
+
     compile project(':WebCrawling')
     //runtime project(':api')
 }
@@ -46,6 +50,11 @@ tomcatRunWar {
     configFile = file('src/main/webapp/META-INF/context.xml')
 }
 
+task delLog(group: 'web application', type: Delete) << {
+    println 'removing tomcat.log...'
+    delete 'logs/tomcat.log'
+}
+
 
 //TODO configure war
 war {
@@ -55,3 +64,5 @@ war {
     //classpath configurations.moreLibs // adds a configuration to the WEB-INF/lib dir.
     webXml = file('src/web.xml') // copies a file to WEB-INF/web.xml
 }
+
+//war.from('src/main/resources'){ include('log4j.properties')}
