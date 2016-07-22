@@ -39,7 +39,12 @@ uploadArchives {
 task(customRun, group: 'application') {
     doFirst{
         delete 'Logs/run.log'
-        println 'Deleted run.log'
+        println 'Deleted run.log and copy log4j2.xml'
+        copy{
+            from 'src/main'
+            into 'build/classes/main'
+            include 'log4j2.xml'
+        }
         run.execute()
     }
 }

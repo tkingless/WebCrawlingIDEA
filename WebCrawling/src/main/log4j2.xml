@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="TRACE">
+<Configuration status="warn"> <!--other options: "trace", "debug", "info", "warn", "error" and "fatal" -->
     <Properties>
         <Property name="filename">Logs/run.log</Property>
     </Properties>
