@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
+<Configuration status="TRACE">
     <Properties>
-        <Property name="filename">target/test.log</Property>
+        <Property name="filename">Logs/run.log</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">

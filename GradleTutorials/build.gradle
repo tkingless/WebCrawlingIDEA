@@ -34,6 +34,17 @@ uploadArchives {
     }
 }
 
+/*
+//Customizing given task
+task(customRun, group: 'application') {
+    doFirst{
+        delete 'Logs/run.log'
+        println 'Deleted run.log'
+        run.execute()
+    }
+}
+ */
+
 //Gradle buildscript can use complicated library like:
 /*
 buildscript {

@@ -24,6 +24,18 @@ sourceSets {
     }
 }
 
+task(customRun, group: 'application') {
+    doFirst{
+        delete 'Logs/run.log'
+        println 'Deleted run.log'
+        copy{
+            from 'src/main'
+            into 'build/classes/main'
+            include 'log4j2.xml'
+        }
+        run.execute()
+    }
+}
 
 //noinspection GroovyAssignabilityCheck
 jar {
