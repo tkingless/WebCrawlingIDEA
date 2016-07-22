@@ -47,6 +47,8 @@ public class HelloWorld extends HttpServlet {
          */
     }
 
+    //TODO consider ServletContextListner instead
+
     //REF: http://crunchify.com/how-to-start-embedded-http-jersey-server-during-java-application-startup/
     //REF: http://crunchify.com/how-to-run-java-program-automatically-on-tomcat-startup/
 }
