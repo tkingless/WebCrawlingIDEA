@@ -15,11 +15,16 @@
     </Appenders>
 
     <Loggers>
+        <Logger name="com.tkk.logTest" level="trace" additivity="true">
+                <AppenderRef ref="File"/>
+        </Logger>
+
+        <Logger name="com.tkk.logTest2" level="trace" additivity="true">
+                <AppenderRef ref="Console"/>
+        </Logger>
+
         <Root level="error">
             <AppenderRef ref="Console"/>
-        </Root>
-        <Root level="trace">
-            <AppenderRef ref="File"/>
         </Root>
     </Loggers>
 </Configuration>
