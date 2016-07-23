@@ -52,7 +52,8 @@ tomcatRunWar {
     configFile = file('src/main/webapp/META-INF/context.xml')
 }
 
-task(customRunWar, group: 'web application', description: 'cannot build war, not taking effect of log4j2.xml change') {
+task(customRunWar, group: 'web application', description: 'cannot build war, not taking effect of log4j2.xml change' +
+        ', use default tomcatRunWar instead for building') {
     doFirst{
         delete 'Logs/'
         println 'Deleted Logs'

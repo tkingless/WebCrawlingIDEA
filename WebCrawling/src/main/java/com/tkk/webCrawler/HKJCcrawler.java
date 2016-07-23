@@ -1,9 +1,10 @@
 package com.tkk.webCrawler;
 
-
-import com.tkk.ConcurrencyMachine;
 import com.tkk.crawlee.BoardCrawlee;
 import com.tkk.logTest;
+
+import java.io.IOException;
+import java.text.ParseException;
 
 public class HKJCcrawler extends baseCrawler {
 
@@ -26,21 +27,24 @@ public class HKJCcrawler extends baseCrawler {
 
     public void run() {
         try {
-            logTest.logger.info("HKJCcrwaler run() called, but this is System.out print");
+            logTest.logger.info("HKJCcrwaler run()");
             GetIndexesFromBoard();
         } catch (Exception e) {
             logTest.logger.error(e);
         }
     }
 
-    protected void GetIndexesFromBoard() throws InterruptedException {
+    protected void GetIndexesFromBoard() throws InterruptedException, IOException, ParseException {
 
         BoardCrawlee boardCrawlee = new BoardCrawlee(this);
-        ConcurrencyMachine.GetInstance().RegisterQueue(boardCrawlee);
+
+        /*ConcurrencyMachine.GetInstance().RegisterQueue(boardCrawlee);
 
         synchronized (this) {
             ConcurrencyMachine.GetInstance().InvokeQueue();
-        }
+        }*/
+
+        boardCrawlee.Process();
 
         logTest.logger.info("HKJCcrawler thread revives at GetIndexesFromBoard()");
     }

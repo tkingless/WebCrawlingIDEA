@@ -37,12 +37,7 @@ public class BoardCrawlee extends baseCrawlee {
 
         ////logTest.logger.info("BoardCrawlee call() for callable called");
         try {
-            if (Jdoc == null) {
-                Jdoc = JsoupHelper.GetDocumentFrom(boardUrl);
-                //logTest.logger.info("Jdoc is: ");
-                //logTest.logger.info(Jdoc.toString());
-            }
-            GetChildNodes();
+            Process();
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -50,6 +45,15 @@ public class BoardCrawlee extends baseCrawlee {
             e.printStackTrace();
         }
         return Jdoc;
+    }
+
+    public void Process() throws IOException, ParseException {
+        if (Jdoc == null) {
+            Jdoc = JsoupHelper.GetDocumentFrom(boardUrl);
+            //logTest.logger.info("Jdoc is: ");
+            //logTest.logger.info(Jdoc.toString());
+        }
+        GetChildNodes();
     }
 
     public List<MatchEventWorker> getParsedWorkers() {
