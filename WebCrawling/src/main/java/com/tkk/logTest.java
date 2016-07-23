@@ -1,3 +1,5 @@
+//TODO: delete this class
+
 package com.tkk;
 
 import org.apache.logging.log4j.LogManager;

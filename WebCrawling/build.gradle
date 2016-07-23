@@ -1,5 +1,4 @@
-//mainClassName = 'com.tkk.WebCrawlingMain'
-mainClassName = 'com.tkk.logTest'
+mainClassName = 'com.tkk.WebCrawlingMain'
 
 dependencies {
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
