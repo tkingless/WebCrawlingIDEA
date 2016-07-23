@@ -3,6 +3,7 @@ package com.tkk.webCrawler;
 
 import com.tkk.ConcurrencyMachine;
 import com.tkk.crawlee.BoardCrawlee;
+import com.tkk.logTest;
 
 public class HKJCcrawler extends baseCrawler {
 

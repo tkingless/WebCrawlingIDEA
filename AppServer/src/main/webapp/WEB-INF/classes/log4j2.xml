@@ -38,7 +38,11 @@
             <AppenderRef ref="File_WebCrawlingMain"/>
         </Logger>
 
-        <Logger name="com.tkk.webCrawler" level="trace" additivity="true">
+        <Logger name="com.tkk.webCrawler" level="info" additivity="true">
+            <AppenderRef ref="File_WebCrawlingMain"/>
+        </Logger>
+
+        <Logger name="com.tkk.crawlee" level="info" additivity="true">
             <AppenderRef ref="File_WebCrawlingMain"/>
         </Logger>
 
