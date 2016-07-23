@@ -33,7 +33,7 @@ public class HelloWorld extends HttpServlet {
 
         //TODO get System.out to a log file
 
-        logger.info("This is info");
+        logger.info("This is info, init() called");
     }
 
     @PreDestroy

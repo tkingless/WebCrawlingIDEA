@@ -34,6 +34,10 @@
             <AppenderRef ref="File_ServletContextTest"/>
         </Logger>
 
+        <Logger name="com.tkk.logTest" level="trace" additivity="true">
+            <AppenderRef ref="File_ServletContextTest"/>
+        </Logger>
+
         <Root level="error">
             <AppenderRef ref="Console"/>
         </Root>

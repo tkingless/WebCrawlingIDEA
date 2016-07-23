@@ -11,6 +11,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import com.tkk.logTest;
+
 
 public class ServletContextListenerTest implements ServletContextListener {
 
@@ -20,6 +22,7 @@ public class ServletContextListenerTest implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
 
         logger.trace("contextInitialized() called");
+        logTest.DoALog();
     }
 
     @Override

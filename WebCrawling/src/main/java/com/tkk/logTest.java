@@ -12,11 +12,9 @@ public class logTest {
 
     final static Logger logger = LogManager.getLogger(logTest.class);
 
-    public static void main(String[] args) {
+    public static void DoALog() {
 
-        logger.debug("This is debug");
-        logger.trace("Entering application.");
-        logger.error("Hello world demo: error.");
+        logger.info("logTest DoALog() called");
 
     }
 }

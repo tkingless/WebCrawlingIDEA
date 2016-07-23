@@ -62,6 +62,16 @@ task(customRunWar, group: 'web application', description: 'cannot build war, not
     }
 }
 
+task(customClean, group: 'build') {
+    doFirst{
+        delete 'Logs/'
+        println 'Deleted Logs'
+    }
+    doLast{
+        clean.execute()
+    }
+}
+
 //TODO configure war
 war {
     from 'src/rootContent' // adds a file-set to the root of the archive
