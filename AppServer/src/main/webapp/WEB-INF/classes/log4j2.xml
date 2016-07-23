@@ -2,7 +2,7 @@
 <Configuration status="warn"> <!--other options: "trace", "debug", "info", "warn", "error" and "fatal" -->
     <Properties>
         <Property name="filename_HelloWorld">Logs/AppRun_HelloWorld.log</Property>
-        <Property name="filename_ServletContextTest">Logs/AppRun_ServletContextTest.log</Property>
+        <Property name="filename_WebCrawlingMain">Logs/AppRun_WebCrawlingMain.log</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
@@ -13,7 +13,7 @@
                 <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
             </PatternLayout>
         </File>
-        <File name="File_ServletContextTest" fileName="${filename_ServletContextTest}">
+        <File name="File_WebCrawlingMain" fileName="${filename_WebCrawlingMain}">
             <PatternLayout>
                 <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
             </PatternLayout>
@@ -31,11 +31,15 @@
         </Logger>
 
         <Logger name="com.tkk.WebCrawlingApp" level="trace" additivity="true">
-            <AppenderRef ref="File_ServletContextTest"/>
+            <AppenderRef ref="File_WebCrawlingMain"/>
         </Logger>
 
         <Logger name="com.tkk.logTest" level="trace" additivity="true">
-            <AppenderRef ref="File_ServletContextTest"/>
+            <AppenderRef ref="File_WebCrawlingMain"/>
+        </Logger>
+
+        <Logger name="com.tkk.webCrawler" level="trace" additivity="true">
+            <AppenderRef ref="File_WebCrawlingMain"/>
         </Logger>
 
         <Root level="error">

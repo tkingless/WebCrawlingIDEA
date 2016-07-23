@@ -4,6 +4,7 @@ package com.tkk;
  * Created by tkingless on 7/23/16.
  */
 
+import com.tkk.webCrawler.HKJCcrawler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +22,11 @@ public class WebCrawlingApp implements ServletContextListener {
 
         logger.trace("contextInitialized() called");
         logTest.DoALog();
+
+        HKJCcrawler hkjcCrlr = HKJCcrawler.GetInstance();
+        hkjcCrlr.NewThreadRun();
+
+        System.out.println("Program main runned to LAST line!");
     }
 
     @Override

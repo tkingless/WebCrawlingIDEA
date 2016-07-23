@@ -15,6 +15,7 @@ public class logTest {
     public static void DoALog() {
 
         logger.info("logTest DoALog() called");
+        System.out.println("logTest, this is System.out println()");
 
     }
 }

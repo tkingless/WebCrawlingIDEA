@@ -1,9 +1,14 @@
 package com.tkk.webCrawler;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Created by tkingless on 24/6/2016.
  */
 public abstract class baseCrawler extends Thread {
+
+    final static Logger logger = LogManager.getLogger(baseCrawler.class);
 
     public enum CrawlingStates {
         STATE_PARSE_IN_CONFIG,

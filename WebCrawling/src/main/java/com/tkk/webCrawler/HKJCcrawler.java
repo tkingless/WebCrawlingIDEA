@@ -25,7 +25,7 @@ public class HKJCcrawler extends baseCrawler {
 
     public void run() {
         try {
-            System.out.println("HKJCcrwaler run() called");
+            System.out.println("HKJCcrwaler run() called, but this is System.out print");
             GetIndexesFromBoard();
         } catch (Exception e) {
             System.err.println(e);
