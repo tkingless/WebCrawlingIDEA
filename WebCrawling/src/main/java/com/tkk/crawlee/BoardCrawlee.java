@@ -196,6 +196,7 @@ public class BoardCrawlee extends baseCrawlee {
     }
 
     private static List<String> livingWorkerMatchIDs = new ArrayList<String>();
+    private static List<MatchEventWorker> livingWorkers = new ArrayList<MatchEventWorker>();
 
     public synchronized static boolean IsRegisteredByID(MatchEventWorker worker) {
         boolean isRegistered = false;
@@ -210,6 +211,7 @@ public class BoardCrawlee extends baseCrawlee {
     public synchronized static void RegisterWorker(MatchEventWorker worker) {
         if (!livingWorkerMatchIDs.contains(worker.getMatchId())) {
             livingWorkerMatchIDs.add(worker.getMatchId());
+            livingWorkers.add(worker);
         } else {
             logTest.logger.error("replicated local registration");
         }
@@ -218,10 +220,17 @@ public class BoardCrawlee extends baseCrawlee {
 
     //TODO at somewhere appropriate, call this function
     public synchronized static void DetachWorker(MatchEventWorker worker) {
-        if (livingWorkerMatchIDs.contains(worker.getMatchId()))
+        if (livingWorkerMatchIDs.contains(worker.getMatchId())) {
             livingWorkerMatchIDs.remove(worker.getMatchId());
-        else
+            livingWorkers.remove(worker);
+        } else
             logTest.logger.error("No such local registration before");
+    }
+
+    public synchronized static void TerminateAllLivingWorkers(){
+        for (MatchEventWorker worker: livingWorkers){
+            worker.Kill();
+        }
     }
 
     public synchronized static List<MatchEventWorker> GenerateTestWorker(MatchTestCONSTANTS.TestType type, String testBoardHtml) {

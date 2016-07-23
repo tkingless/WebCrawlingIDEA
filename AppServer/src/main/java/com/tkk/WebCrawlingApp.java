@@ -4,6 +4,7 @@ package com.tkk;
  * Created by tkingless on 7/23/16.
  */
 
+import com.tkk.crawlee.BoardCrawlee;
 import com.tkk.webCrawler.HKJCcrawler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,6 +42,7 @@ public class WebCrawlingApp implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent sce) {
         logger.trace("contextDestroyed() called");
         //TODO stop all living match workers
+        BoardCrawlee.TerminateAllLivingWorkers();
 
     }
 
