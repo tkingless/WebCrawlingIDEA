@@ -21,6 +21,6 @@
     </servlet>
 
     <listener>
-        <listener-class>com.tkk.ServletContextListenerTest</listener-class>
+        <listener-class>com.tkk.WebCrawlingApp</listener-class>
     </listener>
 </web-app>
