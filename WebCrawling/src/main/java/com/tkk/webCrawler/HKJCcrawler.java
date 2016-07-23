@@ -25,10 +25,10 @@ public class HKJCcrawler extends baseCrawler {
 
     public void run() {
         try {
-            System.out.println("HKJCcrwaler run() called, but this is System.out print");
+            logTest.logger.info("HKJCcrwaler run() called, but this is System.out print");
             GetIndexesFromBoard();
         } catch (Exception e) {
-            System.err.println(e);
+            logTest.logger.error(e);
         }
     }
 
@@ -41,7 +41,7 @@ public class HKJCcrawler extends baseCrawler {
             ConcurrencyMachine.GetInstance().InvokeQueue();
         }
 
-        System.out.println("HKJCcrawler thread revives at GetIndexesFromBoard()");
+        logTest.logger.info("HKJCcrawler thread revives at GetIndexesFromBoard()");
     }
 
     @Override

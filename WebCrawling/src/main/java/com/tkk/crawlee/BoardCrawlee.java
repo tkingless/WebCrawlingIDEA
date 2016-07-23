@@ -1,5 +1,6 @@
 package com.tkk.crawlee;
 
+import com.tkk.logTest;
 import com.tkk.webCrawler.MatchEventWorker;
 import com.tkk.MatchTestCONSTANTS;
 import com.tkk.webCrawler.baseCrawler;
@@ -34,12 +35,12 @@ public class BoardCrawlee extends baseCrawlee {
     //callable callbacks
     public Document call() {
 
-        ////System.out.println("BoardCrawlee call() for callable called");
+        ////logTest.logger.info("BoardCrawlee call() for callable called");
         try {
             if (Jdoc == null) {
                 Jdoc = JsoupHelper.GetDocumentFrom(boardUrl);
-                //System.out.println("Jdoc is: ");
-                //System.out.println(Jdoc.toString());
+                //logTest.logger.info("Jdoc is: ");
+                //logTest.logger.info(Jdoc.toString());
             }
             GetChildNodes();
         } catch (IOException e) {
@@ -123,21 +124,21 @@ public class BoardCrawlee extends baseCrawlee {
             cardinality = cardinalchecks.get(0).size();
         } else {
             result = false;
-            System.out.println("[Error]BoardCrawlee.CardinalityChecking is null");
+            logTest.logger.info("[Error]BoardCrawlee.CardinalityChecking is null");
         }
 
         for (Elements eles : cardinalchecks) {
             if (eles.size() != cardinality) {
                 result = false;
-                System.out.println("[Error]inconsistent cardinality check number found, hint: ");
-                System.out.println(eles.text());
+                logTest.logger.info("[Error]inconsistent cardinality check number found, hint: ");
+                logTest.logger.info(eles.text());
                 break;
             }
         }
 
         //debug use
        /* for (Elements eles: cardinalityChecks){
-            System.out.println(eles.size());
+            logTest.logger.info(eles.size());
         }*/
 
         return result;
@@ -156,7 +157,7 @@ public class BoardCrawlee extends baseCrawlee {
 
         List<MatchEventWorker> workerList = new ArrayList<MatchEventWorker>();
 
-        System.out.println("[Iterator loop start:]");
+        logTest.logger.info("[Iterator loop start:]");
         Iterator<Element> matchNoIte = matchNos.iterator();
         Iterator<Element> matchTeamIte = matchTeams.iterator();
         Iterator<Element> matchStatIte = statuses.iterator();
@@ -172,7 +173,7 @@ public class BoardCrawlee extends baseCrawlee {
             if (idMatcher.find()) {
                 matchId = idMatcher.group();
                 matchId = matchId.substring(matchId.lastIndexOf('=') + 1);
-                System.out.println("GetChildNodes(), match indexes: " + matchId);
+                logTest.logger.info("GetChildNodes(), match indexes: " + matchId);
             }
 
             MatchEventWorker crleWorker = null;
@@ -206,7 +207,7 @@ public class BoardCrawlee extends baseCrawlee {
         if (!livingWorkerMatchIDs.contains(worker.getMatchId())) {
             livingWorkerMatchIDs.add(worker.getMatchId());
         } else {
-            System.err.println("replicated local registration");
+            logTest.logger.error("replicated local registration");
         }
     }
 
@@ -216,7 +217,7 @@ public class BoardCrawlee extends baseCrawlee {
         if (livingWorkerMatchIDs.contains(worker.getMatchId()))
             livingWorkerMatchIDs.remove(worker.getMatchId());
         else
-            System.err.println("No such local registration before");
+            logTest.logger.error("No such local registration before");
     }
 
     public synchronized static List<MatchEventWorker> GenerateTestWorker(MatchTestCONSTANTS.TestType type, String testBoardHtml) {

@@ -35,7 +35,7 @@ public class TutorGroupCrawler extends tutorCrawler {
 		try {
 			ProcessUrlsAction();
 		} catch (Exception e) {
-			System.err.println(e);
+			logTest.logger.error(e);
 		}
 	}
 
@@ -47,7 +47,7 @@ public class TutorGroupCrawler extends tutorCrawler {
 		List<TutorCaseCrawlee> tmpCrles = new ArrayList<TutorCaseCrawlee>();
 
 		for (String url : urls) {
-			System.out.println("The url: " + url);
+			logTest.logger.info("The url: " + url);
 			try {
 				Document aDoc = Jsoup.connect(url).data("query", "Java").userAgent("Mozilla").cookie("auth", "token")
 						.timeout(6000).post();
@@ -62,7 +62,7 @@ public class TutorGroupCrawler extends tutorCrawler {
 
 		synchronized (tutorCaseCrawlees) {
 			tutorCaseCrawlees.addAll(tmpCrles);
-			System.out.println("[TutorGroup] tutorCaseCrawlees size: " + tutorCaseCrawlees.size());
+			logTest.logger.info("[TutorGroup] tutorCaseCrawlees size: " + tutorCaseCrawlees.size());
 			tutorCaseCrawlees.notify();
 		}
 
@@ -94,16 +94,16 @@ public class TutorGroupCrawler extends tutorCrawler {
 				// Filter out not today's post
 				Matcher dayMatcher = dayPattern.matcher(headingStr);
 				if (dayMatcher.find()) {
-					// System.out.println(dayMatcher.group(0));
+					// logTest.logger.info(dayMatcher.group(0));
 
 					// dayMatcher.group(0) is header_text and 1 is context
 					// text
 					Matcher TodayMatcher = TodayPattern.matcher(dayMatcher.group(0));
 					if (!TodayMatcher.find()) {
-						// System.out.println("NONONONO!!!!");
+						// logTest.logger.info("NONONONO!!!!");
 						continue;
 					}
-					// System.out.println("Today's day: " + todayDay);
+					// logTest.logger.info("Today's day: " + todayDay);
 				}
 
 				String[] phaseToBeEmpty = { "自我介紹: ", "時間: ", "我同意所有有關導師條款" };
@@ -111,8 +111,8 @@ public class TutorGroupCrawler extends tutorCrawler {
 					headingStr = headingStr.replace(outPhase, "");
 					contentStr = contentStr.replace(outPhase, "");
 				}
-				System.out.println(headingStr);
-				System.out.println(contentStr);
+				logTest.logger.info(headingStr);
+				logTest.logger.info(contentStr);
 
 				TutorCaseCrawlee tmpCrle = new TutorCaseCrawlee(0, "", this);
 				tmpCrle.Put("Website", "Website: " + this.toString());
@@ -129,7 +129,7 @@ public class TutorGroupCrawler extends tutorCrawler {
 		Pattern price = Pattern.compile("\\$[0-9]{2,4}");
 		Matcher matcher = price.matcher(aText);
 		if(matcher.find()){
-			System.out.println("[SearchCritP] the price is : " + matcher.group(0) + " and the text: " + aText);
+			logTest.logger.info("[SearchCritP] the price is : " + matcher.group(0) + " and the text: " + aText);
 			return matcher.group(0) + "/hr";
 			}
 		return "$98734/hr"; 
@@ -151,7 +151,7 @@ public class TutorGroupCrawler extends tutorCrawler {
 			}
 
 			if (beDeleted) {
-				System.out.println("[SearchCrit] TutorGroup Going to delete tutorCaseCrawlee: " + tutorCaseCrawlee.GetValueByKey("Info"));
+				logTest.logger.info("[SearchCrit] TutorGroup Going to delete tutorCaseCrawlee: " + tutorCaseCrawlee.GetValueByKey("Info"));
 				crawlee_ite.remove();
 			}
 		}

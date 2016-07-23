@@ -43,7 +43,7 @@ public class L4TutorCrawler extends tutorCrawler {
 		try {
 			ProcessUrlsAction();
 		} catch (Exception e) {
-			System.err.println(e);
+			logTest.logger.error(e);
 		}
 	}
 
@@ -60,7 +60,7 @@ public class L4TutorCrawler extends tutorCrawler {
 
 		// load inx board page to get on-board indices
 		for (String idx_url : idx_urls) {
-			System.out.println("The idx url: " + idx_url);
+			logTest.logger.info("The idx url: " + idx_url);
 
 			try {
 				Document idxDoc = Jsoup.connect(idx_url).data("query", "Java").userAgent("Mozilla")
@@ -87,7 +87,7 @@ public class L4TutorCrawler extends tutorCrawler {
 				tutorCaseCrawlees.add(new TutorCaseCrawlee(idx, url + index, this));
 			}
 
-			System.out.println("[L4Tutor tutorCaseCrawlees] size: " + this.getTutorCaseCrawlees().size());
+			logTest.logger.info("[L4Tutor tutorCaseCrawlees] size: " + this.getTutorCaseCrawlees().size());
 			tutorCaseCrawlees.notify();
 		}
 	}
@@ -130,7 +130,7 @@ public class L4TutorCrawler extends tutorCrawler {
 			}
 
 			if (beDeleted) {
-				System.out.println("[SearchCrit] L4Tutor Going to delete tutorCaseCrawlee: " + tutorCaseCrawlee.getCase_index());
+				logTest.logger.info("[SearchCrit] L4Tutor Going to delete tutorCaseCrawlee: " + tutorCaseCrawlee.getCase_index());
 				crawlee_ite.remove();
 			}
 		}
@@ -140,7 +140,7 @@ public class L4TutorCrawler extends tutorCrawler {
 		super.PostProcessAction();
 		// Result:
 		for (TutorCaseCrawlee cr : tutorCaseCrawlees) {
-			System.out.println("[SearchCrit] L4Tutor Remaining tutorCaseCrawlee: " + cr.getCase_index());
+			logTest.logger.info("[SearchCrit] L4Tutor Remaining tutorCaseCrawlee: " + cr.getCase_index());
 		}
 	}
 

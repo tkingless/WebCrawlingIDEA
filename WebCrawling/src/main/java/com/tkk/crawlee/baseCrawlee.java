@@ -1,5 +1,6 @@
 package com.tkk.crawlee;
 
+import com.tkk.logTest;
 import com.tkk.webCrawler.baseCrawler;
 import org.jsoup.nodes.Document;
 
@@ -35,7 +36,7 @@ public class baseCrawlee implements Callable<Document> {
     }
 
     public Document call() {
-        System.out.println("baseCrawlee call() called.");
+        logTest.logger.info("baseCrawlee call() called.");
        return Jdoc;
     }
 }

@@ -56,13 +56,13 @@ public class TutorCaseCrawlee extends baseCrawlee {
 		for (String str : strings) {
 			content = content + str + System.getProperty("line.separator");
 		}
-		// System.out.println("[TutorCaseCrawlee] content: " + content);
+		// logTest.logger.info("[TutorCaseCrawlee] content: " + content);
 		return content;
 	}
 
 	public int GetFee() {
 		if (map.containsKey("Fee")) {
-			// System.out.println("[SearchCrit] fee: " + map.get("Fee"));
+			// logTest.logger.info("[SearchCrit] fee: " + map.get("Fee"));
 			Pattern price = Pattern.compile("\\$[0-9]{2,4}");
 			Matcher matcher = price.matcher(map.get("Fee"));
 			if (matcher.find()) {
@@ -106,7 +106,7 @@ public class TutorCaseCrawlee extends baseCrawlee {
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
-			System.err.println("[Jsoup]by experience, if IO exception, could be timeout");
+			logTest.logger.error("[Jsoup]by experience, if IO exception, could be timeout");
 			state = State.TIME_OUT;
 		}
 		return Jdoc;

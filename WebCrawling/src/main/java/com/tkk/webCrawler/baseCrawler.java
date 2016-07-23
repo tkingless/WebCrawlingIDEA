@@ -46,7 +46,7 @@ public abstract class baseCrawler extends Thread {
         if(thread != null){
             thread.start(); //jump to the run function to see what to do
         }else{
-            System.err.println("thread not initialized");
+            logTest.logger.error("thread not initialized");
         }
     }
 }

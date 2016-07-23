@@ -48,8 +48,8 @@ public class MatchEventWorker extends baseCrawler {
         super(CrawlerKeyBinding.MatchEvent, threadName + "-" + aMatchId);
         status = MatchStatus.STATE_INITIALIZATION;
         matchId = aMatchId;
-        System.out.println("MatchEventWorker constructed, matchId:" + matchId);
-        ///System.out.println("and allOddsLink: " + linkAddr);
+        logTest.logger.info("MatchEventWorker constructed, matchId:" + matchId);
+        ///logTest.logger.info("and allOddsLink: " + linkAddr);
 
         ExtractMatcdKey(matchKeyEle);
         ExtractTeams(teamsEle);
@@ -64,7 +64,7 @@ public class MatchEventWorker extends baseCrawler {
             ExtractStatus(statusEle);
         }
 
-        System.out.println("MatcherEventWorker finished constructer.");
+        logTest.logger.info("MatcherEventWorker finished constructer.");
 
         //do not use run(), to create worker threads
         this.NewThreadRun();
@@ -79,29 +79,29 @@ public class MatchEventWorker extends baseCrawler {
         while (!terminateStates.contains(status)) {
             switch (status) {
                 case STATE_INITIALIZATION:
-                    System.out.println("Threadname: " + threadName + matchId + " STATE_INITIALIZATION");
+                    logTest.logger.info("Threadname: " + threadName + matchId + " STATE_INITIALIZATION");
                     OnStateInitialization();
                     break;
                 case STATE_PRE_REGISTERED:
-                    System.out.println("Threadname: " + threadName + matchId + " STATE_PRE_REGISTERED");
+                    logTest.logger.info("Threadname: " + threadName + matchId + " STATE_PRE_REGISTERED");
                     EmitRequest();
                     OnStatePreRegistered();
                     break;
                 case STATE_MATCH_START:
-                    System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_START");
+                    logTest.logger.info("Threadname: " + threadName + matchId + " STATE_MATCH_START");
                     OnStateMatchStart();
                     break;
                 case STATE_MATCH_LOGGING:
-                    System.out.println("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
+                    logTest.logger.info("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
                     EmitRequest();
                     OnStateMatchLogging();
                     break;
                 case STATE_FUTURE_MATCH:
-                    System.out.println("Threadname: " + threadName + matchId + " STATE_FUTURE_MATCH");
+                    logTest.logger.info("Threadname: " + threadName + matchId + " STATE_FUTURE_MATCH");
                     OnStateFuture();
                     break;
                 default:
-                    System.out.println("Threadname: " + threadName + matchId + " unknown state");
+                    logTest.logger.info("Threadname: " + threadName + matchId + " unknown state");
                     break;
             }
 
@@ -116,12 +116,12 @@ public class MatchEventWorker extends baseCrawler {
             if(status == MatchStatus.STATE_MATCH_ENDED){
                 //TODO (DB feature) mark the actual end time
                 endTime = new DateTimeEntity();
-                System.out.println("Actual end time: "+ endTime.toString());
+                logTest.logger.info("Actual end time: "+ endTime.toString());
             }
             BoardCrawlee.DetachWorker(this);
         }
 
-        System.out.println("[LOG] Threadname: " + threadName + matchId + " Proc() escaped, and the state is: " + status.toString());
+        logTest.logger.info("[LOG] Threadname: " + threadName + matchId + " Proc() escaped, and the state is: " + status.toString());
     }
 
     /*
@@ -130,7 +130,7 @@ public class MatchEventWorker extends baseCrawler {
 
     private void ExtractMatcdKey(Element matchKeyEle) {
         matchKey = matchKeyEle.text();
-        System.out.println("GetChildNodes(), matchKey: " + matchKey);
+        logTest.logger.info("GetChildNodes(), matchKey: " + matchKey);
     }
 
     private boolean noDBcommenceTimeHistory = false;
@@ -159,7 +159,7 @@ public class MatchEventWorker extends baseCrawler {
                 dateTimeBuilder.append(DateTimeEntity.GetCurrentYear());
 
                 commenceTime = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
-                System.out.println("ExtractStatus(),commenceTime: " + commenceTime.toString());
+                logTest.logger.info("ExtractStatus(),commenceTime: " + commenceTime.toString());
                 break;
             case STAGE_FIRST:
             case STAGE_HALFTIME:
@@ -167,13 +167,13 @@ public class MatchEventWorker extends baseCrawler {
                 //TODO (DB feature) try to load futureRecord to get the commenceTime
 
                 if (commenceTime == null) {
-                    System.out.println("[Warning] commenceTime is null, set commenceTime to now()");
+                    logTest.logger.info("[Warning] commenceTime is null, set commenceTime to now()");
                     commenceTime = new DateTimeEntity();
                     noDBcommenceTimeHistory = true;
                 }
                 break;
             default:
-                System.out.println("[Error] no proper type input");
+                logTest.logger.info("[Error] no proper type input");
                 break;
         }
     }
@@ -192,7 +192,7 @@ public class MatchEventWorker extends baseCrawler {
 
     private void ExtractTeams(Element teamsEle) {
         matchTeams = teamsEle.text();
-        System.out.println("GetChildNodes(), matchTeams: " + matchTeams);
+        logTest.logger.info("GetChildNodes(), matchTeams: " + matchTeams);
     }
 
     /*
@@ -216,7 +216,7 @@ public class MatchEventWorker extends baseCrawler {
         long timediff = 0;
         if (!noDBcommenceTimeHistory) {
             timediff = commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
-            System.out.println("timediff: " + timediff + " match id: " + matchId);
+            logTest.logger.info("timediff: " + timediff + " match id: " + matchId);
         }
 
         //only pass considered cases
@@ -254,13 +254,13 @@ public class MatchEventWorker extends baseCrawler {
                 //TODO finetune this longwait, sometime it can be even an half hour long!
                 long longwait = timediff + 1000 * 3;
                 scanPeriod = longwait;
-                System.out.println("Threadname: " + threadName + matchId + " enter long wait in PRE reg state");
+                logTest.logger.info("Threadname: " + threadName + matchId + " enter long wait in PRE reg state");
 
             }
         } else if (timediff <= 0) {
             if (stage == MatchStage.STAGE_ESST) {
                 scanPeriod = 1000 * 2;
-                System.out.println("dry waiting for start state");
+                logTest.logger.info("dry waiting for start state");
             }
         }
 
@@ -292,7 +292,7 @@ public class MatchEventWorker extends baseCrawler {
 
         if (shouldUpdateDB) {
             UpdateDB();
-            System.out.println(lastMatchCrle.toString());
+            logTest.logger.info(lastMatchCrle.toString());
             shouldUpdateDB = false;
         }
 
@@ -326,10 +326,10 @@ public class MatchEventWorker extends baseCrawler {
 
     public void run() {
         try {
-            ////System.out.println("MatchEventWorker run() called");
+            ////logTest.logger.info("MatchEventWorker run() called");
             Proc();
         } catch (Exception e) {
-            System.err.println(e);
+            logTest.logger.error(e);
         }
     }
 
@@ -401,7 +401,7 @@ public class MatchEventWorker extends baseCrawler {
         newMatchCrle.run();
 
         if (!newMatchCrle.isMatchXmlValid()) {
-            System.out.println("[Error] the grabbed xml is not valid");
+            logTest.logger.info("[Error] the grabbed xml is not valid");
             status = MatchStatus.STATE_TERMINATED;
             return;
         }
@@ -419,7 +419,7 @@ public class MatchEventWorker extends baseCrawler {
         if (matchPools == null) {
             //TODO (DB feature) update the pooltypes
             matchPools = crle.getPoolType();
-            System.out.println("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());
+            logTest.logger.info("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());
         }
 
         stage = crle.getMatchStage();

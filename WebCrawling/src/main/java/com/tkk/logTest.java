@@ -10,12 +10,12 @@ import org.apache.logging.log4j.Logger;
  */
 public class logTest {
 
-    final static Logger logger = LogManager.getLogger(logTest.class);
+    final public static Logger logger = LogManager.getLogger(logTest.class);
 
     public static void DoALog() {
 
         logger.info("logTest DoALog() called");
-        System.out.println("logTest, this is System.out println()");
+        logger.error("logTest DoALog() called");
 
     }
 }

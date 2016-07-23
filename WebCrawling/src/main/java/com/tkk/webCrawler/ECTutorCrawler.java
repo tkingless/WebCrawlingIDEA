@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.tkk.crawlee.TutorCaseCrawlee;
+import com.tkk.logTest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -42,7 +43,7 @@ public class ECTutorCrawler extends tutorCrawler {
 		try {
 			ProcessUrlsAction();
 		} catch (Exception e) {
-			System.err.println(e);
+			logTest.logger.error(e);
 		}
 	}
 
@@ -59,7 +60,7 @@ public class ECTutorCrawler extends tutorCrawler {
 
 		// load inx board page to get on-board indices
 		for (String idx_url : idx_urls) {
-			System.out.println("The idx url: " + idx_url);
+			logTest.logger.info("The idx url: " + idx_url);
 
 			try {
 				Document idxDoc = Jsoup.connect(idx_url).data("query", "Java").userAgent("Mozilla")
@@ -86,7 +87,7 @@ public class ECTutorCrawler extends tutorCrawler {
 				tutorCaseCrawlees.add(new TutorCaseCrawlee(idx, url + index, this));
 			}
 
-			System.out.println("[ECTutor tutorCaseCrawlees] size: " + this.getTutorCaseCrawlees().size());
+			logTest.logger.info("[ECTutor tutorCaseCrawlees] size: " + this.getTutorCaseCrawlees().size());
 			tutorCaseCrawlees.notify();
 		}
 	}
@@ -129,7 +130,7 @@ public class ECTutorCrawler extends tutorCrawler {
 			}
 
 			if (beDeleted) {
-				System.out.println("[SearchCrit] Going to delete tutorCaseCrawlee: " + tutorCaseCrawlee.getCase_index());
+				logTest.logger.info("[SearchCrit] Going to delete tutorCaseCrawlee: " + tutorCaseCrawlee.getCase_index());
 				crawlee_ite.remove();
 			}
 		}
@@ -139,7 +140,7 @@ public class ECTutorCrawler extends tutorCrawler {
 		super.PostProcessAction();
 		// Result:
 		for (TutorCaseCrawlee cr : tutorCaseCrawlees) {
-			System.out.println("[SearchCrit] ECTutor Remaining tutorCaseCrawlee: " + cr.getCase_index());
+			logTest.logger.info("[SearchCrit] ECTutor Remaining tutorCaseCrawlee: " + cr.getCase_index());
 		}
 	}
 

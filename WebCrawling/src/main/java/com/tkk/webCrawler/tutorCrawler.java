@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.tkk.logTest;
 import com.tkk.utils.*;
 import com.tkk.crawlee.TutorCaseCrawlee;
 
@@ -55,7 +56,7 @@ public abstract class tutorCrawler extends baseCrawler {
 				String val = record.get(config_header_mapping[2]);
 
 				if ( Key.equals(webKey)){
-					//System.out.println("[Apache] apache commons csv here, The WebKey: " + webKey + ", TYPE: " + key
+					//logTest.logger.info("[Apache] apache commons csv here, The WebKey: " + webKey + ", TYPE: " + key
 							//+ " and the VALUE: " + val);
 
 					config.put(key, val);
@@ -63,7 +64,7 @@ public abstract class tutorCrawler extends baseCrawler {
 			}
 			csvHdr.Close();
 		} catch (Exception ex) {
-			System.err.println(ex);
+			logTest.logger.error(ex);
 		}
 	}
 	
@@ -77,7 +78,7 @@ public abstract class tutorCrawler extends baseCrawler {
 
 	public void AnalyzeContentAction(TutorCaseCrawlee crwl) {
 		mState = CrawlingStates.STATE_ANALYSE_CONTENT;
-		System.out.println("[tutorCrawler] AnalyzeContentAction() called");
+		logTest.logger.info("[tutorCrawler] AnalyzeContentAction() called");
 	}
 
 	public void FilterByCritAction() {

@@ -2,6 +2,7 @@ package com.tkk.crawlee;
 
 import com.tkk.MatchCONSTANTS;
 import com.tkk.MatchCONSTANTS.*;
+import com.tkk.logTest;
 import com.tkk.utils.DateTimeEntity;
 import com.tkk.utils.MapComparator;
 import com.tkk.webCrawler.baseCrawler;
@@ -78,7 +79,7 @@ public class MatchCrawlee extends baseCrawlee {
     }
 
     public void run() {
-        System.out.println("MatchCrawlee run() called");
+        logTest.logger.info("MatchCrawlee run() called");
 
         try {
             String source;
@@ -88,7 +89,7 @@ public class MatchCrawlee extends baseCrawlee {
             } else {
                 source = JsoupHelper.GetDocumentFromStr(strSource).toString();
             }
-            //System.out.println(source);
+            //logTest.logger.info(source);
             InputStream xml = IOUtils.toInputStream(source, "UTF-8");
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -96,7 +97,7 @@ public class MatchCrawlee extends baseCrawlee {
             doc = db.parse(xml);
 
             doc.getDocumentElement().normalize();
-            //System.out.println ("Root element of the doc is " + doc.getDocumentElement().getNodeName());
+            //logTest.logger.info ("Root element of the doc is " + doc.getDocumentElement().getNodeName());
 
             //List<String> queries = Arrays.asList(CornerTotalQuery,CornerLineQuery,CornerHighQuery,CornerLowQuery);
 
@@ -107,11 +108,11 @@ public class MatchCrawlee extends baseCrawlee {
                 ExtractStage();
                 ExtractScores();
                 /*for (String str : queries) {
-                    System.out.println(GetValueByQuery(str));
+                    logTest.logger.info(GetValueByQuery(str));
                 }*/
                 recordTime = new DateTimeEntity();
             } else {
-                System.out.println("MatchCrawlee CheckXMLNodeValid() not valid.");
+                logTest.logger.info("MatchCrawlee CheckXMLNodeValid() not valid.");
             }
 
         } catch (IOException e) {
@@ -187,7 +188,7 @@ public class MatchCrawlee extends baseCrawlee {
                     ExplainCHIpool(hmap);
                     break;
                 default:
-                    //System.out.println("[Error] undefined pool type: " + type.toString());
+                    //logTest.logger.info("[Error] undefined pool type: " + type.toString());
                     hmap.put("Error", "true");
                     break;
             }
@@ -286,8 +287,8 @@ public class MatchCrawlee extends baseCrawlee {
                     for (InplayPoolType aType : oldCrle.getPoolType()) {
                         if (MapComparator.CompareMapsDifferent(oldCrle.ExtractPoolTypeBody(aType)
                                 , newCrle.ExtractPoolTypeBody(aType))) {
-                            System.out.println("oldCrle body: " + oldCrle.ExtractPoolTypeBody(aType));
-                            System.out.println("newCrle body: " + newCrle.ExtractPoolTypeBody(aType));
+                            logTest.logger.info("oldCrle body: " + oldCrle.ExtractPoolTypeBody(aType));
+                            logTest.logger.info("newCrle body: " + newCrle.ExtractPoolTypeBody(aType));
                             toUpdate = true;
                             break;
                         }
