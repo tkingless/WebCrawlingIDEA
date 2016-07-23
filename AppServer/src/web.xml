@@ -19,4 +19,8 @@
         <servlet-class>com.tkk.HelloWorld</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+
+    <listener>
+        <listener-class>com.tkk.ServletContextListenerTest</listener-class>
+    </listener>
 </web-app>

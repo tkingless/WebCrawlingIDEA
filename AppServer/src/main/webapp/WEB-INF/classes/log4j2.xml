@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn"> <!--other options: "trace", "debug", "info", "warn", "error" and "fatal" -->
     <Properties>
-        <Property name="filename">Logs/AppRun.log</Property>
+        <Property name="filename_HelloWorld">Logs/AppRun_HelloWorld.log</Property>
+        <Property name="filename_ServletContextTest">Logs/AppRun_ServletContextTest.log</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
-        <File name="File" fileName="${filename}">
+        <File name="File_HelloWorld" fileName="${filename_HelloWorld}">
+            <PatternLayout>
+                <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+        </File>
+        <File name="File_ServletContextTest" fileName="${filename_ServletContextTest}">
             <PatternLayout>
                 <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
             </PatternLayout>
@@ -17,11 +23,15 @@
     <Loggers>
         <!-- the logger name need to be same as the class -->
         <Logger name="com.tkk.HelloWorld" level="trace" additivity="true">
-                <AppenderRef ref="File"/>
+                <AppenderRef ref="File_HelloWorld"/>
         </Logger>
 
         <Logger name="com.tkk.HelloWorld2" level="trace" additivity="true">
                 <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Logger name="com.tkk.ServletContextListenerTest" level="trace" additivity="true">
+            <AppenderRef ref="File_ServletContextTest"/>
         </Logger>
 
         <Root level="error">
