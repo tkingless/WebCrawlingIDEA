@@ -46,17 +46,21 @@ tomcatRunWar {
     daemon = true
     httpPort = 8080
     stopKey = 'rbi'
-    outputFile = file('logs/tomcat.log')
+    outputFile = file('Logs/tomcat.log')
     //webDefaultXml = file('src/main/webapp/WEB-INF/web.xml')
     //this is default context.xml refered from Tomcat, here just for reminding for listing out
     configFile = file('src/main/webapp/META-INF/context.xml')
 }
 
-task delLog(group: 'web application', type: Delete) << {
-    println 'removing tomcat.log...'
-    delete 'logs/tomcat.log'
+task(customRunWar, group: 'web application', description: 'cannot build war, not taking effect of log4j2.xml change') {
+    doFirst{
+        delete 'Logs/'
+        println 'Deleted Logs'
+    }
+    doLast{
+        tomcatRunWar.execute()
+    }
 }
-
 
 //TODO configure war
 war {
@@ -66,5 +70,3 @@ war {
     //classpath configurations.moreLibs // adds a configuration to the WEB-INF/lib dir.
     webXml = file('src/web.xml') // copies a file to WEB-INF/web.xml
 }
-
-//war.from('src/main/resources'){ include('log4j.properties')}

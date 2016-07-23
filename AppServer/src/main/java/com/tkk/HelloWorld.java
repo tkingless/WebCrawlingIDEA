@@ -35,7 +35,7 @@ public class HelloWorld extends HttpServlet {
 
         logger.debug("This is debug");
         logger.trace("Entering application.");
-        logger.error("Didn't do it.");
+        logger.error("Hello world");
     }
 
     @PreDestroy
@@ -55,7 +55,6 @@ public class HelloWorld extends HttpServlet {
 
     //TODO consider ServletContextListner instead
 
-    //REF: http://crunchify.com/how-to-start-embedded-http-jersey-server-during-java-application-startup/
     //REF: http://crunchify.com/how-to-run-java-program-automatically-on-tomcat-startup/
 }
 
