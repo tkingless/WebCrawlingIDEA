@@ -28,9 +28,6 @@ public class WebCrawlingApp implements ServletContextListener {
         logger.trace("contextInitialized() called");
         logTest.DoALog();
 
-
-        //seems need to joinThread, it happens to if this function run to ends, the sub threads from this thread
-        //will automatically stops after while
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(new ScheduledHKJCcrlr(),0,30000, TimeUnit.MILLISECONDS);
 
