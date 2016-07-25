@@ -40,7 +40,6 @@ public class WebCrawlingApp implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent sce) {
         System.out.println("Actually contextDestroyed() called but logger system turn off quicker");
         logger.trace("contextDestroyed() called");
-        //TODO stop all living match workers
         BoardCrawlee.TerminateAllLivingWorkers();
         scheduler.shutdown();
 
