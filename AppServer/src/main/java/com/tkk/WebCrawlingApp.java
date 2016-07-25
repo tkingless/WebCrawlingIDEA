@@ -43,6 +43,13 @@ public class WebCrawlingApp implements ServletContextListener {
         logger.trace("contextDestroyed() called");
         //TODO stop all living match workers
         BoardCrawlee.TerminateAllLivingWorkers();
+        scheduler.shutdown();
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
