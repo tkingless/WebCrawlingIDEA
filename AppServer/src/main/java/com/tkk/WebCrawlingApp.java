@@ -34,12 +34,11 @@ public class WebCrawlingApp implements ServletContextListener {
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(new ScheduledHKJCcrlr(),0,30000, TimeUnit.MILLISECONDS);
 
-
-        System.out.println("Program main runned to LAST line!");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
+        System.out.println("Actually contextDestroyed() called but logger system turn off quicker");
         logger.trace("contextDestroyed() called");
         //TODO stop all living match workers
         BoardCrawlee.TerminateAllLivingWorkers();

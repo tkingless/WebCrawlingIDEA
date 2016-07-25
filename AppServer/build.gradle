@@ -43,14 +43,16 @@ tomcatStop {
 }*/
 
 tomcatRunWar {
-    daemon = true
+    //daemon = true //no daemon as losing control of process and process will get killed
     httpPort = 8080
-    stopKey = 'rbi'
-    outputFile = file('Logs/tomcat.log')
-    //webDefaultXml = file('src/main/webapp/WEB-INF/web.xml')
+    //stopKey = 'rbi' //no custom stopKey as default stop run from gradle will not work
+    outputFile = file('Logs/tomcatWar.log')
+    webDefaultXml = file('src/web.xml')
     //this is default context.xml refered from Tomcat, here just for reminding for listing out
     configFile = file('src/main/webapp/META-INF/context.xml')
 }
+
+//TODO make tomcatRun workable
 
 task(customRunWar, group: 'web application', description: 'cannot build war, not taking effect of log4j2.xml change' +
         ', use default tomcatRunWar instead for building') {
