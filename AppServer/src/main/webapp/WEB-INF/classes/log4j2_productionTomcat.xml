@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn"> <!--other options: "trace", "debug", "info", "warn", "error" and "fatal" -->
+    <Properties>
+        <Property name="filename_HelloWorld">${sys:catalina.home}/logs/AppRun_HelloWorld.log</Property>
+        <Property name="filename_WebCrawlingMain">${sys:catalina.home}/logs/AppRun_WebCrawlingMain.log</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <File name="File_HelloWorld" fileName="${filename_HelloWorld}">
+            <PatternLayout>
+                <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+        </File>
+        <File name="File_WebCrawlingMain" fileName="${filename_WebCrawlingMain}">
+            <PatternLayout>
+                <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <!-- the logger name need to be same as the class -->
+        <Logger name="com.tkk.HelloWorld" level="trace" additivity="true">
+                <AppenderRef ref="File_HelloWorld"/>
+        </Logger>
+
+        <Logger name="com.tkk.HelloWorld2" level="trace" additivity="true">
+                <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Logger name="com.tkk.WebCrawlingApp" level="trace" additivity="true">
+            <AppenderRef ref="File_WebCrawlingMain"/>
+        </Logger>
+
+        <Logger name="com.tkk.logTest" level="trace" additivity="true">
+            <AppenderRef ref="File_WebCrawlingMain"/>
+        </Logger>
+
+        <Logger name="com.tkk.webCrawler" level="info" additivity="true">
+            <AppenderRef ref="File_WebCrawlingMain"/>
+        </Logger>
+
+        <Logger name="com.tkk.crawlee" level="info" additivity="true">
+            <AppenderRef ref="File_WebCrawlingMain"/>
+        </Logger>
+
+        <Root level="error">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
+
+<!-- To make this config work, according to documentation, need to place in classpath, i.e. by hand, at
+build/classes/com/main -->
+
+<!--
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" strict="true" name="XMLConfigTest"
+               packages="org.apache.logging.log4j.test">
+    <Properties>
+        <Property name="filename">target/test.log</Property>
+    </Properties>
+    <Filter type="ThresholdFilter" level="trace"/>
+
+    <Appenders>
+        <Appender type="Console" name="STDOUT">
+            <Layout type="PatternLayout" pattern="%m MDC%X%n"/>
+            <Filters>
+                <Filter type="MarkerFilter" marker="FLOW" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <Filter type="MarkerFilter" marker="EXCEPTION" onMatch="DENY" onMismatch="ACCEPT"/>
+            </Filters>
+        </Appender>
+        <Appender type="Console" name="FLOW">
+            <Layout type="PatternLayout" pattern="%C{1}.%M %m %ex%n"/>
+            <Filters>
+            <Filter type="MarkerFilter" marker="FLOW" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+            <Filter type="MarkerFilter" marker="EXCEPTION" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </Appender>
+        <Appender type="File" name="File" fileName="${filename}">
+            <Layout type="PatternLayout">
+                <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+            </Layout>
+        </Appender>
+        <Appender type="List" name="List">
+        </Appender>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.apache.logging.log4j.test1" level="debug" additivity="false">
+            <Filter type="ThreadContextMapFilter">
+                <KeyValuePair key="test" value="123"/>
+            </Filter>
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+
+        <Logger name="org.apache.logging.log4j.test2" level="debug" additivity="false">
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <Root level="trace">
+            <AppenderRef ref="List"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
+-->
