@@ -75,7 +75,6 @@ task(customClean, group: 'build') {
     }
 }
 
-//TODO configure war
 war {
     from 'src/rootContent' // adds a file-set to the root of the archive
     //webInf { from 'src/additionalWebInf' } // adds a file-set to the WEB-INF dir.

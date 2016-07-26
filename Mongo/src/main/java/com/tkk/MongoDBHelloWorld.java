@@ -2,6 +2,11 @@ package com.tkk;
 import com.mongodb.*;
 import java.net.UnknownHostException;
 
+import com.tkk.MongoDBparam.*;
+
+import static com.tkk.MongoDBparam.DBaddr;
+import static com.tkk.MongoDBparam.DBport;
+
 /**
  * Created by tkingless on 23/6/2016.
  */
@@ -12,7 +17,7 @@ public class MongoDBHelloWorld {
         // port 27017.
         //
         MongoClient client = new MongoClient(
-                new ServerAddress("192.168.33.11", 27017));
+                new ServerAddress(DBaddr, DBport));
 
         //
         // Gets the peopledb from the MongoDB instance.
