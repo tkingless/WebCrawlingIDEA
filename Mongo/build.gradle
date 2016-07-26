@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.sourcemuse.gradle.plugin:gradle-mongo-plugin:0.13.0'
+    }
+}
+
+apply plugin: 'mongo'
+
 
 dependencies {
     //MongoDB
@@ -5,4 +16,14 @@ dependencies {
 
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.6.2'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.6.2'
+
+}
+
+task integrationTest(type: Test, group: 'mongo') {
+    runWithMongoDb = true
+}
+
+mongo {
+    port 27017
+    logging 'console'
 }
