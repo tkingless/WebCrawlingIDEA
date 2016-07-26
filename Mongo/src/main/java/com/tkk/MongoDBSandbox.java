@@ -2,15 +2,13 @@ package com.tkk;
 import com.mongodb.*;
 import java.net.UnknownHostException;
 
-import com.tkk.MongoDBparam.*;
-
 import static com.tkk.MongoDBparam.DBaddr;
 import static com.tkk.MongoDBparam.DBport;
 
 /**
  * Created by tkingless on 23/6/2016.
  */
-public class MongoDBHelloWorld {
+public class MongoDBSandbox {
     public static void main(String[] args) throws UnknownHostException {
         //
         // Creates a new instance of MongoDBClient and connect to localhost
