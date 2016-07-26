@@ -1,6 +1,9 @@
 package com.tkk;
 
+import com.mongodb.client.MongoDatabase;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import com.mongodb.*;
 
@@ -12,10 +15,12 @@ public class BasicTest {
     String DBaddr = "127.0.0.1";
     int DBport = 27017;
 
-    @Test
+    MongoClient client;
+
+    @Before
     public void TestConnection () throws Exception {
         MongoClientOptions.Builder o = MongoClientOptions.builder().connectTimeout(3000);
-        MongoClient client = new MongoClient(new ServerAddress(DBaddr,DBport));
+        client = new MongoClient(new ServerAddress(DBaddr,DBport));
 
         try {
             client.getAddress();
@@ -24,5 +29,15 @@ public class BasicTest {
             client.close();
             return;
         }
+    }
+
+    @Test
+    public void GetOrCreateDB () throws Exception {
+        MongoDatabase coll = client.getDatabase("MongoTestWebcrawling");
+    }
+
+    @After
+    public void cleanDB() throws Exception{
+
     }
 }
