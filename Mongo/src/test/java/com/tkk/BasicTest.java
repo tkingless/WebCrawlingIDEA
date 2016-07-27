@@ -109,7 +109,8 @@ public class BasicTest {
 
     }
 
-    @Test void Aggregate() throws Exception {
+    @Test
+    public void AggregateQuery() throws Exception {
 
     }
 
