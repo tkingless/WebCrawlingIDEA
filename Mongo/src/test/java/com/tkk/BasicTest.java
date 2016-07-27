@@ -1,5 +1,6 @@
 package com.tkk;
 
+import com.mongodb.client.AggregateIterable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,8 @@ import com.mongodb.client.FindIterable;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+
+import static java.util.Arrays.asList;
 
 /**
  * Created by tsangkk on 7/26/16.
@@ -110,9 +113,31 @@ public class BasicTest {
     }
 
     @Test
-    public void AggregateQuery() throws Exception {
+    public void UpdateQuery() throws Exception{
+
+        client.getDatabase(TestDBname).getCollection("restaurants").updateOne(new Document("borough","Bronx"),
+                new Document("$set", new Document("borough","PforO")).append("$currentDate",
+                                new Document("lastModified",true))
+        );
 
     }
+
+    @Test
+    public void AggregateQuery() throws Exception {
+        AggregateIterable<Document> iterable = client.getDatabase(TestDBname).getCollection("restaurants").aggregate(asList(
+                new Document("$group", new Document("_id", "$borough").append("count", new Document("$sum", 1)))));
+
+        iterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document.toJson());
+            }
+        });
+
+
+    }
+
+    //TODO record, update with datetime
 
     public void FindAllDocAndDo (MongoCollection coll){
         FindIterable<Document> iterable = coll.find();
