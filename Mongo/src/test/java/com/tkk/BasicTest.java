@@ -1,7 +1,6 @@
 package com.tkk;
 
 import com.mongodb.client.AggregateIterable;
-import com.sun.org.apache.bcel.internal.generic.DCONST;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -168,6 +167,20 @@ public class BasicTest {
         });
 
         restColl.updateMany(new Document("lastModified", new Document("$exists", false)),new Document("$currentDate", new Document("lastModified",true)));
+    }
+
+    @Test
+    public void CreateIndexForData() throws Exception{
+        MongoCollection restColl = client.getDatabase(TestDBname).getCollection("restaurants");
+
+        restColl.createIndex(new Document("grades[1].score",1));
+
+        restColl.listIndexes().forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document.toJson());
+            }
+        });
     }
 
 
