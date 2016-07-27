@@ -1,6 +1,7 @@
 package com.tkk;
 
 import com.mongodb.client.AggregateIterable;
+import com.sun.org.apache.bcel.internal.generic.DCONST;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -112,10 +113,24 @@ public class BasicTest {
 
     }
 
+    public void FindAllDocAndDo (MongoCollection coll){
+        FindIterable<Document> iterable = coll.find();
+
+        iterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document);
+            }
+        });
+    }
+
     @Test
     public void UpdateQuery() throws Exception{
 
         client.getDatabase(TestDBname).getCollection("restaurants").updateOne(new Document("borough","Bronx"),
+                //record, update with datetime
+                //TODO format the current date
+                //TODO from DB to java date
                 new Document("$set", new Document("borough","PforO")).append("$currentDate",
                                 new Document("lastModified",true))
         );
@@ -137,18 +152,12 @@ public class BasicTest {
 
     }
 
-    //TODO record, update with datetime
-
-    public void FindAllDocAndDo (MongoCollection coll){
-        FindIterable<Document> iterable = coll.find();
-
-        iterable.forEach(new Block<Document>() {
-            @Override
-            public void apply(final Document document) {
-                System.out.println(document);
-            }
-        });
+    @Test
+    public void InsertDateTime() throws Exception{
+        client.getDatabase(TestDBname).getCollection("restaurants").insertOne(new Document("$currentDate", new Document("CreatedAt",true)));
     }
+
+
 
     @After
     public void cleanDB() throws Exception{
