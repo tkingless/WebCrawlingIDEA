@@ -1,11 +1,18 @@
 package com.tkk;
 
-import com.mongodb.client.MongoDatabase;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.*;
+import org.bson.Document;
+
+import org.apache.commons.io.IOUtils;
+
+import javax.print.Doc;
+import java.io.IOException;
 
 /**
  * Created by tsangkk on 7/26/16.
@@ -33,11 +40,48 @@ public class BasicTest {
 
     @Test
     public void GetOrCreateDB () throws Exception {
-        MongoDatabase coll = client.getDatabase("MongoTestWebcrawling");
+        MongoDatabase DB = client.getDatabase("MongoTestWebcrawling");
+        MongoCollection dbCollection = DB.getCollection("testCollWebCrawling");
+
+        //InsertTestObject(dbCollection);
+
     }
 
-    @After
-    public void cleanDB() throws Exception{
+    public void InsertTestObject(MongoCollection aColl){
 
+        aColl.insertOne(new Document
+                ("testAttribute",
+                        new Document().append("subAttr","val1")
+                )
+        );
+    }
+
+    @Test
+    public void LoadTestResourcesJson() throws Exception{
+
+        String jsonString = JsonFromFileToString("primer-dataset.json");
+        Document doc = Document.parse(jsonString);
+
+        client.getDatabase("MongoTestWebcrawling").getCollection("restaurants").insertOne(doc);
+    }
+
+    //@After
+    @Test
+    public void cleanDB() throws Exception{
+        client.getDatabase("MongoTestWebcrawling").drop();
+    }
+
+    //resources folder usage
+    //Ref: https://www.mkyong.com/java/java-read-a-file-from-resources-folder/
+    public String JsonFromFileToString (String PathToRes){
+        String result = "";
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        try {
+            result = org.apache.commons.io.IOUtils.toString(classLoader.getResourceAsStream(PathToRes));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
