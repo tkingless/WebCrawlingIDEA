@@ -16,6 +16,7 @@ import com.mongodb.client.FindIterable;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.util.Date;
 
 import static java.util.Arrays.asList;
 
@@ -50,16 +51,17 @@ public class BasicTest {
         MongoDatabase DB = client.getDatabase(TestDBname);
         MongoCollection dbCollection = DB.getCollection(TestCollname);
 
-        //InsertTestObject(dbCollection);
+        InsertTestObject(dbCollection);
 
     }
 
     public void InsertTestObject(MongoCollection aColl){
 
+
         aColl.insertOne(new Document
                 ("testAttribute",
                         new Document().append("subAttr","val1")
-                )
+                ).append("CreatedAt", new Date().getTime())
         );
     }
 
@@ -67,7 +69,7 @@ public class BasicTest {
     public void FindQuery() throws Exception {
         String jsonString = JsonFromFileToString("primer-dataset.json");
         Document doc = Document.parse(jsonString);
-        //client.getDatabase(TestDBname).getCollection("restaurants").insertOne(doc);
+        client.getDatabase(TestDBname).getCollection("restaurants").insertOne(doc);
 
         FindAllDocAndDo(client.getDatabase(TestDBname).getCollection("restaurants"));
 
@@ -129,7 +131,6 @@ public class BasicTest {
 
         client.getDatabase(TestDBname).getCollection("restaurants").updateOne(new Document("borough","Bronx"),
                 //record, update with datetime
-                //TODO format the current date
                 //TODO from DB to java date
                 new Document("$set", new Document("borough","PforO")).append("$currentDate",
                                 new Document("lastModified",true))
@@ -153,8 +154,20 @@ public class BasicTest {
     }
 
     @Test
-    public void InsertDateTime() throws Exception{
-        client.getDatabase(TestDBname).getCollection("restaurants").insertOne(new Document("$currentDate", new Document("CreatedAt",true)));
+    public void InsertDateTimeIfNo() throws Exception{
+        //update new attr if there is no such
+        MongoCollection restColl = client.getDatabase(TestDBname).getCollection("restaurants");//updateMany(new Document("LastModified", new Document("CreatedAt",true)));
+
+        FindIterable resultIterable = restColl.find(new Document("lastModified", new Document("$exists", false)));
+
+        resultIterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document.toJson());
+            }
+        });
+
+        restColl.updateMany(new Document("lastModified", new Document("$exists", false)),new Document("$currentDate", new Document("lastModified",true)));
     }
 
 
