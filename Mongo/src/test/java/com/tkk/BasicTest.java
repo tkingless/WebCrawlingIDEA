@@ -8,10 +8,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.*;
 import org.bson.Document;
+import com.mongodb.Block;
+import com.mongodb.client.FindIterable;
 
 import org.apache.commons.io.IOUtils;
 
-import javax.print.Doc;
 import java.io.IOException;
 
 /**
@@ -21,6 +22,8 @@ public class BasicTest {
 
     String DBaddr = "127.0.0.1";
     int DBport = 27017;
+    String TestDBname = "MongoTestWebcrawling";
+    String TestCollname = "testCollWebCrawling";
 
     MongoClient client;
 
@@ -40,8 +43,8 @@ public class BasicTest {
 
     @Test
     public void GetOrCreateDB () throws Exception {
-        MongoDatabase DB = client.getDatabase("MongoTestWebcrawling");
-        MongoCollection dbCollection = DB.getCollection("testCollWebCrawling");
+        MongoDatabase DB = client.getDatabase(TestDBname);
+        MongoCollection dbCollection = DB.getCollection(TestCollname);
 
         //InsertTestObject(dbCollection);
 
@@ -57,18 +60,73 @@ public class BasicTest {
     }
 
     @Test
-    public void LoadTestResourcesJson() throws Exception{
-
+    public void FindQuery() throws Exception {
         String jsonString = JsonFromFileToString("primer-dataset.json");
         Document doc = Document.parse(jsonString);
+        //client.getDatabase(TestDBname).getCollection("restaurants").insertOne(doc);
 
-        client.getDatabase("MongoTestWebcrawling").getCollection("restaurants").insertOne(doc);
+        FindAllDocAndDo(client.getDatabase(TestDBname).getCollection("restaurants"));
+
+        //REF: other queries
+        //db.getCollection("restaurants").find(new Document("borough", "Manhattan"));
+        //db.getCollection("restaurants").find(eq("borough", "Manhattan"));
+
+        //embedded doc query
+        FindIterable<Document> embeddedDocQuery = client.getDatabase(TestDBname).getCollection("restaurants").find(
+                new Document("address.zipcode", "10462"));
+
+        embeddedDocQuery.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document);
+            }
+        });
+
+        //TODO make address as indexed object
+        //TODO query returning embedded doc only
+
+        //Filters helper
+        //db.getCollection("restaurants").find(lt("grades.score", 10));
+        //combined And operator
+        //db.getCollection("restaurants").find(and(eq("cuisine", "Italian"), eq("address.zipcode", "10075")));
+        //combined Or operator
+        /*
+        FindIterable<Document> iterable = db.getCollection("restaurants").find(
+        new Document("$or", asList(new Document("cuisine", "Italian"),
+                new Document("address.zipcode", "10075"))));
+         */
+
+        //Sorting
+        /*
+        FindIterable<Document> iterable = db.getCollection("restaurants").find()
+        .sort(new Document("borough", 1).append("address.zipcode", 1));
+         */
+        //Sort Helper
+        /*
+        db.getCollection("restaurants").find().sort(ascending("borough", "address.zipcode"));
+         */
+
+
     }
 
-    //@After
-    @Test
+    @Test void Aggregate() throws Exception {
+
+    }
+
+    public void FindAllDocAndDo (MongoCollection coll){
+        FindIterable<Document> iterable = coll.find();
+
+        iterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document);
+            }
+        });
+    }
+
+    @After
     public void cleanDB() throws Exception{
-        client.getDatabase("MongoTestWebcrawling").drop();
+        //client.getDatabase(TestDBname).drop();
     }
 
     //resources folder usage
@@ -78,7 +136,7 @@ public class BasicTest {
 
         ClassLoader classLoader = getClass().getClassLoader();
         try {
-            result = org.apache.commons.io.IOUtils.toString(classLoader.getResourceAsStream(PathToRes));
+            result = IOUtils.toString(classLoader.getResourceAsStream(PathToRes));
         } catch (IOException e) {
             e.printStackTrace();
         }
