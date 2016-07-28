@@ -7,9 +7,8 @@ package com.tkk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-//TODO DAO pattern: http://www.tutorialspoint.com/design_pattern/data_access_object_pattern.htm
+//TODO DAO pattern: http://www.tutorialspoint.com/design_pattern/data_access_object_pattern.htm, http://www.pretechsol.com/2012/09/java-mongodb-morphia-basicdao-example.html#.V5owYpN96Rs
 //TODO: Morphia https://mongodb.github.io/morphia/, https://docs.mongodb.com/manual/aggregation/
-//TODO: IDEA mongo plugin: https://plugins.jetbrains.com/plugin/7141
 
 //Manage the facilitation of DB
 public class DBManager {
