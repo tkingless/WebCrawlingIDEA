@@ -23,7 +23,7 @@ public class MatchEventData {
 
     @Id
     private ObjectId id;
-    private int MatchId;
+    private Integer MatchId;
     private String MatchKey;
     private HashMap<Date,String> stageUpdates;
     private HashMap<Date,String> scoreUpdate;
