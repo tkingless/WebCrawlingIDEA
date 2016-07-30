@@ -4,16 +4,22 @@ package com.tkk;
  * Created by tsangkk on 6/27/16.
  */
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.ServerAddress;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mongodb.morphia.Morphia;
 
-//TODO DAO pattern: http://www.pretechsol.com/2012/09/java-mongodb-morphia-basicdao-example.html#.V5owYpN96Rs
-//TODO: Morphia https://mongodb.github.io/morphia/
+import static com.tkk.MongoDBparam.*;
 
 //Manage the facilitation of DB
 public class DBManager {
     private static DBManager instance = new DBManager();
+    private MongoClient client;
+    private Morphia morphia;
     final public static Logger logger = LogManager.getLogger(DBManager.class);
+
 
     public static DBManager getInstance() {
         if (instance == null) {
@@ -23,6 +29,10 @@ public class DBManager {
     }
 
     private DBManager() {
+        MongoClientOptions.Builder o = MongoClientOptions.builder().connectTimeout(3000);
+        client = new MongoClient(new ServerAddress(DBaddr,DBport));
+        morphia = new Morphia();
+
     }
 
     public boolean IsThereConnection() {

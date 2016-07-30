@@ -11,7 +11,9 @@ public class WebCrawlingMain {
 	public static void main(String[] args) throws IOException, InterruptedException {
 
 		//Workaround to ensure outputs folders
-		FileManager.CreateFolder("Outputs");
+		//FileManager.CreateFolder("Outputs");
+
+		DBManager.getInstance();
 
 		// declared all the websites
 		List<baseCrawler> crawlers = new ArrayList<baseCrawler>();
