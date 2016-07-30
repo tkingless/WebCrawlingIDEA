@@ -15,7 +15,7 @@ import static org.mongodb.morphia.utils.IndexType.DESC;
 
 @Entity("MatchEvents")
 @Indexes({
-        @Index(value = "MatchId", fields = @Field(value = "MatchdId", type = DESC)),
+        @Index(value = "MatchId", fields = @Field(value = "MatchdId", type = DESC), options = @IndexOptions(unique = true) ),
         @Index(value = "createdAt", fields = @Field(value = "createdAt", type = DESC))
 })
 
@@ -90,6 +90,45 @@ public class MatchEventData {
 
     public void setLastModifiedAt(Date lastModifiedAt) {
         this.lastModifiedAt = lastModifiedAt;
+    }
+
+    public Integer getMatchId() {
+        return MatchId;
+    }
+
+    public String getMatchKey() {
+        return MatchKey;
+    }
+
+    public String getHomeTeam() {
+        return homeTeam;
+    }
+
+    public String getAwayTeam() {
+        return awayTeam;
+    }
+
+    public List<String> getPoolTypes() {
+        return poolTypes;
+    }
+
+    public Date getCommence() {
+        return commence;
+    }
+
+    public boolean equals(MatchEventData data){
+        boolean eq = false;
+
+        if(MatchId.equals(data.getMatchId()))
+            if(MatchKey.equals(data.getMatchKey()))
+                if(homeTeam.equals(data.getHomeTeam()))
+                    if(awayTeam.equals(data.getAwayTeam()))
+                        if(poolTypes.equals(data.getPoolTypes()))
+                            if(commence.equals(data.getCommence())){
+                                eq = true;
+                            }
+
+        return eq;
     }
 
 }

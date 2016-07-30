@@ -36,7 +36,16 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         return getDatastore().find(MatchEventData.class).filter("MatchId = ", id).order("MatchId").asList();
     }
 
-    public static void ExplainEventWorkerToDBdata (MatchEventWorker worker, MatchEventData data){
+    public boolean IsMatchRegisteredBefore (Integer id){
+        List<MatchEventData> data = findByMatchId(id);
+
+        if(data.isEmpty())
+            return false;
+        else
+            return true;
+    }
+
+    public static void FutureEventWorkerToDBdata(MatchEventWorker worker, MatchEventData data){
         data.setMatchId(Integer.parseInt(worker.getMatchId()));
         data.setMatchKey(worker.getMatchKey());
 

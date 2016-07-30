@@ -62,7 +62,7 @@ public class MorphiaBasicTest {
 
         //Data modelling
         MatchEventData aData = new MatchEventData();
-        matchDao.ExplainEventWorkerToDBdata(preRegWorker,aData);
+        matchDao.FutureEventWorkerToDBdata(preRegWorker,aData);
 
         matchDao.save(aData);
 

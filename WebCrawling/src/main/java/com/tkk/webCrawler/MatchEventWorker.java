@@ -314,6 +314,11 @@ public class MatchEventWorker extends baseCrawler {
 
     void OnStateFuture(){
         //TODO (DB feature) check whether DB added the match/ or the match changed
+        if(dao.IsMatchRegisteredBefore(Integer.parseInt(matchId))){
+
+        }else{
+
+        }
         //TODO (DB feature) add/update the match registration to DB
         status = STATE_TERMINATED;
     }
