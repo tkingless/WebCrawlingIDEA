@@ -1,4 +1,4 @@
-package com.tkk;
+package com.tkk.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,6 @@ import java.util.concurrent.*;
 
 import com.tkk.crawlee.baseCrawlee;
 import org.jsoup.nodes.Document;
-import com.tkk.utils.Stopwatch;
 
 public class ConcurrencyMachine {
 
