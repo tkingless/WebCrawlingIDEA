@@ -63,7 +63,7 @@ public class MorphiaBasicTest {
 
         //Data modelling
         MatchEventData aData = new MatchEventData();
-        CrawlingDBobjectConverter.ExplainEventWorkerToDBdata(preRegWorker,aData);
+        matchDao.ExplainEventWorkerToDBdata(preRegWorker,aData);
 
         matchDao.save(aData);
 
