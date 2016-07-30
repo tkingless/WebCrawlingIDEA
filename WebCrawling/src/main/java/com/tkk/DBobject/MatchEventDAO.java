@@ -1,7 +1,8 @@
-package com.tkk.WebCrawling.DBobject;
+package com.tkk.DBobject;
 
 import com.mongodb.MongoClient;
 import com.tkk.MongoDBparam;
+import com.tkk.WebCrawling.DBobject.MatchEventData;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.dao.BasicDAO;
@@ -17,6 +18,10 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
 
     public MatchEventDAO(MongoClient mongoClient, Morphia morphia) {
         super(mongoClient, morphia, MongoDBparam.webCrawlingDB);
+    }
+
+    public MatchEventDAO(MongoClient mongoClient, Morphia morphia, String DBname){
+        super(mongoClient, morphia, DBname);
     }
 
     public List<MatchEventData> findAll() {

@@ -1,4 +1,4 @@
-package com.tkk.WebCrawling.DBobject;
+package com.tkk.DBobject;
 import java.util.List;
 
 /**
