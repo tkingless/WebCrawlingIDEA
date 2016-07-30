@@ -5,6 +5,7 @@ package com.tkk;
  */
 
 import com.tkk.crawlee.BoardCrawlee;
+import com.tkk.utils.logTest;
 import com.tkk.webCrawler.HKJCcrawler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

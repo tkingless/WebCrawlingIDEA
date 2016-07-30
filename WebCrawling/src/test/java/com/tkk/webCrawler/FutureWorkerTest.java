@@ -1,6 +1,6 @@
 package com.tkk.webCrawler;
 
-import com.tkk.ConcurrencyMachine;
+import com.tkk.utils.ConcurrencyMachine;
 import com.tkk.MatchCONSTANTS;
 import com.tkk.crawlee.BoardCrawlee;
 import org.junit.*;

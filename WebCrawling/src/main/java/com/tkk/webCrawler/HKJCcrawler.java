@@ -1,7 +1,7 @@
 package com.tkk.webCrawler;
 
 import com.tkk.crawlee.BoardCrawlee;
-import com.tkk.logTest;
+import com.tkk.utils.logTest;
 
 import java.io.IOException;
 import java.text.ParseException;

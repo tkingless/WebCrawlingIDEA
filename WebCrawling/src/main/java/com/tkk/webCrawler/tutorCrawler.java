@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.tkk.logTest;
+import com.tkk.utils.logTest;
 import com.tkk.utils.*;
 import com.tkk.crawlee.TutorCaseCrawlee;
 

@@ -1,6 +1,6 @@
 package com.tkk.webCrawler;
 
-import com.tkk.logTest;
+import com.tkk.utils.logTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

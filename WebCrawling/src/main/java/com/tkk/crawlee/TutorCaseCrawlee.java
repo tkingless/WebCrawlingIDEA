@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-import com.tkk.logTest;
+import com.tkk.utils.logTest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 

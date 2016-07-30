@@ -34,7 +34,7 @@
             <AppenderRef ref="File_WebCrawlingMain"/>
         </Logger>
 
-        <Logger name="com.tkk.logTest" level="trace" additivity="true">
+        <Logger name="com.tkk.utils.logTest" level="trace" additivity="true">
             <AppenderRef ref="File_WebCrawlingMain"/>
         </Logger>
 

@@ -1,6 +1,6 @@
 package com.tkk.crawlee;
 
-import com.tkk.logTest;
+import com.tkk.utils.logTest;
 import com.tkk.webCrawler.baseCrawler;
 import org.jsoup.nodes.Document;
 
