@@ -1,4 +1,4 @@
-package com.tkk.WebCrawling;
+package com.tkk.WebCrawling.DBobject;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.*;
