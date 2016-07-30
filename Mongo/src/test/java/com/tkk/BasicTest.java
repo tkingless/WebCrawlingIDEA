@@ -17,16 +17,20 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.util.Date;
 
+import static com.tkk.MongoDBparam.webCrawlingTestDB;
 import static java.util.Arrays.asList;
+
+import static com.tkk.MongoDBparam.TestDBAddr;
+import static com.tkk.MongoDBparam.TestDBport;
 
 /**
  * Created by tsangkk on 7/26/16.
  */
 public class BasicTest {
 
-    String DBaddr = "127.0.0.1";
-    int DBport = 27017;
-    String TestDBname = "MongoTestWebcrawling";
+    String DBaddr = TestDBAddr;
+    int DBport = TestDBport;
+    String TestDBname = webCrawlingTestDB;
     String TestCollname = "testCollWebCrawling";
 
     MongoClient client;

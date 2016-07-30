@@ -24,6 +24,7 @@ public class MatchEventData {
     @Id
     private ObjectId id;
     private Integer MatchId;
+
     private String MatchKey;
     private HashMap<Date,String> stageUpdates;
     private HashMap<Date,String> scoreUpdate;
@@ -38,5 +39,57 @@ public class MatchEventData {
     private Date endTime;
     private Date createdAt;
     private Date lastModifiedAt;
+
+    public void setMatchId(Integer matchId) {
+        MatchId = matchId;
+    }
+
+    public void setMatchKey(String matchKey) {
+        MatchKey = matchKey;
+    }
+
+    public void setStageUpdates(HashMap<Date, String> stageUpdates) {
+        this.stageUpdates = stageUpdates;
+    }
+
+    public void setScoreUpdate(HashMap<Date, String> scoreUpdate) {
+        this.scoreUpdate = scoreUpdate;
+    }
+
+    public void setCornerTotUpdate(HashMap<Date, Integer> cornerTotUpdate) {
+        this.cornerTotUpdate = cornerTotUpdate;
+    }
+
+    public void setHomeTeam(String homeTeam) {
+        this.homeTeam = homeTeam;
+    }
+
+    public void setAwayTeam(String awayTeam) {
+        this.awayTeam = awayTeam;
+    }
+
+    public void setPoolTypes(List<String> poolTypes) {
+        this.poolTypes = poolTypes;
+    }
+
+    public void setCommence(Date commence) {
+        this.commence = commence;
+    }
+
+    public void setActualCommence(Date actualCommence) {
+        this.actualCommence = actualCommence;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setLastModifiedAt(Date lastModifiedAt) {
+        this.lastModifiedAt = lastModifiedAt;
+    }
 
 }

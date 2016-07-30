@@ -365,6 +365,15 @@ public class MatchEventWorker extends baseCrawler {
     public DateTimeEntity getCommenceTime() {
         return commenceTime;
     }
+
+    public String getMatchKey() {
+        return matchKey;
+    }
+
+    public String getMatchTeams() {
+        return matchTeams;
+    }
+
     /*
     Subsidary functions(): end
      */

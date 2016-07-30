@@ -7,6 +7,9 @@ public class MongoDBparam {
 
     public static String DBaddr = "192.168.33.11";
     public static int DBport = 27017;
+    public static String webCrawlingDB = "MongoProdWebcrawling";
 
-    public static String webCrawlingDB = "MongoTestWebcrawling";
+    public static String TestDBAddr = "127.0.0.1";
+    public static int TestDBport = 27017;
+    public static String webCrawlingTestDB = "MongoTestWebcrawling";
 }

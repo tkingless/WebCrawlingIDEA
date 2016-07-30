@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class PreRegWorkerTest {
 
-    MatchEventWorker preRegWorker;
-    List<MatchEventWorker> workers;
-    private String simulatedMatchCrleSrc;
+    protected MatchEventWorker preRegWorker;
+    protected List<MatchEventWorker> workers;
+    protected String simulatedMatchCrleSrc;
     /*
     The setUp generate PreRegWorker ignoring the actual input commence, it forcefully sets the event start time
     to half of pre-reg time just right before current time
