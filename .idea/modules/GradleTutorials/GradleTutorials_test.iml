@@ -10,7 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="GradleTutorials_main" />
-    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.13" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />
     <orderEntry type="library" name="Gradle: org.hamcrest:java-hamcrest:2.0.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />

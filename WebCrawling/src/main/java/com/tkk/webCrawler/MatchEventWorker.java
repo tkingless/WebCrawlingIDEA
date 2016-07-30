@@ -1,5 +1,7 @@
 package com.tkk.webCrawler;
 
+import com.tkk.DBManager;
+import com.tkk.DBobject.MatchEventDAO;
 import com.tkk.MatchTestCONSTANTS;
 import com.tkk.crawlee.BoardCrawlee;
 import com.tkk.crawlee.MatchCrawlee;
@@ -45,8 +47,11 @@ public class MatchEventWorker extends baseCrawler {
     String matchKey;
     String matchTeams;
 
+    MatchEventDAO dao;
+
     public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element teamsEle, MatchTestCONSTANTS.TestType type) throws ParseException {
         super(CrawlerKeyBinding.MatchEvent, threadName + "-" + aMatchId);
+        dao = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
         status = MatchStatus.STATE_INITIALIZATION;
         matchId = aMatchId;
         logTest.logger.info("MatchEventWorker constructed, matchId:" + matchId);

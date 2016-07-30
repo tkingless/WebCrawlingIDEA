@@ -4,6 +4,7 @@ package com.tkk;
 
 //import com.tkk.test.TestCases.MatchCrawleeTestSample;
 import com.tkk.utils.JsoupHelper;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -27,7 +28,8 @@ import java.util.List;
  */
 public class XPathExpt {
 
-    public static void main(String[] args) throws XPathExpressionException {
+    @Test
+    public void main() throws Exception {
 
         String uri = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=104049";
 

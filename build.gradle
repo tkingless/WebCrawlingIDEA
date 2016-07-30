@@ -13,10 +13,6 @@ subprojects {
 
     dependencies {
 
-        // The production code uses the SLF4J logging API at compile time
-        //TODO consider get rid of this plugin
-        compile 'org.slf4j:slf4j-api:1.7.13'
-
         //For test case
         testCompile 'junit:junit:4.12'
         testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'

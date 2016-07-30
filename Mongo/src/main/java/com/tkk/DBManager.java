@@ -39,12 +39,19 @@ public class DBManager {
         return true;
     }
 
-    //TODO
     void OnDisconnected() {
 
     }
 
     void OnConnected() {
 
+    }
+
+    public MongoClient getClient() {
+        return client;
+    }
+
+    public Morphia getMorphia() {
+        return morphia;
     }
 }
