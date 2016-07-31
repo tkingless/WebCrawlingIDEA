@@ -8,5 +8,6 @@ public class MatchTestCONSTANTS {
     public enum TestType {
         TYPE_FUTURE,
         TYPE_PRE_REG,
+        TYPE_MATCHING
     }
 }
