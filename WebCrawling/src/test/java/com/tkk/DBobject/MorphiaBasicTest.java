@@ -61,11 +61,20 @@ public class MorphiaBasicTest {
         preRegWorker.setMatchCrleTestTarget(MatchCrawleeTestSample.preReg103904NotStartYet);
 
         //Data modelling
-        MatchEventData aData = new MatchEventData();
-        matchDao.FutureEventWorkerToDBdata(preRegWorker,aData);
+        matchDao.RegisterMatchEventWorker(preRegWorker);
+    }
 
-        matchDao.save(aData);
+    @Test
+    public void GetByID() throws Exception{
+        MatchEventData data = matchDao.findByMatchId(103904);
 
+        System.out.println(data.getMatchKey());
+    }
+
+    @Test
+    public void TestFindFunctions() throws Exception {
+
+        System.out.println(matchDao.IsMatchRegisteredBefore(103904));
     }
 
     @Test

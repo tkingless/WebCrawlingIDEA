@@ -123,7 +123,7 @@ public class MatchEventData {
             if(MatchKey.equals(data.getMatchKey()))
                 if(homeTeam.equals(data.getHomeTeam()))
                     if(awayTeam.equals(data.getAwayTeam()))
-                        if(poolTypes.equals(data.getPoolTypes()))
+                        //if(poolTypes.equals(data.getPoolTypes()))
                             if(commence.equals(data.getCommence())){
                                 eq = true;
                             }

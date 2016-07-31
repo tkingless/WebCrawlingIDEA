@@ -39,6 +39,7 @@ public class MatchEventWorker extends baseCrawler {
     DateTimeEntity commenceTime;
     DateTimeEntity actualCommence;
     DateTimeEntity endTime;
+    DateTimeEntity workerTime;
 
     MatchStatus status;
     MatchStage stage;
@@ -52,6 +53,7 @@ public class MatchEventWorker extends baseCrawler {
     public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element teamsEle, MatchTestCONSTANTS.TestType type) throws ParseException {
         super(CrawlerKeyBinding.MatchEvent, threadName + "-" + aMatchId);
         dao = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
+        workerTime = new DateTimeEntity();
         status = MatchStatus.STATE_INITIALIZATION;
         matchId = aMatchId;
         logTest.logger.info("MatchEventWorker constructed, matchId:" + matchId);
@@ -63,7 +65,7 @@ public class MatchEventWorker extends baseCrawler {
         if (type == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
             testTypeSwitch = type;
             preRegperiod = 1000 * 10;
-            long rectTimestamp = (long) ((new DateTimeEntity()).GetTheInstant().getTime() + 0.5 * preRegperiod);
+            long rectTimestamp = (long) (workerTime.GetTheInstant().getTime() + 0.5 * preRegperiod);
             commenceTime = new DateTimeEntity(rectTimestamp);
             IdentifyStage(statusEle);
         } else {
@@ -314,11 +316,7 @@ public class MatchEventWorker extends baseCrawler {
 
     void OnStateFuture(){
         //TODO (DB feature) check whether DB added the match/ or the match changed
-        if(dao.IsMatchRegisteredBefore(Integer.parseInt(matchId))){
-
-        }else{
-
-        }
+        dao.RegisterMatchEventWorker(this);
         //TODO (DB feature) add/update the match registration to DB
         status = STATE_TERMINATED;
     }
@@ -384,6 +382,9 @@ public class MatchEventWorker extends baseCrawler {
         return matchTeams;
     }
 
+    public DateTimeEntity getWorkerTime() {
+        return workerTime;
+    }
     /*
     Subsidary functions(): end
      */
