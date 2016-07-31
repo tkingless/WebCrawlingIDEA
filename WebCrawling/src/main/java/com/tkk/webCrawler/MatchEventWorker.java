@@ -122,8 +122,8 @@ public class MatchEventWorker extends baseCrawler {
 
         if (status == MatchStatus.STATE_MATCH_ENDED || status == MatchStatus.STATE_TERMINATED) {
             if(status == MatchStatus.STATE_MATCH_ENDED){
-                //TODO (DB feature) mark the actual end time
                 endTime = new DateTimeEntity();
+                dao.InsertField(this,"endTime",endTime.GetTheInstant());
                 logTest.logger.info("Actual end time: "+ endTime.toString());
             }
             BoardCrawlee.DetachWorker(this);
@@ -315,9 +315,7 @@ public class MatchEventWorker extends baseCrawler {
     }
 
     void OnStateFuture(){
-        //TODO (DB feature) check whether DB added the match/ or the match changed
         dao.RegisterMatchEventWorker(this);
-        //TODO (DB feature) add/update the match registration to DB
         status = STATE_TERMINATED;
     }
 
@@ -344,10 +342,6 @@ public class MatchEventWorker extends baseCrawler {
 
     public void Kill() {
         status = MatchStatus.STATE_TERMINATED;
-    }
-
-    void registerOnDB() {
-        //TODO (DB feature)
     }
 
     void registerOnlocal() {

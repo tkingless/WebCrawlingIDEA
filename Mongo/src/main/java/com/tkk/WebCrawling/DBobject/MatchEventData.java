@@ -80,10 +80,6 @@ public class MatchEventData {
         this.actualCommence = actualCommence;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
@@ -114,6 +110,22 @@ public class MatchEventData {
 
     public Date getCommence() {
         return commence;
+    }
+
+    public Date getActualCommence() {
+        return actualCommence;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public Date getLastModifiedAt() {
+        return lastModifiedAt;
     }
 
     public boolean equals(MatchEventData data){

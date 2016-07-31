@@ -14,8 +14,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.Morphia;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static com.tkk.MongoDBparam.TestDBAddr;
 import static com.tkk.MongoDBparam.TestDBport;
@@ -75,6 +79,26 @@ public class MorphiaBasicTest {
     public void TestFindFunctions() throws Exception {
 
         System.out.println(matchDao.IsMatchRegisteredBefore(103904));
+    }
+
+    @Test
+    public void TestInsertEndtime() throws Exception {
+        preRegWorker = workers.get(0);
+        matchDao.InsertField(preRegWorker,"endTime",new Date());
+    }
+
+    @Test
+    public void TestGetEndtime() throws Exception{
+        preRegWorker = workers.get(0);
+        MatchEventData data =  matchDao.findByMatchId(Integer.parseInt(preRegWorker.getMatchId()));
+        System.out.println(data.getEndTime());
+    }
+
+    @Test
+    public void TestEndTimeExist() throws Exception{
+        preRegWorker = workers.get(0);
+
+        System.out.println(matchDao.QueryDataFieldExists(preRegWorker,"endTime"));
     }
 
     @Test
