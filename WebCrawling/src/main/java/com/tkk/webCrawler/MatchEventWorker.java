@@ -296,7 +296,6 @@ public class MatchEventWorker extends baseCrawler {
             long shortwait = 1000;
             scanPeriod = shortwait;
             if (noDBcommenceTimeHistory) {
-                //TODO (DB feature) update the event to DB
                 dao.RegisterMatchEventWorker(this);
             }
             status = MatchStatus.STATE_MATCH_START;
