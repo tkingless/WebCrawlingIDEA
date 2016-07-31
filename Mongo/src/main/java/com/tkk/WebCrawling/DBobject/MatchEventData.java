@@ -13,6 +13,8 @@ import static org.mongodb.morphia.utils.IndexType.DESC;
  * Created by tkingless on 7/29/16.
  */
 
+//TODO: the MatchID index unique property is not working, test on Mongo DB
+
 @Entity("MatchEvents")
 @Indexes({
         @Index(value = "MatchId", fields = @Field(value = "MatchdId", type = DESC), options = @IndexOptions(unique = true) ),
