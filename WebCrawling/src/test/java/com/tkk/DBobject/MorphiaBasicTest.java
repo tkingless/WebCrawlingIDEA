@@ -7,6 +7,7 @@ import com.tkk.MatchTestCONSTANTS;
 import com.tkk.MongoDBparam;
 import com.tkk.WebCrawling.DBobject.MatchEventData;
 import com.tkk.crawlee.BoardCrawlee;
+import com.tkk.utils.DateTimeEntity;
 import com.tkk.webCrawler.BoardCrawleeTestSample;
 import com.tkk.webCrawler.MatchCrawleeTestSample;
 import com.tkk.webCrawler.MatchEventWorker;
@@ -99,6 +100,14 @@ public class MorphiaBasicTest {
         preRegWorker = workers.get(0);
 
         System.out.println(matchDao.QueryDataFieldExists(preRegWorker,"endTime"));
+    }
+
+    @Test
+    public void TestcommenceTimeSetting() throws Exception{
+        preRegWorker = workers.get(0);
+        long timestampOfcommence = matchDao.findByMatchId(Integer.parseInt(preRegWorker.getMatchId())).getCommence().getTime();
+        DateTimeEntity commenceTime = new DateTimeEntity(timestampOfcommence);
+        System.out.println("The commence time is: " + commenceTime.GetTheInstant());
     }
 
     @Test

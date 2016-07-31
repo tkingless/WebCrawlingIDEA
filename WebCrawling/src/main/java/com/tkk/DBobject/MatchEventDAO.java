@@ -36,7 +36,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         return getDatastore().find(MatchEventData.class).asList();
     }
 
-    MatchEventData findByMatchId (Integer id){
+    public MatchEventData findByMatchId (Integer id){
         return findOne("MatchId",id);
     }
 

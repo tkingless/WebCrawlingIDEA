@@ -172,11 +172,14 @@ public class MatchEventWorker extends baseCrawler {
             case STAGE_FIRST:
             case STAGE_HALFTIME:
             case STAGE_SECOND:
-                //TODO (DB feature) try to load futureRecord to get the commenceTime
+
+                if(dao.QueryDataFieldExists(this,"commence")){
+                    long timestampOfcommence = dao.findByMatchId(Integer.parseInt(matchId)).getCommence().getTime();
+                    commenceTime = new DateTimeEntity(timestampOfcommence);
+                }
 
                 if (commenceTime == null) {
-                    logTest.logger.info("[Warning] commenceTime is null, set commenceTime to now()");
-                    commenceTime = new DateTimeEntity();
+                    logTest.logger.info("[Warning] commenceTime is null");
                     noDBcommenceTimeHistory = true;
                 }
                 break;
@@ -219,7 +222,9 @@ public class MatchEventWorker extends baseCrawler {
             return;
         }
 
-        //TODO (DB feature) if the event ended, set status to ENDED
+        if(dao.QueryDataFieldExists(this,"endTime")){
+            status = MatchStatus.STATE_TERMINATED;
+        }
 
         long timediff = 0;
         if (!noDBcommenceTimeHistory) {
@@ -259,7 +264,6 @@ public class MatchEventWorker extends baseCrawler {
 
         if (timediff > 0) {
             if (stage == MatchStage.STAGE_ESST) {
-                //TODO finetune this longwait, sometime it can be even an half hour long!
                 long longwait = timediff + 1000 * 3;
                 scanPeriod = longwait;
                 logTest.logger.info("Threadname: " + threadName + matchId + " enter long wait in PRE reg state");
@@ -267,6 +271,7 @@ public class MatchEventWorker extends baseCrawler {
             }
         } else if (timediff <= 0) {
             if (stage == MatchStage.STAGE_ESST) {
+                //TODO finetune this longwait, sometime it can be even an half hour long!
                 scanPeriod = 1000 * 2;
                 logTest.logger.info("dry waiting for start state");
             }
@@ -277,6 +282,7 @@ public class MatchEventWorker extends baseCrawler {
             scanPeriod = shortwait;
             if (noDBcommenceTimeHistory) {
                 //TODO (DB feature) update the event to DB
+                dao.RegisterMatchEventWorker(this);
             }
             status = MatchStatus.STATE_MATCH_START;
         }
