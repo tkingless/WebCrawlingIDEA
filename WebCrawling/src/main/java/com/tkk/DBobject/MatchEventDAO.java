@@ -11,11 +11,8 @@ import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by tkingless on 7/29/16.
@@ -44,25 +41,20 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         return exists("MatchId",id);
     }
 
-    public void RegisterMatchEventWorker (MatchEventWorker worker){
+    public void RegisterMatchEventWorker (MatchEventWorker worker) {
         Integer id = Integer.parseInt(worker.getMatchId());
         if(!IsMatchRegisteredBefore(id)){
             SaveMatchEventWorker(worker);
         }else{
             MatchEventData DBdata = findByMatchId(id);
             MatchEventData grabbedData = new MatchEventData();
-            FutureEventWorkerToDBdata(worker,grabbedData);
+            EventWorkerToDBdata(worker,grabbedData);
 
             if(!DBdata.equals(grabbedData)){
                 UpdateDBdata(grabbedData,worker.getWorkerTime().GetTheInstant());
 
             }
         }
-    }
-
-    public void MarkAMatchEndTime (MatchEventWorker worker){
-        MatchEventData data = findByMatchId(Integer.parseInt(worker.getMatchId()));
-
     }
 
     public void InsertField (MatchEventWorker worker, String field, Object val){
@@ -84,12 +76,12 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
 
     void SaveMatchEventWorker(MatchEventWorker worker){
         MatchEventData data = new MatchEventData();
-        FutureEventWorkerToDBdata(worker,data);
+        EventWorkerToDBdata(worker,data);
         this.save(data);
 
     }
 
-    void FutureEventWorkerToDBdata(MatchEventWorker worker, MatchEventData data){
+    void EventWorkerToDBdata(MatchEventWorker worker, MatchEventData data){
         data.setMatchId(Integer.parseInt(worker.getMatchId()));
         data.setMatchKey(worker.getMatchKey());
 

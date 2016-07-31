@@ -1,8 +1,10 @@
 package com.tkk.webCrawler;
 
+import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
+import com.tkk.DBManager;
 import com.tkk.DBobject.MatchEventDAO;
 import com.tkk.MatchTestCONSTANTS;
 import com.tkk.MongoDBparam;
@@ -50,11 +52,27 @@ public class OnMatchingWorkerTest {
         //Morphia DAO
         morphia = new Morphia();
         matchDao = new MatchEventDAO(client,morphia, MongoDBparam.webCrawlingTestDB);
+        //DBManager.getInstance();
     }
 
     @Test
     public void BasicTest() throws Exception{
         onMatchingWorker = workers.get(0);
-        onMatchingWorker.setMatchCrleTestTarget(MatchCrawleeTestSample.onMatching103904firstHalf);
+
+        synchronized (onMatchingWorker) {
+            onMatchingWorker.setMatchCrleTestTarget(MatchCrawleeTestSample.onMatching103909firstHalf);
+        }
+
+        Thread.sleep(10000);
+    }
+
+    @Test
+    public void DropTestDB() throws Exception {
+        client.getDatabase(MongoDBparam.webCrawlingTestDB).drop();
+    }
+
+    @Test
+    public  void DropProdDB() throws Exception{
+        client.getDatabase(MongoDBparam.webCrawlingDB).drop();
     }
 }

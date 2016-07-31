@@ -2,7 +2,7 @@ package com.tkk.crawlee;
 
 import com.tkk.utils.logTest;
 import com.tkk.webCrawler.MatchEventWorker;
-import com.tkk.MatchTestCONSTANTS;
+import com.tkk.MatchTestCONSTANTS.TestType;
 import com.tkk.webCrawler.baseCrawler;
 import com.tkk.utils.JsoupHelper;
 import org.jsoup.nodes.Document;
@@ -14,6 +14,9 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.tkk.MatchTestCONSTANTS.TestType.TYPE_MATCHING;
+import static com.tkk.MatchTestCONSTANTS.TestType.TYPE_PRE_REG;
 
 /**
  * Created by tkingless on 24/6/2016.
@@ -87,7 +90,7 @@ public class BoardCrawlee extends baseCrawlee {
         }
     }
 
-    static List<MatchEventWorker> GetTestWorkers(MatchTestCONSTANTS.TestType test_type, Element jDoc) throws ParseException {
+    static List<MatchEventWorker> GetTestWorkers(TestType test_type, Element jDoc) throws ParseException {
         List<MatchEventWorker> workers = new ArrayList<MatchEventWorker>();
         HashMap<String, String> searchNodes = new HashMap<String, String>();
         searchNodes.put("onboardChildUrls", "td[class$=cdAllIn] > a[href]");
@@ -109,7 +112,7 @@ public class BoardCrawlee extends baseCrawlee {
         checks.add(statuses);
 
         if (CardinalityChecking(checks)) {
-            if (test_type == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
+            if (test_type == TYPE_PRE_REG || test_type == TYPE_MATCHING) {
                 workers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, matchTeams, statuses, test_type);
             } else {
                 workers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, matchTeams, statuses);
@@ -156,7 +159,7 @@ public class BoardCrawlee extends baseCrawlee {
 
     private static List<MatchEventWorker> ParsingDocIntoMatchWorker(Elements onboardChildUrls,
                                                                     Elements matchNos, Elements matchTeams,
-                                                                    Elements statuses, MatchTestCONSTANTS.TestType test_type)
+                                                                    Elements statuses, TestType test_type)
             throws ParseException {
 
         List<MatchEventWorker> workerList = new ArrayList<MatchEventWorker>();
@@ -233,7 +236,7 @@ public class BoardCrawlee extends baseCrawlee {
         }
     }
 
-    public synchronized static List<MatchEventWorker> GenerateTestWorker(MatchTestCONSTANTS.TestType type, String testBoardHtml) {
+    public synchronized static List<MatchEventWorker> GenerateTestWorker(TestType type, String testBoardHtml) {
         List<MatchEventWorker> outputs = null;
 
         Document doc = JsoupHelper.GetDocumentFromStr(testBoardHtml);

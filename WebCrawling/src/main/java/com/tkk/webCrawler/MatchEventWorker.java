@@ -3,6 +3,7 @@ package com.tkk.webCrawler;
 import com.tkk.DBManager;
 import com.tkk.DBobject.MatchEventDAO;
 import com.tkk.MatchTestCONSTANTS;
+import com.tkk.MongoDBparam;
 import com.tkk.crawlee.BoardCrawlee;
 import com.tkk.crawlee.MatchCrawlee;
 import com.tkk.utils.logTest;
@@ -52,7 +53,14 @@ public class MatchEventWorker extends baseCrawler {
 
     public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element teamsEle, MatchTestCONSTANTS.TestType type) throws ParseException {
         super(CrawlerKeyBinding.MatchEvent, threadName + "-" + aMatchId);
-        dao = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
+        testTypeSwitch = type;
+
+        if(type != null){
+            dao = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
+        }else{
+            dao = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
+        }
+
         workerTime = new DateTimeEntity();
         status = MatchStatus.STATE_INITIALIZATION;
         matchId = aMatchId;
@@ -63,7 +71,6 @@ public class MatchEventWorker extends baseCrawler {
         ExtractTeams(teamsEle);
 
         if (type == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
-            testTypeSwitch = type;
             preRegperiod = 1000 * 10;
             long rectTimestamp = (long) (workerTime.GetTheInstant().getTime() + 0.5 * preRegperiod);
             commenceTime = new DateTimeEntity(rectTimestamp);
@@ -250,6 +257,10 @@ public class MatchEventWorker extends baseCrawler {
             if (onMatchingStages.contains(stage)) {
                 status = MatchStatus.STATE_PRE_REGISTERED;
                 scanPeriod = 0;
+
+                if(testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_MATCHING){
+                    scanPeriod = 500;
+                }
             }
             //there is possibility the match actual starting time is delayed a bit
             else if (stage == MatchStage.STAGE_ESST) {
@@ -260,7 +271,11 @@ public class MatchEventWorker extends baseCrawler {
 
     void OnStatePreRegistered() {
 
-        long timediff = commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
+        long timediff = 0;
+
+        if(commenceTime != null) {
+           timediff =commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
+        }
 
         if (timediff > 0) {
             if (stage == MatchStage.STAGE_ESST) {
@@ -415,7 +430,10 @@ public class MatchEventWorker extends baseCrawler {
 
         if (testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
             newMatchCrle = new MatchCrawlee(matchCrleTestTarget);
-        } else {
+        } else if(testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_MATCHING){
+            newMatchCrle = new MatchCrawlee(matchCrleTestTarget);
+        }
+        else {
             newMatchCrle = new MatchCrawlee(this, matchId);
         }
 
