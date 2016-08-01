@@ -31,6 +31,8 @@ public class MatchEventData {
     private HashMap<String,String> stageUpdates;
     private List<HashMap<String,String>> scoreUpdate;
     private HashMap<String,Integer> cornerTotUpdate;
+    @Embedded("scoreBoard")
+    private List<DateValuePair> scoreBoard;
 
     private String homeTeam;
     private String awayTeam;

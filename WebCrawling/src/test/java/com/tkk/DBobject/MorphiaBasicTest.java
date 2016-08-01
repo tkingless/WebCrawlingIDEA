@@ -6,6 +6,7 @@ import com.mongodb.ServerAddress;
 import com.tkk.MatchCONSTANTS;
 import com.tkk.MatchTestCONSTANTS;
 import com.tkk.MongoDBparam;
+import com.tkk.WebCrawling.DBobject.DateValuePair;
 import com.tkk.WebCrawling.DBobject.MatchEventData;
 import com.tkk.crawlee.BoardCrawlee;
 import com.tkk.utils.DateTimeEntity;
@@ -15,6 +16,7 @@ import com.tkk.webCrawler.MatchEventWorker;
 import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.Morphia;
+import sun.util.calendar.LocalGregorianCalendar;
 
 import java.util.*;
 
@@ -135,11 +137,14 @@ public class MorphiaBasicTest {
 
         //AscoreUpdate.put((new Date()).getTime(),"0 : 2");
 
-        HashMap<String,String> AscoreUpdate2 = new HashMap();
-        AscoreUpdate2.put("POD","1 : 2");
+        //HashMap<String,String> AscoreUpdate2 = new HashMap();
+        //AscoreUpdate2.put("POD","1 : 2");
 
         //scoreUpdate
-        matchDao.AddHashMap(preRegWorker,"scoreUpdate",AscoreUpdate2);
+        //matchDao.AddHashMap(preRegWorker,"scoreUpdate",AscoreUpdate2);
+
+        DateValuePair data = new DateValuePair(new Date(), "0 : 3");
+        matchDao.AddItemToListField(preRegWorker,"scoreBoard",data);
     }
 
     @Test
