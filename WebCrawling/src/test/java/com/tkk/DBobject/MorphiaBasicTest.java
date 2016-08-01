@@ -3,6 +3,7 @@ package com.tkk.DBobject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
+import com.tkk.MatchCONSTANTS;
 import com.tkk.MatchTestCONSTANTS;
 import com.tkk.MongoDBparam;
 import com.tkk.WebCrawling.DBobject.MatchEventData;
@@ -15,9 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.Morphia;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.tkk.MongoDBparam.TestDBAddr;
 import static com.tkk.MongoDBparam.TestDBport;
@@ -105,6 +104,27 @@ public class MorphiaBasicTest {
         long timestampOfcommence = matchDao.findByMatchId(Integer.parseInt(preRegWorker.getMatchId())).getCommence().getTime();
         DateTimeEntity commenceTime = new DateTimeEntity(timestampOfcommence);
         System.out.println("The commence time is: " + commenceTime.GetTheInstant());
+    }
+
+    @Test
+    public void TestUpdatePoolType() throws Exception {
+        preRegWorker = workers.get(0);
+        Set<MatchCONSTANTS.InplayPoolType> typePool = EnumSet.noneOf(MatchCONSTANTS.InplayPoolType.class);
+        typePool.add(MatchCONSTANTS.InplayPoolType.HAD);
+        typePool.add(MatchCONSTANTS.InplayPoolType.CHL);
+
+        matchDao.SetField(preRegWorker,"poolTypes",typePool);
+
+    }
+
+    @Test
+    public void TestGetPoolType() throws Exception {
+        preRegWorker = workers.get(0);
+
+        java.util.Set<MatchCONSTANTS.InplayPoolType> queried = matchDao.QueryPoolTypes(preRegWorker);
+
+        System.out.println("queried: " + queried);
+
     }
 
     @Test

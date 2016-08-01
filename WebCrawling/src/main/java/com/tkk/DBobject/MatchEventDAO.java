@@ -1,6 +1,7 @@
 package com.tkk.DBobject;
 
 import com.mongodb.MongoClient;
+import com.tkk.MatchCONSTANTS;
 import com.tkk.MongoDBparam;
 import com.tkk.WebCrawling.DBobject.MatchEventData;
 import com.tkk.utils.DateTimeEntity;
@@ -14,6 +15,7 @@ import org.mongodb.morphia.query.UpdateOperations;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by tkingless on 7/29/16.
@@ -61,12 +63,6 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         String[] teams = worker.getMatchTeams().split("vs");
         data.setHomeTeam(teams[0]);
         data.setAwayTeam(teams[1]);
-        //TODO usable
-        /*List<java.lang.String> pools = new ArrayList<>();
-        for (MatchCONSTANTS.InplayPoolType type: worker.getMatchPools()){
-            pools.add(type.toString());
-        }
-        data.setPoolTypes(pools);*/
 
         if(worker.getCommenceTime() != null){
             data.setCommence(worker.getCommenceTime().GetTheInstant());
@@ -110,6 +106,16 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         return getDatastore().find(MatchEventData.class).asList();
     }
 
+    public Set<MatchCONSTANTS.InplayPoolType> QueryPoolTypes(MatchEventWorker worker){
+        Set<MatchCONSTANTS.InplayPoolType> returnPools;
+
+        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
+        MatchEventData data = query.get();
+        returnPools = MatchCONSTANTS.GetInplayPoolTypeSet(data.getPoolTypes());
+
+        return returnPools;
+    }
+
     //CRUD: update
 
     private void UpdateDBdata(MatchEventData newData, Date modified){
@@ -137,6 +143,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
     private void ApplyLastModified(MatchEventWorker worker){
         Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
         UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).set("lastModifiedAt",worker.getLastModifiedTime().GetTheInstant());
+        getDatastore().update(query,ops);
     }
 
     private void ApplyLastModified(MatchEventData data, Date mod){

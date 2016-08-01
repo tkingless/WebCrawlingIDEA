@@ -90,7 +90,6 @@ public class MatchCrawlee extends baseCrawlee {
             }
             //logTest.logger.info(source);
             InputStream xml = IOUtils.toInputStream(source, "UTF-8");
-
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             doc = db.parse(xml);

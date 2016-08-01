@@ -463,8 +463,8 @@ public class MatchEventWorker extends baseCrawler {
     private void UpdateWorkerFromCrle(MatchCrawlee crle) {
 
         if (matchPools == null) {
-            //TODO (DB feature) update the pooltypes
             matchPools = crle.getPoolType();
+            dao.SetField(this,"poolTypes",matchPools);
             logTest.logger.info("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());
         }
 

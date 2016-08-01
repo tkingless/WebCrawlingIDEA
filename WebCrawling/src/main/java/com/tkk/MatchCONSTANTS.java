@@ -1,5 +1,10 @@
 package com.tkk;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Created by tsangkk on 7/5/16.
  */
@@ -74,6 +79,16 @@ public class MatchCONSTANTS {
             default:
                 return "undefined";
         }
+    }
+
+    public static Set<InplayPoolType> GetInplayPoolTypeSet(List<String> pools){
+        Set<InplayPoolType> poolLists = EnumSet.noneOf(InplayPoolType.class);
+
+        for(String pool : pools){
+            poolLists.add(GetInplayPoolType(pool));
+        }
+
+        return poolLists;
     }
 
     public static MatchStage GetMatchStage(String str){
