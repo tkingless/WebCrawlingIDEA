@@ -28,9 +28,9 @@ public class MatchEventData {
     private Integer MatchId;
 
     private String MatchKey;
-    private HashMap<Date,String> stageUpdates;
-    private HashMap<Date,String> scoreUpdate;
-    private HashMap<Date,Integer> cornerTotUpdate;
+    private HashMap<String,String> stageUpdates;
+    private HashMap<String,String> scoreUpdate;
+    private HashMap<String,Integer> cornerTotUpdate;
 
     private String homeTeam;
     private String awayTeam;
@@ -50,18 +50,6 @@ public class MatchEventData {
         MatchKey = matchKey;
     }
 
-    public void setStageUpdates(HashMap<Date, String> stageUpdates) {
-        this.stageUpdates = stageUpdates;
-    }
-
-    public void setScoreUpdate(HashMap<Date, String> scoreUpdate) {
-        this.scoreUpdate = scoreUpdate;
-    }
-
-    public void setCornerTotUpdate(HashMap<Date, Integer> cornerTotUpdate) {
-        this.cornerTotUpdate = cornerTotUpdate;
-    }
-
     public void setHomeTeam(String homeTeam) {
         this.homeTeam = homeTeam;
     }
@@ -70,16 +58,8 @@ public class MatchEventData {
         this.awayTeam = awayTeam;
     }
 
-    public void setPoolTypes(List<String> poolTypes) {
-        this.poolTypes = poolTypes;
-    }
-
     public void setCommence(Date commence) {
         this.commence = commence;
-    }
-
-    public void setActualCommence(Date actualCommence) {
-        this.actualCommence = actualCommence;
     }
 
     public void setCreatedAt(Date createdAt) {
@@ -114,20 +94,20 @@ public class MatchEventData {
         return commence;
     }
 
-    public Date getActualCommence() {
-        return actualCommence;
-    }
-
     public Date getEndTime() {
         return endTime;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public HashMap<String, String> getStageUpdates() {
+        return stageUpdates;
     }
 
-    public Date getLastModifiedAt() {
-        return lastModifiedAt;
+    public HashMap<String, String> getScoreUpdate() {
+        return scoreUpdate;
+    }
+
+    public HashMap<String, Integer> getCornerTotUpdate() {
+        return cornerTotUpdate;
     }
 
     public boolean equals(MatchEventData data){

@@ -128,6 +128,31 @@ public class MorphiaBasicTest {
     }
 
     @Test
+    public void TestUpdateHashMap() throws Exception {
+        preRegWorker = workers.get(0);
+
+        HashMap<Date,String> AscoreUpdate = new HashMap();
+
+        //AscoreUpdate.put((new Date()).getTime(),"0 : 2");
+
+        //scoreUpdate
+        matchDao.AddHashMap(preRegWorker,"scoreUpdate",AscoreUpdate);
+    }
+
+    @Test
+    public void TestQueryHashMap() throws  Exception{
+        preRegWorker = workers.get(0);
+
+        HashMap<Date,String> hmap = matchDao.QueryHashMap(preRegWorker,"scoreUpdate");
+
+        for(Date d: hmap.keySet()){
+            //System.out.println("Hashmap ele" + hmap.get(d));
+        }
+
+
+    }
+
+    @Test
     public void DropDB() throws Exception {
         //client.getDatabase(MongoDBparam.webCrawlingDB).drop();
         client.getDatabase(MongoDBparam.webCrawlingTestDB).drop();

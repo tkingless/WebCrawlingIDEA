@@ -14,6 +14,7 @@ import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -116,7 +117,25 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         return returnPools;
     }
 
+    public HashMap<Date,String> QueryHashMap(MatchEventWorker worker, String field){
+        HashMap<Date,String> map = new HashMap<>();
+
+        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
+        MatchEventData data = query.get();
+
+       // map = data.getScoreUpdate();
+
+        return map;
+    }
+
     //CRUD: update
+
+    public void AddHashMap(MatchEventWorker worker, String field,Object val){
+        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
+        UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).add(field,val);
+        getDatastore().update(query,ops);
+        ApplyLastModified(worker);
+    }
 
     private void UpdateDBdata(MatchEventData newData, Date modified){
         Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(newData.getMatchId());
