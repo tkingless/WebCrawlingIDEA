@@ -47,7 +47,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         }
     }
 
-    void EventWorkerToDBdata(MatchEventWorker worker, MatchEventData data){
+    private void EventWorkerToDBdata(MatchEventWorker worker, MatchEventData data){
         data.setMatchId(Integer.parseInt(worker.getMatchId()));
         data.setMatchKey(worker.getMatchKey());
 
@@ -72,7 +72,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
 
     }
 
-    void SaveMatchEventWorker(MatchEventWorker worker){
+    private void SaveMatchEventWorker(MatchEventWorker worker){
         MatchEventData data = new MatchEventData();
         EventWorkerToDBdata(worker,data);
         this.save(data);
@@ -85,7 +85,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         return findOne("MatchId",id);
     }
 
-    public boolean IsMatchRegisteredBefore (Integer id){
+    boolean IsMatchRegisteredBefore(Integer id){
         return exists("MatchId",id);
     }
 
@@ -106,7 +106,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
 
     //CRUD: update
 
-    void UpdateDBdata(MatchEventData newData, Date modified){
+    private void UpdateDBdata(MatchEventData newData, Date modified){
 
         Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(newData.getMatchId());
 
@@ -119,16 +119,23 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         ops = getDatastore().createUpdateOperations(MatchEventData.class).set("commence",newData.getCommence());
         getDatastore().update(query,ops);
 
-        ApplyLastModifed(newData,modified);
+        ApplyLastModified(newData,modified);
     }
 
-    public void InsertField (MatchEventWorker worker, String field, Object val){
+    public void SetField(MatchEventWorker worker, String field, Object val){
         Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
         UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).set(field,val);
         getDatastore().update(query,ops);
+
+        ApplyLastModified(worker);
     }
 
-    void ApplyLastModifed(MatchEventData data, Date mod){
+    private void ApplyLastModified(MatchEventWorker worker){
+        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
+        UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).set("lastModifiedAt",worker.getLastModifiedTime().GetTheInstant());
+    }
+
+    private void ApplyLastModified(MatchEventData data, Date mod){
         Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(data.getMatchId());
         UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).set("lastModifiedAt",mod);
         getDatastore().update(query,ops);

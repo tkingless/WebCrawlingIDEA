@@ -82,7 +82,7 @@ public class MorphiaBasicTest {
     @Test
     public void TestInsertEndtime() throws Exception {
         preRegWorker = workers.get(0);
-        matchDao.InsertField(preRegWorker,"endTime",new Date());
+        matchDao.SetField(preRegWorker,"endTime",new Date());
     }
 
     @Test

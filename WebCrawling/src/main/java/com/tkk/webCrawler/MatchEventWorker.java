@@ -129,8 +129,8 @@ public class MatchEventWorker extends baseCrawler {
 
         if (status == MatchStatus.STATE_MATCH_ENDED || status == MatchStatus.STATE_TERMINATED) {
             if(status == MatchStatus.STATE_MATCH_ENDED){
-                endTime = new DateTimeEntity();
-                dao.InsertField(this,"endTime",endTime.GetTheInstant());
+                endTime = lastMatchCrle.getRecordTime();
+                dao.SetField(this,"endTime",endTime.GetTheInstant());
                 logTest.logger.info("Actual end time: "+ endTime.toString());
             }
             BoardCrawlee.DetachWorker(this);
@@ -286,8 +286,7 @@ public class MatchEventWorker extends baseCrawler {
             }
         } else if (timediff <= 0) {
             if (stage == MatchStage.STAGE_ESST) {
-                //TODO finetune this longwait, sometime it can be even an half hour long!
-                scanPeriod = 1000 * 2;
+                scanPeriod = scanPeriod + 1000 * 2;
                 logTest.logger.info("dry waiting for start state");
             }
         }
@@ -307,7 +306,8 @@ public class MatchEventWorker extends baseCrawler {
     }
 
     void OnStateMatchStart() {
-        //TODO (DB feature) update the actual match start time and odds
+        //TODO (DB feature) update odds
+        dao.SetField(this,"actualCommence",lastMatchCrle.getRecordTime());
         //TODO (DB feature) init relevant DB objects
 
         actualCommence = lastMatchCrle.getRecordTime();
@@ -319,7 +319,7 @@ public class MatchEventWorker extends baseCrawler {
     void OnStateMatchLogging() {
 
         if (shouldUpdateDB) {
-            UpdateDB();
+            UpdateDBOnLogging();
             logTest.logger.info(lastMatchCrle.toString());
             shouldUpdateDB = false;
         }
@@ -396,8 +396,16 @@ public class MatchEventWorker extends baseCrawler {
         return matchTeams;
     }
 
+    //return worker constructed time
     public DateTimeEntity getWorkerTime() {
         return workerTime;
+    }
+
+    public DateTimeEntity getLastModifiedTime() {
+        if(lastMatchCrle == null)
+            return new DateTimeEntity();
+        else
+            return lastMatchCrle.getRecordTime();
     }
     /*
     Subsidary functions(): end
@@ -410,7 +418,7 @@ public class MatchEventWorker extends baseCrawler {
 
     boolean shouldUpdateDB = false;
 
-    void UpdateDB() {
+    void UpdateDBOnLogging() {
         //TODO (DB feature)
     }
     /*
