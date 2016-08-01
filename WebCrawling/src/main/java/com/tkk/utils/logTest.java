@@ -1,4 +1,3 @@
-//TODO: delete this class
 
 package com.tkk.utils;
 

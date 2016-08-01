@@ -220,8 +220,6 @@ public class BoardCrawlee extends baseCrawlee {
         }
     }
 
-
-    //TODO at somewhere appropriate, call this function
     public synchronized static void DetachWorker(MatchEventWorker worker) {
         if (livingWorkerMatchIDs.contains(worker.getMatchId())) {
             livingWorkerMatchIDs.remove(worker.getMatchId());

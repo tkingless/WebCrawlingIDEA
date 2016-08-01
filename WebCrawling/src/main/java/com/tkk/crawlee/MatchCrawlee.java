@@ -69,7 +69,6 @@ public class MatchCrawlee extends baseCrawlee {
 
     public MatchCrawlee(baseCrawler crlr, String aMatchID) {
         super(crlr);
-        //TODO
         matchID = aMatchID;
         linkAddr = baseUrl + matchID;
     }
