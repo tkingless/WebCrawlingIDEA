@@ -4,6 +4,7 @@ import com.mongodb.MongoClient;
 import com.tkk.MongoDBparam;
 import com.tkk.WebCrawling.DBobject.MatchEventData;
 import com.tkk.utils.DateTimeEntity;
+import com.tkk.utils.logTest;
 import com.tkk.webCrawler.MatchEventWorker;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Morphia;
@@ -36,6 +37,13 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         if(!IsMatchRegisteredBefore(id)){
             SaveMatchEventWorker(worker);
         }else{
+
+            //Workaround
+            if(worker.getCommenceTime() == null){
+                logTest.logger.error("commence is null for on matchingEvent, not expected usage.");
+                return;
+            }
+
             MatchEventData DBdata = findByMatchId(id);
             MatchEventData grabbedData = new MatchEventData();
             EventWorkerToDBdata(worker,grabbedData);
@@ -50,11 +58,9 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
     private void EventWorkerToDBdata(MatchEventWorker worker, MatchEventData data){
         data.setMatchId(Integer.parseInt(worker.getMatchId()));
         data.setMatchKey(worker.getMatchKey());
-
         String[] teams = worker.getMatchTeams().split("vs");
         data.setHomeTeam(teams[0]);
         data.setAwayTeam(teams[1]);
-
         //TODO usable
         /*List<java.lang.String> pools = new ArrayList<>();
         for (MatchCONSTANTS.InplayPoolType type: worker.getMatchPools()){
@@ -107,7 +113,6 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
     //CRUD: update
 
     private void UpdateDBdata(MatchEventData newData, Date modified){
-
         Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(newData.getMatchId());
 
         UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).set("MatchKey",newData.getMatchKey());
@@ -118,7 +123,6 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         getDatastore().update(query,ops);
         ops = getDatastore().createUpdateOperations(MatchEventData.class).set("commence",newData.getCommence());
         getDatastore().update(query,ops);
-
         ApplyLastModified(newData,modified);
     }
 

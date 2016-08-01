@@ -55,8 +55,9 @@ public class OnMatchingWorkerTest {
         //DBManager.getInstance();
     }
 
+    //NOTE AFTER THIS TEST MUST RUN DROPDB()
     @Test
-    public void BasicTest() throws Exception{
+    public void FoundAmatchingEvent() throws Exception{
         onMatchingWorker = workers.get(0);
 
         synchronized (onMatchingWorker) {

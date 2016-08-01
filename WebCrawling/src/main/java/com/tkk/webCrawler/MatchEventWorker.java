@@ -307,7 +307,7 @@ public class MatchEventWorker extends baseCrawler {
 
     void OnStateMatchStart() {
         //TODO (DB feature) update odds
-        dao.SetField(this,"actualCommence",lastMatchCrle.getRecordTime());
+        dao.SetField(this,"actualCommence",lastMatchCrle.getRecordTime().GetTheInstant());
         //TODO (DB feature) init relevant DB objects
 
         actualCommence = lastMatchCrle.getRecordTime();
