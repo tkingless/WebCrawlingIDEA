@@ -29,17 +29,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         super(mongoClient, morphia, DBname);
     }
 
-    public List<MatchEventData> findAll() {
-        return getDatastore().find(MatchEventData.class).asList();
-    }
-
-    public MatchEventData findByMatchId (Integer id){
-        return findOne("MatchId",id);
-    }
-
-    public boolean IsMatchRegisteredBefore (Integer id){
-        return exists("MatchId",id);
-    }
+    //CRUD: create
 
     public void RegisterMatchEventWorker (MatchEventWorker worker) {
         Integer id = Integer.parseInt(worker.getMatchId());
@@ -55,30 +45,6 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
 
             }
         }
-    }
-
-    public void InsertField (MatchEventWorker worker, String field, Object val){
-        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
-        UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).set(field,val);
-        getDatastore().update(query,ops);
-    }
-
-    public boolean QueryDataFieldExists (MatchEventWorker worker, String field){
-        boolean existing = false;
-
-        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId())).field(field).exists();
-        MatchEventData data = query.get();
-        if(data != null){
-            existing = true;
-        }
-        return existing;
-    }
-
-    void SaveMatchEventWorker(MatchEventWorker worker){
-        MatchEventData data = new MatchEventData();
-        EventWorkerToDBdata(worker,data);
-        this.save(data);
-
     }
 
     void EventWorkerToDBdata(MatchEventWorker worker, MatchEventData data){
@@ -106,6 +72,40 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
 
     }
 
+    void SaveMatchEventWorker(MatchEventWorker worker){
+        MatchEventData data = new MatchEventData();
+        EventWorkerToDBdata(worker,data);
+        this.save(data);
+
+    }
+
+    //CRUD: read
+
+    public MatchEventData findByMatchId (Integer id){
+        return findOne("MatchId",id);
+    }
+
+    public boolean IsMatchRegisteredBefore (Integer id){
+        return exists("MatchId",id);
+    }
+
+    public boolean QueryDataFieldExists (MatchEventWorker worker, String field){
+        boolean existing = false;
+
+        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId())).field(field).exists();
+        MatchEventData data = query.get();
+        if(data != null){
+            existing = true;
+        }
+        return existing;
+    }
+
+    public List<MatchEventData> findAll() {
+        return getDatastore().find(MatchEventData.class).asList();
+    }
+
+    //CRUD: update
+
     void UpdateDBdata(MatchEventData newData, Date modified){
 
         Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(newData.getMatchId());
@@ -119,9 +119,22 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         ops = getDatastore().createUpdateOperations(MatchEventData.class).set("commence",newData.getCommence());
         getDatastore().update(query,ops);
 
-        ops = getDatastore().createUpdateOperations(MatchEventData.class).set("lastModifiedAt",modified);
+        ApplyLastModifed(newData,modified);
+    }
+
+    public void InsertField (MatchEventWorker worker, String field, Object val){
+        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
+        UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).set(field,val);
         getDatastore().update(query,ops);
     }
+
+    void ApplyLastModifed(MatchEventData data, Date mod){
+        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(data.getMatchId());
+        UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).set("lastModifiedAt",mod);
+        getDatastore().update(query,ops);
+    }
+
+    //CRUD: delete
 
 }
 
