@@ -1,5 +1,3 @@
-//TODO: delete this class
-
 package com.tkk;
 
 //import com.tkk.test.TestCases.MatchCrawleeTestSample;
@@ -29,7 +27,7 @@ import java.util.List;
 public class XPathExpt {
 
     @Test
-    public void main() throws Exception {
+    public void BasicTest() throws Exception {
 
         String uri = "http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match=104049";
 
