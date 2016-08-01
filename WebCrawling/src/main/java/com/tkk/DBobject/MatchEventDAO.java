@@ -13,10 +13,7 @@ import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by tkingless on 7/29/16.
@@ -117,13 +114,13 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         return returnPools;
     }
 
-    public HashMap<Date,String> QueryHashMap(MatchEventWorker worker, String field){
-        HashMap<Date,String> map = new HashMap<>();
+    public List<HashMap<String,String>> QueryHashMap(MatchEventWorker worker, String field){
+        List<HashMap<String,String>> map;
 
         Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
         MatchEventData data = query.get();
 
-       // map = data.getScoreUpdate();
+        map = data.getScoreUpdate();
 
         return map;
     }

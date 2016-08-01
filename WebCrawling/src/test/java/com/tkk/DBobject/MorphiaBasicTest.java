@@ -135,19 +135,25 @@ public class MorphiaBasicTest {
 
         //AscoreUpdate.put((new Date()).getTime(),"0 : 2");
 
+        HashMap<String,String> AscoreUpdate2 = new HashMap();
+        AscoreUpdate2.put("POD","1 : 2");
+
         //scoreUpdate
-        matchDao.AddHashMap(preRegWorker,"scoreUpdate",AscoreUpdate);
+        matchDao.AddHashMap(preRegWorker,"scoreUpdate",AscoreUpdate2);
     }
 
     @Test
     public void TestQueryHashMap() throws  Exception{
         preRegWorker = workers.get(0);
 
-        HashMap<Date,String> hmap = matchDao.QueryHashMap(preRegWorker,"scoreUpdate");
+        List<HashMap<String,String>> hmap = matchDao.QueryHashMap(preRegWorker,"scoreUpdate");
 
-        for(Date d: hmap.keySet()){
-            //System.out.println("Hashmap ele" + hmap.get(d));
-        }
+
+        /*for(String d: hmap.keySet()){
+            System.out.println("Hashmap ele" + hmap.get(d));
+        }*/
+
+        System.out.println(hmap);
 
 
     }

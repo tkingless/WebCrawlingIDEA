@@ -29,7 +29,7 @@ public class MatchEventData {
 
     private String MatchKey;
     private HashMap<String,String> stageUpdates;
-    private HashMap<String,String> scoreUpdate;
+    private List<HashMap<String,String>> scoreUpdate;
     private HashMap<String,Integer> cornerTotUpdate;
 
     private String homeTeam;
@@ -102,7 +102,7 @@ public class MatchEventData {
         return stageUpdates;
     }
 
-    public HashMap<String, String> getScoreUpdate() {
+    public List<HashMap<String, String>> getScoreUpdate() {
         return scoreUpdate;
     }
 
