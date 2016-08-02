@@ -22,27 +22,27 @@
 
     <Loggers>
         <!-- the logger name need to be same as the class -->
-        <Logger name="com.tkk.HelloWorld" level="trace" additivity="true">
+        <Logger name="com.tkingless.HelloWorld" level="trace" additivity="true">
                 <AppenderRef ref="File_HelloWorld"/>
         </Logger>
 
-        <Logger name="com.tkk.HelloWorld2" level="trace" additivity="true">
+        <Logger name="com.tkingless.HelloWorld2" level="trace" additivity="true">
                 <AppenderRef ref="Console"/>
         </Logger>
 
-        <Logger name="com.tkk.WebCrawlingApp" level="trace" additivity="true">
+        <Logger name="com.tkingless.WebCrawlingApp" level="trace" additivity="true">
             <AppenderRef ref="File_WebCrawlingMain"/>
         </Logger>
 
-        <Logger name="com.tkk.utils.logTest" level="trace" additivity="true">
+        <Logger name="com.tkingless.utils.logTest" level="trace" additivity="true">
             <AppenderRef ref="File_WebCrawlingMain"/>
         </Logger>
 
-        <Logger name="com.tkk.webCrawler" level="info" additivity="true">
+        <Logger name="com.tkingless.webCrawler" level="info" additivity="true">
             <AppenderRef ref="File_WebCrawlingMain"/>
         </Logger>
 
-        <Logger name="com.tkk.crawlee" level="info" additivity="true">
+        <Logger name="com.tkingless.crawlee" level="info" additivity="true">
             <AppenderRef ref="File_WebCrawlingMain"/>
         </Logger>
 

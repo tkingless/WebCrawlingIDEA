@@ -15,11 +15,11 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="com.tkk" level="trace" additivity="true">
+        <Logger name="com.tkingless" level="trace" additivity="true">
                 <AppenderRef ref="File"/>
         </Logger>
 
-        <Logger name="com.tkk" level="trace" additivity="true">
+        <Logger name="com.tkingless" level="trace" additivity="true">
                 <AppenderRef ref="Console"/>
         </Logger>
 
