@@ -77,7 +77,6 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         MatchEventData data = new MatchEventData();
         EventWorkerToDBdata(worker,data);
         this.save(data);
-
     }
 
     //CRUD: read
@@ -115,36 +114,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         return returnPools;
     }
 
-    public List<HashMap<String,String>> QueryHashMap(MatchEventWorker worker, String field){
-        List<HashMap<String,String>> map;
-
-        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
-        MatchEventData data = query.get();
-
-        map = data.getScoreUpdate();
-
-        return map;
-    }
-
-    public List<Object> QueryArrayField(MatchEventWorker worker, String Attrfield){
-        List<Object> objects = null ;
-        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
-
-       query.field(Attrfield).exists().
-
-
-
-        return objects;
-    }
-
     //CRUD: update
-
-    public void AddHashMap(MatchEventWorker worker, String field,Object val){
-        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
-        UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).add(field,val);
-        getDatastore().update(query,ops);
-        ApplyLastModified(worker);
-    }
 
     public void AddItemToListField(MatchEventWorker worker, String ArrayField,Object val){
         Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));

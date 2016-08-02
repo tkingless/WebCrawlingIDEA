@@ -12,7 +12,7 @@ import static org.mongodb.morphia.utils.IndexType.ASC;
 
 @Entity("DateValuePair")
 @Indexes({
-        @Index(value = "time", fields = @Field(value = "time", type = ASC), options = @IndexOptions(unique = true) ),
+        @Index(value = "time", fields = @Field(value = "time", type = ASC), options = @IndexOptions(unique = true) )
 })
 
 public class DateValuePair {
@@ -20,11 +20,6 @@ public class DateValuePair {
     @Id
     Date time;
     String val;
-
-    public DateValuePair(Date date, String val) {
-        this.time = date;
-        this.val = val;
-    }
 
     public Date getTime() {
         return time;

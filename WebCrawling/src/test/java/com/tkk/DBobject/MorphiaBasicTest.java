@@ -16,7 +16,6 @@ import com.tkk.webCrawler.MatchEventWorker;
 import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.Morphia;
-import sun.util.calendar.LocalGregorianCalendar;
 
 import java.util.*;
 
@@ -133,17 +132,9 @@ public class MorphiaBasicTest {
     public void TestUpdateHashMap() throws Exception {
         preRegWorker = workers.get(0);
 
-        HashMap<Date,String> AscoreUpdate = new HashMap();
-
-        //AscoreUpdate.put((new Date()).getTime(),"0 : 2");
-
-        //HashMap<String,String> AscoreUpdate2 = new HashMap();
-        //AscoreUpdate2.put("POD","1 : 2");
-
-        //scoreUpdate
-        //matchDao.AddHashMap(preRegWorker,"scoreUpdate",AscoreUpdate2);
-
-        DateValuePair data = new DateValuePair(new Date(), "0 : 3");
+        DateValuePair data = new DateValuePair();
+        data.setTime(new Date());
+        data.setVal("0 : 23");
         matchDao.AddItemToListField(preRegWorker,"scoreBoard",data);
     }
 
@@ -151,15 +142,9 @@ public class MorphiaBasicTest {
     public void TestQueryHashMap() throws  Exception{
         preRegWorker = workers.get(0);
 
-        List<HashMap<String,String>> hmap = matchDao.QueryHashMap(preRegWorker,"scoreUpdate");
+        MatchEventData data = matchDao.findByMatchId(Integer.parseInt(preRegWorker.getMatchId()));
 
-
-        /*for(String d: hmap.keySet()){
-            System.out.println("Hashmap ele" + hmap.get(d));
-        }*/
-
-        System.out.println(hmap);
-
+        System.out.println("scoreBoard: " + data.getScoreUpdates().get(0).getTime());
 
     }
 
@@ -168,4 +153,5 @@ public class MorphiaBasicTest {
         //client.getDatabase(MongoDBparam.webCrawlingDB).drop();
         client.getDatabase(MongoDBparam.webCrawlingTestDB).drop();
     }
+
 }

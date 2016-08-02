@@ -28,11 +28,13 @@ public class MatchEventData {
     private Integer MatchId;
 
     private String MatchKey;
-    private HashMap<String,String> stageUpdates;
-    private List<HashMap<String,String>> scoreUpdate;
-    private HashMap<String,Integer> cornerTotUpdate;
-    @Embedded("scoreBoard")
-    private List<DateValuePair> scoreBoard;
+    @Embedded("stageUpdates")
+    private List<DateValuePair> stageUpdates;
+    @Embedded("scoreUpdates")
+    private List<DateValuePair> scoreUpdates;
+    @Embedded("cornerTotUpdates")
+    private List<DateValuePair> cornerTotUpdates;
+
 
     private String homeTeam;
     private String awayTeam;
@@ -72,6 +74,10 @@ public class MatchEventData {
         this.lastModifiedAt = lastModifiedAt;
     }
 
+    public void setScoreUpdates(List<DateValuePair> scoreUpdates) {
+        this.scoreUpdates = scoreUpdates;
+    }
+
     public Integer getMatchId() {
         return MatchId;
     }
@@ -100,16 +106,16 @@ public class MatchEventData {
         return endTime;
     }
 
-    public HashMap<String, String> getStageUpdates() {
+    public List<DateValuePair> getStageUpdates() {
         return stageUpdates;
     }
 
-    public List<HashMap<String, String>> getScoreUpdate() {
-        return scoreUpdate;
+    public List<DateValuePair> getScoreUpdates() {
+        return scoreUpdates;
     }
 
-    public HashMap<String, Integer> getCornerTotUpdate() {
-        return cornerTotUpdate;
+    public List<DateValuePair> getCornerTotUpdates() {
+        return cornerTotUpdates;
     }
 
     public boolean equals(MatchEventData data){
