@@ -30,6 +30,7 @@ import static com.tkingless.MatchCONSTANTS.MatchStatus.*;
 public class MatchEventWorker extends baseCrawler {
 
     private final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST, MatchStage.STAGE_HALFTIME, MatchStage.STAGE_SECOND);
+    private final Set<UpdateDifferentiator> oddPoolUpdateType = EnumSet.of(UpdateDifferentiator.UPDATE_POOL_CHL,UpdateDifferentiator.UPDATE_POOL_HAD);
     private static final String threadName = "MatchEventWorker-thread";
 
     //The unique id for this worker

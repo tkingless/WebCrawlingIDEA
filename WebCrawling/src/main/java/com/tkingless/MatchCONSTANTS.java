@@ -40,6 +40,14 @@ public class MatchCONSTANTS {
         UNDEFINED
     }
 
+    public enum UpdateDifferentiator {
+        UPDATE_STAGE,
+        UPDATE_POOLS,
+        UPDATE_SCORES,
+        UPDATE_POOL_HAD,
+        UPDATE_POOL_CHL
+    }
+
     public static InplayPoolType GetInplayPoolType(String input) {
 
         String lowercase = input.toLowerCase();

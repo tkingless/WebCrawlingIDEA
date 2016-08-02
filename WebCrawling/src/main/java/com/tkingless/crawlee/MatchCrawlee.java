@@ -297,6 +297,50 @@ public class MatchCrawlee extends baseCrawlee {
         return toUpdate;
     }
 
+    public static Set<UpdateDifferentiator> UpdateDifferentiator (MatchCrawlee oldCrle, MatchCrawlee newCrle) throws XPathExpressionException {
+        Set<UpdateDifferentiator> difftr = EnumSet.noneOf(UpdateDifferentiator.class);
+
+        if (newCrle == null)
+            return difftr;
+        if (oldCrle == null)
+            return EnumSet.allOf(UpdateDifferentiator.class);
+
+        if (newCrle.getRecordTime().GetTheInstant().getTime() <= oldCrle.getRecordTime().GetTheInstant().getTime())
+            return difftr;
+
+        if (oldCrle.getMatchStage() != newCrle.getMatchStage())
+            difftr.add(UpdateDifferentiator.UPDATE_STAGE);
+
+        if (!oldCrle.getPoolType().equals(newCrle.getPoolType()))
+            difftr.add(UpdateDifferentiator.UPDATE_POOLS);
+
+        if (oldCrle.getScores().equals(newCrle.getScores()))
+            difftr.add(UpdateDifferentiator.UPDATE_SCORES);
+
+        for (InplayPoolType aType : oldCrle.getPoolType()) {
+            if (MapComparator.CompareMapsDifferent(oldCrle.ExtractPoolTypeBody(aType)
+                    , newCrle.ExtractPoolTypeBody(aType))) {
+                logTest.logger.info("oldCrle body: " + oldCrle.ExtractPoolTypeBody(aType));
+                logTest.logger.info("newCrle body: " + newCrle.ExtractPoolTypeBody(aType));
+                //kludge
+                switch (aType){
+                    case HAD:
+                        difftr.add(UpdateDifferentiator.UPDATE_POOL_HAD);
+                        break;
+                    case CHL:
+                        difftr.add(UpdateDifferentiator.UPDATE_POOL_CHL);
+                        break;
+                    default:
+                        logTest.logger.warn("[UpdateDifferentiator] this type " + aType.toString() + " is not catched yet");
+                        break;
+                }
+            }
+        }
+
+
+        return difftr;
+    }
+
     @Override
     public String toString() {
         StringBuilder tmp = new StringBuilder();

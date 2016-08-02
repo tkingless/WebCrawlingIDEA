@@ -123,7 +123,6 @@ public class MorphiaBasicTest {
         preRegWorker = workers.get(0);
 
         java.util.Set<MatchCONSTANTS.InplayPoolType> queried = matchDao.QueryPoolTypes(preRegWorker);
-
         System.out.println("queried: " + queried);
 
     }
