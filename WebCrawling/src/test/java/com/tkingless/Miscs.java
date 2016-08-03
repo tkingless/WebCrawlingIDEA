@@ -27,12 +27,23 @@ public class Miscs {
     public void TestDateSortedList() throws Exception {
         List<APoolOddsData> sortedList = new ArrayList<>();
 
-        sortedList.add(new APoolOddsData(new Date((long)1470190376*1000)));
-        sortedList.add(new APoolOddsData(new Date((long)(1470190376+1000)*1000)));
-        sortedList.add(new APoolOddsData(new Date((long)(1470190376-1000)*1000)));
+        Date middle = new Date((1470190376)*1000);
+        Date first = new Date((1470190376-1000)*1000);
+        Date later = new Date((1470190376+1000)*1000);
 
-        for(APoolOddsData data : sortedList){
-            System.out.println(data.getRecorded());
+        APoolOddsData data = new APoolOddsData();
+
+        data.setRecorded(middle);
+        sortedList.add(data);
+        data = new APoolOddsData();
+        data.setRecorded(later);
+        sortedList.add(data);
+        data = new APoolOddsData();
+        data.setRecorded(first);
+        sortedList.add(data);
+
+        for(APoolOddsData Adata : sortedList){
+            System.out.println(Adata.getRecorded());
         }
 
         //ASC ORDER
@@ -42,8 +53,8 @@ public class Miscs {
         Comparator<APoolOddsData> comparator = (h1, h2) -> h1.getRecorded().compareTo(h2.getRecorded());
         sortedList.sort(comparator.reversed());
 
-        for(APoolOddsData data : sortedList){
-            System.out.println(data.getRecorded());
+        for(APoolOddsData Adata : sortedList){
+            System.out.println(Adata.getRecorded());
         }
 
 
