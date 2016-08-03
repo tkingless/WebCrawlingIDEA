@@ -34,4 +34,12 @@ public class APoolOddsData {
     private String poolStatus;
 
     private Date recorded;
+
+    public APoolOddsData(Date recorded) {
+        this.recorded = recorded;
+    }
+
+    public Date getRecorded() {
+        return recorded;
+    }
 }

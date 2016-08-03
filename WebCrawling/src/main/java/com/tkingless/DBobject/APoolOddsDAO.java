@@ -5,12 +5,12 @@ import com.tkingless.MatchCONSTANTS;
 import com.tkingless.MongoDBparam;
 import com.tkingless.WebCrawling.DBobject.APoolOddsData;
 import com.tkingless.crawlee.MatchCrawlee;
-import com.tkingless.webCrawler.MatchEventWorker;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.dao.BasicDAO;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -29,16 +29,21 @@ public class APoolOddsDAO extends BasicDAO<APoolOddsData, ObjectId> {
     }
 
     //CRUD: CREATE
-    public void InsertOddPoolUpdates(MatchEventWorker worker, MatchCrawlee lastCrle, Set<MatchCONSTANTS.UpdateDifferentiator> difftr){
+    public void InsertOddPoolUpdates(String matchId, MatchCrawlee lastCrle, Set<MatchCONSTANTS.UpdateDifferentiator> difftr){
 
     }
 
     //CRUD: READ
-    public List<APoolOddsData> GetAllOdds(int matchNo, String poolType){
-        //TODO return time-order sorted list
+    public List<APoolOddsData> GetAllOdds(String matchId, MatchCONSTANTS.InplayPoolType type){
+
         List<APoolOddsData> aList = new ArrayList<>();
 
         return aList;
+    }
+
+    public void SortUpdateRecordsByASC(){
+        //TODO return time-order sorted list
+        //aList.sort(Comparator.comparing(data -> data.getRecorded()));
     }
 
     public void updateAllOdds(APoolOddsData odds){

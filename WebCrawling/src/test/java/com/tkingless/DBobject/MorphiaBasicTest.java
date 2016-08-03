@@ -68,7 +68,7 @@ public class MorphiaBasicTest {
 
     @Test
     public void GetByID() throws Exception{
-        MatchEventData data = matchDao.findByMatchId(103904);
+        MatchEventData data = matchDao.findByMatchId("103904");
 
         System.out.println(data.getMatchKey());
     }
@@ -76,7 +76,7 @@ public class MorphiaBasicTest {
     @Test
     public void TestFindFunctions() throws Exception {
 
-        System.out.println(matchDao.IsMatchRegisteredBefore(103904));
+        System.out.println(matchDao.IsMatchRegisteredBefore("103904"));
     }
 
     @Test
@@ -88,7 +88,7 @@ public class MorphiaBasicTest {
     @Test
     public void TestGetEndtime() throws Exception{
         preRegWorker = workers.get(0);
-        MatchEventData data =  matchDao.findByMatchId(Integer.parseInt(preRegWorker.getMatchId()));
+        MatchEventData data =  matchDao.findByMatchId(preRegWorker.getMatchId());
         System.out.println(data.getEndTime());
     }
 
@@ -102,7 +102,7 @@ public class MorphiaBasicTest {
     @Test
     public void TestcommenceTimeSetting() throws Exception{
         preRegWorker = workers.get(0);
-        long timestampOfcommence = matchDao.findByMatchId(Integer.parseInt(preRegWorker.getMatchId())).getCommence().getTime();
+        long timestampOfcommence = matchDao.findByMatchId(preRegWorker.getMatchId()).getCommence().getTime();
         DateTimeEntity commenceTime = new DateTimeEntity(timestampOfcommence);
         System.out.println("The commence time is: " + commenceTime.GetTheInstant());
     }
@@ -141,7 +141,7 @@ public class MorphiaBasicTest {
     public void TestQueryHashMap() throws  Exception{
         preRegWorker = workers.get(0);
 
-        MatchEventData data = matchDao.findByMatchId(Integer.parseInt(preRegWorker.getMatchId()));
+        MatchEventData data = matchDao.findByMatchId(preRegWorker.getMatchId());
 
         System.out.println("scoreBoard: " + data.getScoreUpdates().get(0).getTime());
 
