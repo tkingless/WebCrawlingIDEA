@@ -50,16 +50,16 @@ public class MatchEventWorker extends baseCrawler {
     String matchKey;
     String matchTeams;
 
-    MatchEventDAO dao;
+    MatchEventDAO workerDAO;
 
     public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element teamsEle, MatchTestCONSTANTS.TestType type) throws ParseException {
         super(CrawlerKeyBinding.MatchEvent, threadName + "-" + aMatchId);
         testTypeSwitch = type;
 
         if(type != null){
-            dao = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
+            workerDAO = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
         }else{
-            dao = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
+            workerDAO = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
         }
 
         workerTime = new DateTimeEntity();
@@ -108,7 +108,7 @@ public class MatchEventWorker extends baseCrawler {
                     OnStateMatchStart();
                     break;
                 case STATE_MATCH_LOGGING:
-                    logTest.logger.info("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
+                    //logTest.logger.info("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
                     EmitRequest();
                     OnStateMatchLogging();
                     break;
@@ -131,7 +131,7 @@ public class MatchEventWorker extends baseCrawler {
         if (status == MatchStatus.STATE_MATCH_ENDED || status == MatchStatus.STATE_TERMINATED) {
             if(status == MatchStatus.STATE_MATCH_ENDED){
                 endTime = lastMatchCrle.getRecordTime();
-                dao.SetField(this,"endTime",endTime.GetTheInstant());
+                workerDAO.SetField(this,"endTime",endTime.GetTheInstant());
                 logTest.logger.info("Actual end time: "+ endTime.toString());
             }
             BoardCrawlee.DetachWorker(this);
@@ -181,8 +181,8 @@ public class MatchEventWorker extends baseCrawler {
             case STAGE_HALFTIME:
             case STAGE_SECOND:
 
-                if(dao.QueryDataFieldExists(this,"commence")){
-                    long timestampOfcommence = dao.findByMatchId(Integer.parseInt(matchId)).getCommence().getTime();
+                if(workerDAO.QueryDataFieldExists(this,"commence")){
+                    long timestampOfcommence = workerDAO.findByMatchId(Integer.parseInt(matchId)).getCommence().getTime();
                     commenceTime = new DateTimeEntity(timestampOfcommence);
                 }
 
@@ -230,7 +230,7 @@ public class MatchEventWorker extends baseCrawler {
             return;
         }
 
-        if(dao.QueryDataFieldExists(this,"endTime")){
+        if(workerDAO.QueryDataFieldExists(this,"endTime")){
             status = MatchStatus.STATE_TERMINATED;
         }
 
@@ -296,7 +296,7 @@ public class MatchEventWorker extends baseCrawler {
             long shortwait = 1000;
             scanPeriod = shortwait;
             if (noDBcommenceTimeHistory) {
-                dao.RegisterMatchEventWorker(this);
+                workerDAO.RegisterMatchEventWorker(this);
             }
             status = MatchStatus.STATE_MATCH_START;
         }
@@ -308,13 +308,14 @@ public class MatchEventWorker extends baseCrawler {
 
     void OnStateMatchStart() {
         //TODO (DB feature) update odds
-        dao.SetField(this,"actualCommence",lastMatchCrle.getRecordTime().GetTheInstant());
+        workerDAO.SetField(this,"actualCommence",lastMatchCrle.getRecordTime().GetTheInstant());
         //TODO (DB feature) init relevant DB objects
 
         actualCommence = lastMatchCrle.getRecordTime();
         scanPeriod = 1000;
 
         status = MatchStatus.STATE_MATCH_LOGGING;
+        logTest.logger.info("Threadname: " + threadName + matchId + "Entered STATE_MATCH_LOGGING");
     }
 
     void OnStateMatchLogging() {
@@ -336,7 +337,7 @@ public class MatchEventWorker extends baseCrawler {
     }
 
     void OnStateFuture(){
-        dao.RegisterMatchEventWorker(this);
+        workerDAO.RegisterMatchEventWorker(this);
         status = STATE_TERMINATED;
     }
 
@@ -465,7 +466,7 @@ public class MatchEventWorker extends baseCrawler {
 
         if (matchPools == null) {
             matchPools = crle.getPoolType();
-            dao.SetField(this,"poolTypes",matchPools);
+            workerDAO.SetField(this,"poolTypes",matchPools);
             logTest.logger.info("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());
         }
 

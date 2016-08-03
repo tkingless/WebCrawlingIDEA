@@ -134,7 +134,6 @@ public class BasicTest {
 
         client.getDatabase(TestDBname).getCollection("restaurants").updateOne(new Document("borough","Bronx"),
                 //record, update with datetime
-                //TODO from DB to java date
                 new Document("$set", new Document("borough","PforO")).append("$currentDate",
                                 new Document("lastModified",true))
         );
