@@ -61,6 +61,12 @@ public class MatchCrawlee extends baseCrawlee {
 
     private String scores;
 
+    public String getTotalCorners() {
+        return totalCorners;
+    }
+
+    private String totalCorners;
+
     boolean matchXmlValid = false;
 
     public boolean isMatchXmlValid() {
@@ -105,6 +111,7 @@ public class MatchCrawlee extends baseCrawlee {
                 ExtractMatchPools();
                 ExtractStage();
                 ExtractScores();
+                ExtractTotalCorners();
                 /*for (String str : queries) {
                     logTest.logger.info(GetValueByQuery(str));
                 }*/
@@ -169,7 +176,7 @@ public class MatchCrawlee extends baseCrawlee {
         return allPoolClosed;
     }
 
-    HashMap<String, String> ExtractPoolTypeBody(InplayPoolType type) throws XPathExpressionException {
+    public HashMap<String, String> ExtractPoolTypeBody(InplayPoolType type) throws XPathExpressionException {
         HashMap<String, String> hmap = new HashMap<String, String>();
 
         String existQuery = String.format("//pool[@type=\"%s\"]", MatchCONSTANTS.GetCapPoolType(type));
@@ -216,12 +223,10 @@ public class MatchCrawlee extends baseCrawlee {
     }
 
     void ExplainCHIpool(HashMap<String, String> hmap) {
-        final String CornerTotalQuery = "//match/@ninety_mins_total_corner";
         final String CornerLineQuery = "//pool[@type=\"CHL\"]/@line";
         final String CornerHighQuery = "//pool[@type=\"CHL\"]/@h";
         final String CornerLowQuery = "//pool[@type=\"CHL\"]/@l";
 
-        String totalVal = GetValueByQuery(CornerTotalQuery);
         String lineVal = GetValueByQuery(CornerLineQuery);
         String highVal = GetValueByQuery(CornerHighQuery);
         String lowVal = GetValueByQuery(CornerLowQuery);
@@ -229,7 +234,6 @@ public class MatchCrawlee extends baseCrawlee {
         highVal = StrTrimAtChar(highVal);
         lowVal = StrTrimAtChar(lowVal);
 
-        hmap.put("total", totalVal);
         hmap.put("line", lineVal);
         hmap.put("high", highVal);
         hmap.put("low", lowVal);
@@ -267,6 +271,11 @@ public class MatchCrawlee extends baseCrawlee {
         scores = GetValueByQuery(scoreQuery);
     }
 
+    private void ExtractTotalCorners() {
+        final String CornerTotalQuery = "//match/@ninety_mins_total_corner";
+        totalCorners = GetValueByQuery(CornerTotalQuery);
+    }
+
     public static boolean HasUpdate(MatchCrawlee oldCrle, MatchCrawlee newCrle) throws XPathExpressionException {
         boolean toUpdate = true;
 
@@ -280,6 +289,7 @@ public class MatchCrawlee extends baseCrawlee {
 
         if (oldCrle.getMatchStage() == newCrle.getMatchStage())
             if (oldCrle.getPoolType().equals(newCrle.getPoolType()))
+                if(oldCrle.getTotalCorners().equals(newCrle.getTotalCorners()) || newCrle.getTotalCorners().contains("-"))
                 if (oldCrle.getScores().equals(newCrle.getScores())) {
                     toUpdate = false;
                     for (InplayPoolType aType : oldCrle.getPoolType()) {
@@ -292,7 +302,6 @@ public class MatchCrawlee extends baseCrawlee {
                         }
                     }
                 }
-
 
         return toUpdate;
     }
@@ -314,8 +323,11 @@ public class MatchCrawlee extends baseCrawlee {
         if (!oldCrle.getPoolType().equals(newCrle.getPoolType()))
             difftr.add(UpdateDifferentiator.UPDATE_POOLS);
 
-        if (oldCrle.getScores().equals(newCrle.getScores()))
+        if (!oldCrle.getScores().equals(newCrle.getScores()))
             difftr.add(UpdateDifferentiator.UPDATE_SCORES);
+
+        if( !oldCrle.getTotalCorners().equals(newCrle.getTotalCorners()) && !newCrle.getTotalCorners().contains("-"))
+            difftr.add(UpdateDifferentiator.UPDATE_CORNER);
 
         for (InplayPoolType aType : oldCrle.getPoolType()) {
             if (MapComparator.CompareMapsDifferent(oldCrle.ExtractPoolTypeBody(aType)
@@ -336,7 +348,6 @@ public class MatchCrawlee extends baseCrawlee {
                 }
             }
         }
-
 
         return difftr;
     }

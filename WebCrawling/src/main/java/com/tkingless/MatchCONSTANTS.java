@@ -44,6 +44,7 @@ public class MatchCONSTANTS {
         UPDATE_STAGE,
         UPDATE_POOLS,
         UPDATE_SCORES,
+        UPDATE_CORNER,
         UPDATE_POOL_HAD,
         UPDATE_POOL_CHL
     }
