@@ -33,8 +33,8 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
     //CRUD: create
 
     public void RegisterMatchEventWorker (MatchEventWorker worker) {
-        Integer id = Integer.parseInt(worker.getMatchId());
-        if(!IsMatchRegisteredBefore(id)){
+        String idStr = worker.getMatchId();
+        if(!IsMatchRegisteredBefore(idStr)){
             SaveMatchEventWorker(worker);
         }else{
 
@@ -44,7 +44,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
                 return;
             }
 
-            MatchEventData DBdata = findByMatchId(id);
+            MatchEventData DBdata = findByMatchId(idStr);
             MatchEventData grabbedData = new MatchEventData();
             EventWorkerToDBdata(worker,grabbedData);
 
@@ -80,12 +80,12 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
 
     //CRUD: read
 
-    public MatchEventData findByMatchId (Integer id){
-        return findOne("MatchId",id);
+    public MatchEventData findByMatchId (String id){
+        return findOne("MatchId",Integer.parseInt(id));
     }
 
-    boolean IsMatchRegisteredBefore(Integer id){
-        return exists("MatchId",id);
+    boolean IsMatchRegisteredBefore(String id){
+        return exists("MatchId",Integer.parseInt(id));
     }
 
     public boolean QueryDataFieldExists (MatchEventWorker worker, String field){

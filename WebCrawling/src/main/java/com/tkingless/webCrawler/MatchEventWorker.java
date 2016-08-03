@@ -1,6 +1,7 @@
 package com.tkingless.webCrawler;
 
 import com.tkingless.DBManager;
+import com.tkingless.DBobject.APoolOddsDAO;
 import com.tkingless.DBobject.MatchEventDAO;
 import com.tkingless.MatchTestCONSTANTS;
 import com.tkingless.MongoDBparam;
@@ -30,7 +31,8 @@ import static com.tkingless.MatchCONSTANTS.MatchStatus.*;
 public class MatchEventWorker extends baseCrawler {
 
     private final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST, MatchStage.STAGE_HALFTIME, MatchStage.STAGE_SECOND);
-    private final Set<UpdateDifferentiator> oddPoolUpdateType = EnumSet.of(UpdateDifferentiator.UPDATE_POOL_CHL,UpdateDifferentiator.UPDATE_POOL_HAD);
+    private static final Set<UpdateDifferentiator> oddPoolUpdateType = EnumSet.of(UpdateDifferentiator.UPDATE_POOL_CHL,UpdateDifferentiator.UPDATE_POOL_HAD);
+    private static final Set<UpdateDifferentiator> workerUpdateType = EnumSet.of(UpdateDifferentiator.UPDATE_POOLS,UpdateDifferentiator.UPDATE_SCORES,UpdateDifferentiator.UPDATE_STAGE);
     private static final String threadName = "MatchEventWorker-thread";
 
     //The unique id for this worker
@@ -51,6 +53,7 @@ public class MatchEventWorker extends baseCrawler {
     String matchTeams;
 
     MatchEventDAO workerDAO;
+    APoolOddsDAO CrleOddsDAO;
 
     public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element teamsEle, MatchTestCONSTANTS.TestType type) throws ParseException {
         super(CrawlerKeyBinding.MatchEvent, threadName + "-" + aMatchId);
