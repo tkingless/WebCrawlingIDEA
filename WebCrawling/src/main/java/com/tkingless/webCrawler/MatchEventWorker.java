@@ -61,8 +61,10 @@ public class MatchEventWorker extends baseCrawler {
 
         if(type != null){
             workerDAO = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
+            CrleOddsDAO = new APoolOddsDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
         }else{
             workerDAO = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
+            CrleOddsDAO = new APoolOddsDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
         }
 
         workerTime = new DateTimeEntity();
@@ -185,7 +187,7 @@ public class MatchEventWorker extends baseCrawler {
             case STAGE_SECOND:
 
                 if(workerDAO.QueryDataFieldExists(this,"commence")){
-                    long timestampOfcommence = workerDAO.findByMatchId(Integer.parseInt(matchId)).getCommence().getTime();
+                    long timestampOfcommence = workerDAO.findByMatchId(matchId).getCommence().getTime();
                     commenceTime = new DateTimeEntity(timestampOfcommence);
                 }
 
