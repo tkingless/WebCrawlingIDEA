@@ -115,6 +115,23 @@ public class MatchCONSTANTS {
             return MatchStage.STAGE_UNDEFINED;
     }
 
+    public static String GetMatchStageStr(MatchStage stage){
+
+        switch (stage) {
+            case STAGE_ESST:
+                return "inplayesst_nobr";
+            case STAGE_FIRST:
+                return "firsthalf";
+            case STAGE_HALFTIME:
+                return "halftimecompleted";
+            case STAGE_SECOND:
+                return "secondhalf";
+            case STAGE_UNDEFINED:
+                default:
+                return "unknown";
+        }
+    }
+
     public enum MatchPoolStatus {
         STATUS_START_SELL,
         STATUS_SUSPENDED,

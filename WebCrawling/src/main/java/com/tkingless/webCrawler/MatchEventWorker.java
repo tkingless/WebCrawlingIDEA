@@ -3,6 +3,7 @@ package com.tkingless.webCrawler;
 import com.tkingless.DBManager;
 import com.tkingless.DBobject.APoolOddsDAO;
 import com.tkingless.DBobject.MatchEventDAO;
+import com.tkingless.MatchCONSTANTS;
 import com.tkingless.MatchTestCONSTANTS;
 import com.tkingless.MongoDBparam;
 import com.tkingless.crawlee.BoardCrawlee;
@@ -53,7 +54,7 @@ public class MatchEventWorker extends baseCrawler {
     String matchTeams;
 
     MatchEventDAO workerDAO;
-    APoolOddsDAO CrleOddsDAO;
+    APoolOddsDAO crleOddsDAO;
 
     public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element teamsEle, MatchTestCONSTANTS.TestType type) throws ParseException {
         super(CrawlerKeyBinding.MatchEvent, threadName + "-" + aMatchId);
@@ -61,10 +62,10 @@ public class MatchEventWorker extends baseCrawler {
 
         if(type != null){
             workerDAO = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
-            CrleOddsDAO = new APoolOddsDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
+            crleOddsDAO = new APoolOddsDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
         }else{
             workerDAO = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
-            CrleOddsDAO = new APoolOddsDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
+            crleOddsDAO = new APoolOddsDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
         }
 
         workerTime = new DateTimeEntity();
@@ -311,24 +312,26 @@ public class MatchEventWorker extends baseCrawler {
         }
     }
 
-    void OnStateMatchStart() {
-        //TODO (DB feature) update odds
-        workerDAO.SetField(this,"actualCommence",lastMatchCrle.getRecordTime().GetTheInstant());
-        //TODO (DB feature) init relevant DB objects
+    void OnStateMatchStart() throws XPathExpressionException {
+
+        //init the match DB data
+        UpdateDBByDifftr(updateDifftr,lastMatchCrle);
 
         actualCommence = lastMatchCrle.getRecordTime();
+        workerDAO.SetField(this,"actualCommence",actualCommence.GetTheInstant());
+
         scanPeriod = 1000;
 
+        updateDifftr.clear();
         status = MatchStatus.STATE_MATCH_LOGGING;
         logTest.logger.info("Threadname: " + threadName + matchId + "Entered STATE_MATCH_LOGGING");
     }
 
-    void OnStateMatchLogging() {
+    void OnStateMatchLogging() throws XPathExpressionException {
 
-        if (shouldUpdateDB) {
-            UpdateDBOnLogging();
+        if (!updateDifftr.isEmpty()) {
+            UpdateDBByDifftr(updateDifftr,lastMatchCrle);
             logTest.logger.info(lastMatchCrle.toString());
-            shouldUpdateDB = false;
         }
 
         if(!lastMatchCrle.isMatchXmlValid())
@@ -423,11 +426,39 @@ public class MatchEventWorker extends baseCrawler {
     DB functions()
      */
 
-    boolean shouldUpdateDB = false;
+    Set<UpdateDifferentiator> updateDifftr = EnumSet.noneOf(UpdateDifferentiator.class);
 
-    void UpdateDBOnLogging() {
-        //TODO (DB feature)
+    private void UpdateDBByDifftr(Set<UpdateDifferentiator> difftr, MatchCrawlee crle) throws XPathExpressionException {
+
+        for (UpdateDifferentiator differentiator : difftr) {
+            switch (differentiator) {
+                case UPDATE_STAGE:
+                    workerDAO.AddItemToListField(this,"stageUpdates", MatchCONSTANTS.GetMatchStageStr(crle.getMatchStage()));
+                    break;
+                case UPDATE_POOLS:
+                    workerDAO.SetField(this,"poolTypes",matchPools);
+                    break;
+                case UPDATE_SCORES:
+                    workerDAO.AddItemToListField(this,"scoreUpdates",crle.getScores());
+                    break;
+                case UPDATE_CORNER:
+                    workerDAO.AddItemToListField(this,"cornerTotUpdates",crle.getScores());
+                    break;
+                case UPDATE_POOL_HAD:
+                    crleOddsDAO.InsertOddPoolUpdates(matchId,crle,InplayPoolType.HAD);
+                    break;
+                case UPDATE_POOL_CHL:
+                    crleOddsDAO.InsertOddPoolUpdates(matchId,crle,InplayPoolType.CHL);
+                    break;
+                default:
+                    logTest.logger.error("[Worker] UpdateDBByDifftr() undefined type");
+            }
+        }
+
+        difftr.clear();
     }
+
+
     /*
     DB functions(): end
      */
@@ -459,25 +490,25 @@ public class MatchEventWorker extends baseCrawler {
             return;
         }
 
-        if (MatchCrawlee.HasUpdate(lastMatchCrle, newMatchCrle)) {
-            lastMatchCrle = newMatchCrle;
+        updateDifftr = MatchCrawlee.UpdateDifferentiator(lastMatchCrle,newMatchCrle);
+
+        if (!updateDifftr.isEmpty()) {
             UpdateWorkerFromCrle(newMatchCrle);
-            shouldUpdateDB = true;
+            lastMatchCrle = newMatchCrle;
         }
 
     }
 
+    //this function is not touching DB part
     private void UpdateWorkerFromCrle(MatchCrawlee crle) {
 
         if (matchPools == null) {
             matchPools = crle.getPoolType();
-            workerDAO.SetField(this,"poolTypes",matchPools);
             logTest.logger.info("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());
         }
-
         stage = crle.getMatchStage();
-        //TODO other things (DB feature)
     }
+
     /*
     MatchCrawlee functions(): end
      */

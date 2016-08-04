@@ -9,6 +9,7 @@ import com.tkingless.MongoDBparam;
 import com.tkingless.WebCrawling.DBobject.DateValuePair;
 import com.tkingless.WebCrawling.DBobject.MatchEventData;
 import com.tkingless.crawlee.BoardCrawlee;
+import com.tkingless.crawlee.MatchCrawlee;
 import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.webCrawler.BoardCrawleeTestSample;
 import com.tkingless.webCrawler.MatchCrawleeTestSample;
@@ -33,6 +34,7 @@ public class MorphiaBasicTest {
     MongoClient client;
     Morphia morphia;
     MatchEventDAO matchDao;
+    APoolOddsDAO oddDao;
 
     @Before
     public synchronized void setUp() throws Exception {
@@ -55,6 +57,7 @@ public class MorphiaBasicTest {
         //Morphia DAO
         morphia = new Morphia();
         matchDao = new MatchEventDAO(client,morphia, MongoDBparam.webCrawlingTestDB);
+        oddDao = new APoolOddsDAO(client,morphia,MongoDBparam.webCrawlingTestDB);
     }
 
     @Test
@@ -128,7 +131,7 @@ public class MorphiaBasicTest {
     }
 
     @Test
-    public void TestUpdateHashMap() throws Exception {
+    public void TestUpdateDateValuePairList() throws Exception {
         preRegWorker = workers.get(0);
 
         DateValuePair data = new DateValuePair();
@@ -138,13 +141,24 @@ public class MorphiaBasicTest {
     }
 
     @Test
-    public void TestQueryHashMap() throws  Exception{
+    public void TestQueryDateValuePairList() throws  Exception{
         preRegWorker = workers.get(0);
 
         MatchEventData data = matchDao.findByMatchId(preRegWorker.getMatchId());
 
         System.out.println("scoreBoard: " + data.getScoreUpdates().get(0).getTime());
 
+    }
+
+    @Test
+    public void TestInsertPoolOdd() throws Exception {
+        String id = "103904";
+        MatchCrawlee crle = new MatchCrawlee(MatchCrawleeTestSample.preReg103904firstHalf);
+        crle.run();
+
+        Set<MatchCONSTANTS.UpdateDifferentiator> difftr = EnumSet.of(MatchCONSTANTS.UpdateDifferentiator.UPDATE_POOL_HAD, MatchCONSTANTS.UpdateDifferentiator.UPDATE_POOL_CHL);
+
+        oddDao.InsertOddPoolUpdates(id,crle,difftr);
     }
 
     @Test

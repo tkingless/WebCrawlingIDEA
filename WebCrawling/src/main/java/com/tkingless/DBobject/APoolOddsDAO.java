@@ -69,6 +69,38 @@ public class APoolOddsDAO extends BasicDAO<APoolOddsData, ObjectId> {
         }
     }
 
+    //this function coupled with MatchCrawlee::ExplainHADpool(), ExplainCHIpool(), ExtractPoolTypeBody()
+    public void InsertOddPoolUpdates(String matchId, MatchCrawlee lastCrle, MatchCONSTANTS.InplayPoolType aPool) throws XPathExpressionException {
+
+            APoolOddsData data = new APoolOddsData();
+            data.setMatchId(Integer.parseInt(matchId));
+            data.setRecorded(lastCrle.getRecordTime().GetTheInstant());
+
+            switch (aPool){
+                case HAD:
+                    HashMap<String,String> toUpdateHAD = lastCrle.ExtractPoolTypeBody(MatchCONSTANTS.InplayPoolType.HAD);
+                    data.setType("HAD");
+                    data.setPoolStatus(toUpdateHAD.get("PoolStat"));
+                    data.setHADhomeOdd(Double.parseDouble(toUpdateHAD.get("home")));
+                    data.setHADdrawOdd(Double.parseDouble(toUpdateHAD.get("draw")));
+                    data.setHADawayOdd(Double.parseDouble(toUpdateHAD.get("away")));
+                    break;
+                case CHL:
+                    HashMap<String,String> toUpdateCHL = lastCrle.ExtractPoolTypeBody(MatchCONSTANTS.InplayPoolType.CHL);
+                    data.setType("CHL");
+                    data.setPoolStatus(toUpdateCHL.get("PoolStat"));
+                    data.setCHLline(Double.parseDouble(toUpdateCHL.get("line")));
+                    data.setCHLhigh(Double.parseDouble(toUpdateCHL.get("high")));
+                    data.setCHLlow(Double.parseDouble(toUpdateCHL.get("low")));
+                    break;
+                default:
+                    logTest.logger.error("[PoolOddInsertion] Undefined pool yet");
+                    return;
+            }
+
+            save(data);
+    }
+
     //CRUD: READ
     public List<APoolOddsData> GetAllOdds(String matchId, MatchCONSTANTS.InplayPoolType type){
 
