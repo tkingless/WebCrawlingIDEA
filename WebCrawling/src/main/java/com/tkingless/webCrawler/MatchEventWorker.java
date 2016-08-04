@@ -6,6 +6,7 @@ import com.tkingless.DBobject.MatchEventDAO;
 import com.tkingless.MatchCONSTANTS;
 import com.tkingless.MatchTestCONSTANTS;
 import com.tkingless.MongoDBparam;
+import com.tkingless.WebCrawling.DBobject.DateValuePair;
 import com.tkingless.crawlee.BoardCrawlee;
 import com.tkingless.crawlee.MatchCrawlee;
 import com.tkingless.utils.logTest;
@@ -433,16 +434,25 @@ public class MatchEventWorker extends baseCrawler {
         for (UpdateDifferentiator differentiator : difftr) {
             switch (differentiator) {
                 case UPDATE_STAGE:
-                    workerDAO.AddItemToListField(this,"stageUpdates", MatchCONSTANTS.GetMatchStageStr(crle.getMatchStage()));
+                    DateValuePair DVPstage = new DateValuePair();
+                    DVPstage.setTime(crle.getRecordTime().GetTheInstant());
+                    DVPstage.setVal(MatchCONSTANTS.GetMatchStageStr(crle.getMatchStage()));
+                    workerDAO.AddItemToListField(this,"stageUpdates", DVPstage);
                     break;
                 case UPDATE_POOLS:
                     workerDAO.SetField(this,"poolTypes",matchPools);
                     break;
                 case UPDATE_SCORES:
-                    workerDAO.AddItemToListField(this,"scoreUpdates",crle.getScores());
+                    DateValuePair DVPscore = new DateValuePair();
+                    DVPscore.setTime(crle.getRecordTime().GetTheInstant());
+                    DVPscore.setVal(crle.getScores());
+                    workerDAO.AddItemToListField(this,"scoreUpdates",DVPscore);
                     break;
                 case UPDATE_CORNER:
-                    workerDAO.AddItemToListField(this,"cornerTotUpdates",crle.getScores());
+                    DateValuePair DVPcorner = new DateValuePair();
+                    DVPcorner.setTime(crle.getRecordTime().GetTheInstant());
+                    DVPcorner.setVal(crle.getTotalCorners());
+                    workerDAO.AddItemToListField(this,"cornerTotUpdates",DVPcorner);
                     break;
                 case UPDATE_POOL_HAD:
                     crleOddsDAO.InsertOddPoolUpdates(matchId,crle,InplayPoolType.HAD);
