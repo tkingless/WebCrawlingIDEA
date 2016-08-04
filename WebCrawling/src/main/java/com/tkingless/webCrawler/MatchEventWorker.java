@@ -33,8 +33,6 @@ import static com.tkingless.MatchCONSTANTS.MatchStatus.*;
 public class MatchEventWorker extends baseCrawler {
 
     private final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST, MatchStage.STAGE_HALFTIME, MatchStage.STAGE_SECOND);
-    private static final Set<UpdateDifferentiator> oddPoolUpdateType = EnumSet.of(UpdateDifferentiator.UPDATE_POOL_CHL,UpdateDifferentiator.UPDATE_POOL_HAD);
-    private static final Set<UpdateDifferentiator> workerUpdateType = EnumSet.of(UpdateDifferentiator.UPDATE_POOLS,UpdateDifferentiator.UPDATE_SCORES,UpdateDifferentiator.UPDATE_STAGE);
     private static final String threadName = "MatchEventWorker-thread";
 
     //The unique id for this worker
@@ -138,8 +136,10 @@ public class MatchEventWorker extends baseCrawler {
         if (status == MatchStatus.STATE_MATCH_ENDED || status == MatchStatus.STATE_TERMINATED) {
             if(status == MatchStatus.STATE_MATCH_ENDED){
                 endTime = lastMatchCrle.getRecordTime();
+
                 workerDAO.SetField(this,"endTime",endTime.GetTheInstant());
                 logTest.logger.info("Actual end time: "+ endTime.toString());
+
             }
             BoardCrawlee.DetachWorker(this);
         }
@@ -306,6 +306,12 @@ public class MatchEventWorker extends baseCrawler {
                 workerDAO.RegisterMatchEventWorker(this);
             }
             status = MatchStatus.STATE_MATCH_START;
+        }
+
+        //This is added later on as workaround for service started just at pre-reg time, the chance is supposed to be low though...
+        if(stage == MatchStage.STAGE_ESST){
+            if(!workerDAO.IsMatchRegisteredBefore(matchId))
+                workerDAO.RegisterMatchEventWorker(this);
         }
 
         if(!BoardCrawlee.IsRegisteredByID(this)) {

@@ -3,6 +3,7 @@ package com.tkingless.webCrawler;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
+import com.tkingless.DBobject.MatchEventDAO;
 import com.tkingless.MatchCONSTANTS;
 import com.tkingless.MatchTestCONSTANTS;
 import com.tkingless.MongoDBparam;
@@ -29,6 +30,7 @@ public class PreRegWorkerTest {
 
     MongoClient client;
     Morphia morphia;
+    MatchEventDAO matchDao;
     /*
     The setUp generate PreRegWorker ignoring the actual input commence, it forcefully sets the event start time
     to half of pre-reg time just right before current time
@@ -53,14 +55,15 @@ public class PreRegWorkerTest {
 
         //Morphia DAO
         morphia = new Morphia();
+        matchDao = new MatchEventDAO(client,morphia, MongoDBparam.webCrawlingTestDB);
     }
 
     @After
     public void tearDown() throws Exception {
     }
 
-    //@Test
-    @Ignore
+    @Test
+    //@Ignore
     public void StateVerification() throws Exception {
         preRegWorker = workers.get(0);
         simulatedMatchCrleSrc = MatchCrawleeTestSample.preReg103904NotStartYet;
@@ -81,7 +84,7 @@ public class PreRegWorkerTest {
         simulatedMatchCrleSrc = MatchCrawleeTestSample.preReg103904firstHalf;
         preRegWorker.setMatchCrleTestTarget((simulatedMatchCrleSrc));
 
-        Thread.sleep(2000);
+        Thread.sleep(4000);
         MatchCONSTANTS.MatchStatus expectedStatJustAfterPreReg = MatchCONSTANTS.MatchStatus.STATE_MATCH_LOGGING;
         Assert.assertEquals(expectedStatJustAfterPreReg,preRegWorker.getStatus());
 

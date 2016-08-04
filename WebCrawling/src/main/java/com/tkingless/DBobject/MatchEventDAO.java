@@ -84,7 +84,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         return findOne("MatchId",Integer.parseInt(id));
     }
 
-    boolean IsMatchRegisteredBefore(String id){
+    public boolean IsMatchRegisteredBefore(String id){
         return exists("MatchId",Integer.parseInt(id));
     }
 
