@@ -90,7 +90,7 @@ public class PreRegWorkerTest {
 
         Thread.sleep(1000 * 6);
 
-        simulatedMatchCrleSrc = MatchCrawleeTestSample.preReg103904firstHalf2;
+        /*simulatedMatchCrleSrc = MatchCrawleeTestSample.preReg103904firstHalf2;
         preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
 
         Thread.sleep(1000 * 5);
@@ -123,7 +123,7 @@ public class PreRegWorkerTest {
         simulatedMatchCrleSrc = MatchCrawleeTestSample.PreReg103904AllSuspend2;
         preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
 
-        Thread.sleep(1000 * 5);
+        Thread.sleep(1000 * 5);*/
 
         simulatedMatchCrleSrc = MatchCrawleeTestSample.PreReg103904HADbettingClosed;
         preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);

@@ -73,13 +73,20 @@ public class MatchCrawleeTest {
 
     @Test
     public void BettingAllClosed() throws Exception {
-        MatchCrawlee aCrle = new MatchCrawlee(MatchCrawleeTestSample.secondHalf103904AllpoolsEnd);
+        MatchCrawlee aCrle = new MatchCrawlee(MatchCrawleeTestSample.PreReg103904HADbettingClosed);
         MatchCrawlee aCrle2 = new MatchCrawlee(MatchCrawleeTestSample.preReg103904firstHalf2);
+        MatchCrawlee aCrle3 = new MatchCrawlee(MatchCrawleeTestSample.PreReg103904allBettingClosed);
+        MatchCrawlee aCrle4 = new MatchCrawlee(MatchCrawleeTestSample.secondHalf103904AllpoolsEnd);
+
         aCrle.run();
         aCrle2.run();
+        aCrle3.run();
+        aCrle4.run();
 
-        Assert.assertEquals(true,aCrle.isAllPoolClosed());
+        Assert.assertEquals(false,aCrle.isAllPoolClosed());
         Assert.assertEquals(false,aCrle2.isAllPoolClosed());
+        Assert.assertEquals(true,aCrle3.isAllPoolClosed());
+        Assert.assertEquals(true,aCrle4.isAllPoolClosed());
     }
 
 }
