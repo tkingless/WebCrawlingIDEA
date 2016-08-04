@@ -316,6 +316,13 @@ public class MatchEventWorker extends baseCrawler {
     void OnStateMatchStart() throws XPathExpressionException {
 
         //init the match DB data
+        if(workerDAO.QueryDataFieldExists(this,"stageUpdates"))
+            updateDifftr.remove(UpdateDifferentiator.UPDATE_STAGE);
+        if(workerDAO.QueryDataFieldExists(this,"scoreUpdates"))
+            updateDifftr.remove(UpdateDifferentiator.UPDATE_SCORES);
+        if(workerDAO.QueryDataFieldExists(this,"cornerTotUpdates"))
+            updateDifftr.remove(UpdateDifferentiator.UPDATE_CORNER);
+
         UpdateDBByDifftr(updateDifftr,lastMatchCrle);
 
         actualCommence = lastMatchCrle.getRecordTime();
@@ -483,9 +490,7 @@ public class MatchEventWorker extends baseCrawler {
     private void EmitRequest() throws XPathExpressionException {
         MatchCrawlee newMatchCrle;
 
-        if (testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
-            newMatchCrle = new MatchCrawlee(matchCrleTestTarget);
-        } else if(testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_MATCHING){
+        if (testTypeSwitch != null) {
             newMatchCrle = new MatchCrawlee(matchCrleTestTarget);
         }
         else {

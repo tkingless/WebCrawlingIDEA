@@ -15,9 +15,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.tkingless.MatchTestCONSTANTS.TestType.TYPE_MATCHING;
-import static com.tkingless.MatchTestCONSTANTS.TestType.TYPE_PRE_REG;
-
 /**
  * Created by tkingless on 24/6/2016.
  */
@@ -112,7 +109,7 @@ public class BoardCrawlee extends baseCrawlee {
         checks.add(statuses);
 
         if (CardinalityChecking(checks)) {
-            if (test_type == TYPE_PRE_REG || test_type == TYPE_MATCHING) {
+            if (test_type != null) {
                 workers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, matchTeams, statuses, test_type);
             } else {
                 workers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, matchTeams, statuses);

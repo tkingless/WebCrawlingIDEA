@@ -1,13 +1,21 @@
 package com.tkingless.webCrawler;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.ServerAddress;
 import com.tkingless.MatchCONSTANTS;
 import com.tkingless.MatchTestCONSTANTS;
+import com.tkingless.MongoDBparam;
 import com.tkingless.crawlee.BoardCrawlee;
 import com.tkingless.utils.DateTimeEntity;
 import org.junit.*;
+import org.mongodb.morphia.Morphia;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.tkingless.MongoDBparam.TestDBAddr;
+import static com.tkingless.MongoDBparam.TestDBport;
 
 /**
  * Created by tsangkk on 7/12/16.
@@ -17,6 +25,10 @@ public class PreRegWorkerTest {
     protected MatchEventWorker preRegWorker;
     protected List<MatchEventWorker> workers;
     protected String simulatedMatchCrleSrc;
+
+
+    MongoClient client;
+    Morphia morphia;
     /*
     The setUp generate PreRegWorker ignoring the actual input commence, it forcefully sets the event start time
     to half of pre-reg time just right before current time
@@ -27,6 +39,20 @@ public class PreRegWorkerTest {
         synchronized (workers) {
             workers = BoardCrawlee.GenerateTestWorker(MatchTestCONSTANTS.TestType.TYPE_PRE_REG, BoardCrawleeTestSample.PreRegBoardhtml);
         }
+
+        //Initialize MongoClient
+        MongoClientOptions.Builder o = MongoClientOptions.builder().connectTimeout(3000);
+        client = new MongoClient(new ServerAddress(TestDBAddr,TestDBport));
+        try {
+            client.getAddress();
+        } catch (Exception e) {
+            System.out.println("Mongo is down");
+            client.close();
+            return;
+        }
+
+        //Morphia DAO
+        morphia = new Morphia();
     }
 
     @After
@@ -112,6 +138,16 @@ public class PreRegWorkerTest {
         Thread.sleep(1000 * 5);
 
         System.out.println("[WorkerTester] the setUp() finished");
+    }
+
+    @Test
+    public void DropTestDB() throws Exception {
+        client.getDatabase(MongoDBparam.webCrawlingTestDB).drop();
+    }
+
+    @Test
+    public  void DropProdDB() throws Exception{
+        client.getDatabase(MongoDBparam.webCrawlingDB).drop();
     }
 
 }
