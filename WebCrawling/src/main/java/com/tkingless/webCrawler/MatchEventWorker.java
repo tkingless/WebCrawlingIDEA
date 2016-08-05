@@ -18,6 +18,7 @@ import org.jsoup.nodes.Element;
 import javax.xml.xpath.XPathExpressionException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -176,10 +177,25 @@ public class MatchEventWorker extends baseCrawler {
                 dayMatch.find();
                 timeMatch.find();
 
-                StringBuilder dateTimeBuilder = new StringBuilder(timeMatch.group()).append(":00 ");
-                dateTimeBuilder.append(dayMatch.group());
+                String day = dayMatch.group();
+                String time = timeMatch.group();
+
+                StringBuilder dateTimeBuilder = new StringBuilder(time).append(":00 ");
+                dateTimeBuilder.append(day);
                 dateTimeBuilder.append("/");
                 dateTimeBuilder.append(DateTimeEntity.GetCurrentYear());
+
+
+                //=========================check whether next year datetime
+                DateTimeEntity checkIfNextYear = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
+
+                if(checkIfNextYear.CalTimeIntervalDiff(new DateTimeEntity()) < 0){
+                    dateTimeBuilder = new StringBuilder(time).append(":00 ");
+                    dateTimeBuilder.append(day);
+                    dateTimeBuilder.append("/");
+                    dateTimeBuilder.append(DateTimeEntity.GetYearPlus(1));
+                }
+                //=========================check whether next year datetime: end
 
                 commenceTime = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
                 logTest.logger.info("ExtractStatus(),commenceTime: " + commenceTime.toString());

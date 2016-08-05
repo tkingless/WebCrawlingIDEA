@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.StringJoiner;
 import java.util.TimeZone;
 
 /**
@@ -40,6 +41,12 @@ public class DateTimeEntity {
 
     public static String GetCurrentYear() {
         return String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+    }
+
+    public static String GetYearPlus(Integer yr){
+        Integer yrToReturn = Calendar.getInstance().get(Calendar.YEAR)+yr;
+
+        return String.valueOf(yrToReturn);
     }
 
     public DateTimeEntity(String ParseInDatetime) throws ParseException {

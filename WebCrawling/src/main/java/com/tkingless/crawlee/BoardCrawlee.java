@@ -222,7 +222,7 @@ public class BoardCrawlee extends baseCrawlee {
             livingWorkerMatchIDs.remove(worker.getMatchId());
             livingWorkers.remove(worker);
         } else
-            logTest.logger.error("No such local registration before");
+            logTest.logger.warn("No such local registration before");
     }
 
     public synchronized static void TerminateAllLivingWorkers(){

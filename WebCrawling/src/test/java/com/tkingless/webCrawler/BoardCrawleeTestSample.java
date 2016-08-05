@@ -5,8 +5,7 @@ package com.tkingless.webCrawler;
  */
 public class BoardCrawleeTestSample {
 
-    static public String FutureBoardhtml = "\n" +
-            "\n" +
+    static public String FutureBoardhtml =
             "<html>\n" +
             "   <body>\n" +
             "      <form name=\"aspnetForm\" method=\"post\" action=\"odds_inplay.aspx?ci=en-US\" id=\"aspnetForm\">\n" +
@@ -20,7 +19,7 @@ public class BoardCrawleeTestSample {
             "                  <td class=\"ctv\"><span class=\"tv\"><span onclick=\"javascript:goTVUrl();\" style=\"cursor: pointer;\"><img src=\"/nas/jcbwinfo/football/info/images/icon_tv-C61.gif?CV=\" alt=\"C61-i-CABLE Super Soccer Channel \n" +
             "                     201-i-CABLE hd201\" title=\"C61-i-CABLE Super Soccer Channel \n" +
             "                     201-i-CABLE hd201\" onerror=\"errImg(this);\"></span></span></td>\n" +
-            "                  <td class=\"cesst\"><span id=\"sst104030\"><input type=\"hidden\" id=\"hsst104030\" value=\"InPlayESST_nobr\">Expected In Play start selling time: <br>13/12 18:00</span></td>\n" +
+            "                  <td class=\"cesst\"><span id=\"sst104030\"><input type=\"hidden\" id=\"hsst104030\" value=\"InPlayESST_nobr\">Expected In Play start selling time: <br>01/08 18:00</span></td>\n" +
             "                  <td class=\"codds\"><span class=\"s1\"><input type=\"checkbox\" disabled name=\"chkHAD\" id=\"104030_HAD_H_c\" value=\"\" onclick=\"tgTD(this);\" class=\"104030_HAD_H_0_c\"><a class=\"oddsLink noUL\"><span id=\"104030_HAD_H\">---</span></a></span></td>\n" +
             "                  <td class=\"codds\"><span class=\"dl\"><input type=\"checkbox\" disabled name=\"chkHAD\" id=\"104030_HAD_D_c\" value=\"\" onclick=\"tgTD(this);\" class=\"104030_HAD_D_0_c\"><a class=\"oddsLink noUL\"><span id=\"104030_HAD_D\">---</span></a></span></td>\n" +
             "                  <td class=\"codds\"><span class=\"dl\"><input type=\"checkbox\" disabled name=\"chkHAD\" id=\"104030_HAD_A_c\" value=\"\" onclick=\"tgTD(this);\" class=\"104030_HAD_A_0_c\"><a class=\"oddsLink noUL\"><span id=\"104030_HAD_A\">---</span></a></span></td>\n" +
@@ -30,11 +29,9 @@ public class BoardCrawleeTestSample {
             "         </table>\n" +
             "      </form>\n" +
             "   </body>\n" +
-            "</html>\n" +
-            "\n";
+            "</html>\n";
 
-    static public String PreRegBoardhtml = "\n" +
-            "\n" +
+    static public String PreRegBoardhtml =
             "<html>\n" +
             "   <body>\n" +
             "      <form name=\"aspnetForm\" method=\"post\" action=\"odds_inplay.aspx?ci=en-US\" id=\"aspnetForm\">\n" +
@@ -58,11 +55,9 @@ public class BoardCrawleeTestSample {
             "         </table>\n" +
             "      </form>\n" +
             "   </body>\n" +
-            "</html>\n" +
-            "\n";
+            "</html>\n";
 
-    static public String OnMatchingBoardhtml = "\n" +
-            "\n" +
+    static public String OnMatchingBoardhtml =
             "<html>\n" +
             "   <body>\n" +
             "      <form name=\"aspnetForm\" method=\"post\" action=\"odds_inplay.aspx?ci=en-US\" id=\"aspnetForm\">\n" +
@@ -86,11 +81,9 @@ public class BoardCrawleeTestSample {
             "         </table>\n" +
             "      </form>\n" +
             "   </body>\n" +
-            "</html>\n" +
-            "\n";
+            "</html>\n";
 
-    static public String EndedBoardhtml = "\n" +
-            "\n" +
+    static public String EndedBoardhtml =
             "<html>\n" +
             "   <body>\n" +
             "      <form name=\"aspnetForm\" method=\"post\" action=\"odds_inplay.aspx?ci=en-US\" id=\"aspnetForm\">\n" +
@@ -114,7 +107,5 @@ public class BoardCrawleeTestSample {
             "         </table>\n" +
             "      </form>\n" +
             "   </body>\n" +
-            "</html>\n" +
-            "\n";
-
+            "</html>\n";
 }
