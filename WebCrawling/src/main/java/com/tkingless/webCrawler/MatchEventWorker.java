@@ -266,7 +266,7 @@ public class MatchEventWorker extends baseCrawler {
                 status = MatchStatus.STATE_PRE_REGISTERED;
                 scanPeriod = 0;
 
-                if(testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_MATCHING){
+                if(testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_MATCHING || testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_ENDED){
                     scanPeriod = 500;
                 }
             }
@@ -462,10 +462,12 @@ public class MatchEventWorker extends baseCrawler {
                     workerDAO.AddItemToListField(this,"scoreUpdates",DVPscore);
                     break;
                 case UPDATE_CORNER:
-                    DateValuePair DVPcorner = new DateValuePair();
-                    DVPcorner.setTime(crle.getRecordTime().GetTheInstant());
-                    DVPcorner.setVal(crle.getTotalCorners());
-                    workerDAO.AddItemToListField(this,"cornerTotUpdates",DVPcorner);
+                    if(!crle.getTotalCorners().contains("-")) {
+                        DateValuePair DVPcorner = new DateValuePair();
+                        DVPcorner.setTime(crle.getRecordTime().GetTheInstant());
+                        DVPcorner.setVal(crle.getTotalCorners());
+                        workerDAO.AddItemToListField(this, "cornerTotUpdates", DVPcorner);
+                    }
                     break;
                 case UPDATE_POOL_HAD:
                     crleOddsDAO.InsertOddPoolUpdates(matchId,crle,InplayPoolType.HAD);

@@ -62,7 +62,23 @@ public class OnMatchingWorkerTest {
             onMatchingWorker.setMatchCrleTestTarget(MatchCrawleeTestSample.onMatching103909firstHalf);
         }
 
-        Thread.sleep(10000);
+        Thread.sleep(10 * 1000);
+
+        onMatchingWorker.setMatchCrleTestTarget(MatchCrawleeTestSample.onMatching103909HalfTime);
+
+        Thread.sleep(1000 * 5);
+
+        onMatchingWorker.setMatchCrleTestTarget(MatchCrawleeTestSample.onMatching103909secondhalfStart);
+
+        Thread.sleep(1000 * 5);
+
+        onMatchingWorker.setMatchCrleTestTarget(MatchCrawleeTestSample.onMatching103909HADbettingClosed);
+
+        Thread.sleep(1000 * 5);
+
+        onMatchingWorker.setMatchCrleTestTarget(MatchCrawleeTestSample.onMatching103909allBettingClosed);
+
+        Thread.sleep(1000 * 5);
     }
 
     @Test

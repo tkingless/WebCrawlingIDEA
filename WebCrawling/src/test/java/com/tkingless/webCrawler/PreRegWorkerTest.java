@@ -62,8 +62,8 @@ public class PreRegWorkerTest {
     public void tearDown() throws Exception {
     }
 
-    @Test
-    //@Ignore
+    //@Test
+    @Ignore
     public void StateVerification() throws Exception {
         preRegWorker = workers.get(0);
         simulatedMatchCrleSrc = MatchCrawleeTestSample.preReg103904NotStartYet;
@@ -135,12 +135,10 @@ public class PreRegWorkerTest {
 
         Thread.sleep(1000 * 5);
 
-        simulatedMatchCrleSrc = MatchCrawleeTestSample.secondHalf103904AllpoolsEnd;
+        simulatedMatchCrleSrc = MatchCrawleeTestSample.PreRegsecondHalf103904AllpoolsEnd;
         preRegWorker.setMatchCrleTestTarget(simulatedMatchCrleSrc);
 
         Thread.sleep(1000 * 5);
-
-        System.out.println("[WorkerTester] the setUp() finished");
     }
 
     @Test

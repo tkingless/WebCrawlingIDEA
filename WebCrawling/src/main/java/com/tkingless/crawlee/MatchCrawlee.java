@@ -84,7 +84,7 @@ public class MatchCrawlee extends baseCrawlee {
     }
 
     public void run() {
-        logTest.logger.info("MatchCrawlee run() called");
+        //logTest.logger.info("MatchCrawlee run() called");
 
         try {
             String source;
@@ -327,7 +327,7 @@ public class MatchCrawlee extends baseCrawlee {
         if (!oldCrle.getScores().equals(newCrle.getScores()))
             difftr.add(UpdateDifferentiator.UPDATE_SCORES);
 
-        if( !oldCrle.getTotalCorners().equals(newCrle.getTotalCorners()) && !newCrle.getTotalCorners().contains("-"))
+        if( !oldCrle.getTotalCorners().equals(newCrle.getTotalCorners()))
             difftr.add(UpdateDifferentiator.UPDATE_CORNER);
 
         for (InplayPoolType aType : oldCrle.getPoolType()) {

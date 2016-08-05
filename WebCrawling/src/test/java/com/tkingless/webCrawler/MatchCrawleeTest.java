@@ -76,7 +76,7 @@ public class MatchCrawleeTest {
         MatchCrawlee aCrle = new MatchCrawlee(MatchCrawleeTestSample.PreReg103904HADbettingClosed);
         MatchCrawlee aCrle2 = new MatchCrawlee(MatchCrawleeTestSample.preReg103904firstHalf2);
         MatchCrawlee aCrle3 = new MatchCrawlee(MatchCrawleeTestSample.PreReg103904allBettingClosed);
-        MatchCrawlee aCrle4 = new MatchCrawlee(MatchCrawleeTestSample.secondHalf103904AllpoolsEnd);
+        MatchCrawlee aCrle4 = new MatchCrawlee(MatchCrawleeTestSample.PreRegsecondHalf103904AllpoolsEnd);
 
         aCrle.run();
         aCrle2.run();

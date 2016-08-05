@@ -22,7 +22,6 @@ public class FutureWorkerTest {
             ConcurrencyMachine.GetInstance().InvokeQueue();
         }
         futureWorker = testBoardCrlr.getParsedWorkers().get(0);
-        System.out.println("[WorkerTester] the setUp() finished");
     }
 
     @After
