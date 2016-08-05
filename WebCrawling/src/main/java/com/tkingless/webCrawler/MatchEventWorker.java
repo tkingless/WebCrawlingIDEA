@@ -279,6 +279,10 @@ public class MatchEventWorker extends baseCrawler {
 
     void OnStatePreRegistered() {
 
+        if(terminateStates.contains(status)) {
+            return;
+        }
+
         long timediff = 0;
 
         if(commenceTime != null) {
@@ -321,6 +325,12 @@ public class MatchEventWorker extends baseCrawler {
 
     void OnStateMatchStart() throws XPathExpressionException {
 
+        if(terminateStates.contains(status)) {
+            return;
+        }
+
+        System.out.println("trace1");
+
         //init the match DB data
         if(workerDAO.QueryDataFieldExists(this,"stageUpdates"))
             updateDifftr.remove(UpdateDifferentiator.UPDATE_STAGE);
@@ -330,18 +340,19 @@ public class MatchEventWorker extends baseCrawler {
             updateDifftr.remove(UpdateDifferentiator.UPDATE_CORNER);
 
         UpdateDBByDifftr(updateDifftr,lastMatchCrle);
-
         actualCommence = lastMatchCrle.getRecordTime();
         workerDAO.SetField(this,"actualCommence",actualCommence.GetTheInstant());
-
         scanPeriod = 1000;
-
         updateDifftr.clear();
         status = MatchStatus.STATE_MATCH_LOGGING;
         logTest.logger.info("Threadname: " + threadName + matchId + "Entered STATE_MATCH_LOGGING");
     }
 
     void OnStateMatchLogging() throws XPathExpressionException {
+
+        if(terminateStates.contains(status)) {
+            return;
+        }
 
         if (!updateDifftr.isEmpty()) {
             UpdateDBByDifftr(updateDifftr,lastMatchCrle);
@@ -508,7 +519,7 @@ public class MatchEventWorker extends baseCrawler {
         newMatchCrle.run();
 
         if (!newMatchCrle.isMatchXmlValid()) {
-            logTest.logger.info("[Error] the grabbed xml is not valid");
+            logTest.logger.error("[Error] the grabbed xml is not valid");
             status = MatchStatus.STATE_TERMINATED;
             return;
         }
