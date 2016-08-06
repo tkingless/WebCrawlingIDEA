@@ -15,7 +15,7 @@ public class HelloWorld extends HttpServlet {
 
     final static Logger logger = LogManager.getLogger(HelloWorld.class);
 
-    @Override
+    /*@Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String user = req.getParameter("user");
@@ -23,7 +23,7 @@ public class HelloWorld extends HttpServlet {
         req.setAttribute("user", user);
         req.getRequestDispatcher("hello.jsp")
                 .forward(req, resp);
-    }
+    }*/
 
     @Override
     public void init() throws ServletException {
