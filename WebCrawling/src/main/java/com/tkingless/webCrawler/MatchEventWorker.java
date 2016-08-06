@@ -136,13 +136,24 @@ public class MatchEventWorker extends baseCrawler {
         }
 
         if (status == MatchStatus.STATE_MATCH_ENDED || status == MatchStatus.STATE_TERMINATED) {
+            logTest.logger.info("Threadname: " + threadName + matchId + " STATE_MATCH_ENDED||STATE_TERMINATED");
             if(status == MatchStatus.STATE_MATCH_ENDED){
-                endTime = lastMatchCrle.getRecordTime();
+                logTest.logger.debug("trace2");
+
+                if(lastMatchCrle == null || lastMatchCrle.getRecordTime() == null){
+                    logTest.logger.debug("trace3");
+                    endTime = new DateTimeEntity();
+                }else{
+                    logTest.logger.debug("trace4");
+                    endTime = lastMatchCrle.getRecordTime();
+                }
+
 
                 workerDAO.SetField(this,"endTime",endTime.GetTheInstant());
                 logTest.logger.info("Actual end time: "+ endTime.toString());
 
             }
+            logTest.logger.debug("trace3");
             BoardCrawlee.DetachWorker(this);
         }
 
@@ -374,14 +385,17 @@ public class MatchEventWorker extends baseCrawler {
 
         if (!updateDifftr.isEmpty()) {
             UpdateDBByDifftr(updateDifftr,lastMatchCrle);
-            logTest.logger.info(lastMatchCrle.toString());
+            logTest.logger.info("updateDifftr not empty, last crle is: \n" + lastMatchCrle.toString());
         }
 
-        if(!lastMatchCrle.isMatchXmlValid())
+        if(!lastMatchCrle.isMatchXmlValid()) {
+            logTest.logger.debug("lastMatchCrle is not valid");
             status = MatchStatus.STATE_MATCH_ENDED;
+        }
 
         if(stage == MatchStage.STAGE_SECOND){
             if(lastMatchCrle.isAllPoolClosed())
+                logTest.logger.debug("last crle shown all pool closed");
                 status = MatchStatus.STATE_MATCH_ENDED;
         }
 

@@ -333,8 +333,8 @@ public class MatchCrawlee extends baseCrawlee {
         for (InplayPoolType aType : oldCrle.getPoolType()) {
             if (MapComparator.CompareMapsDifferent(oldCrle.ExtractPoolTypeBody(aType)
                     , newCrle.ExtractPoolTypeBody(aType))) {
-                logTest.logger.info("oldCrle body: " + oldCrle.ExtractPoolTypeBody(aType));
-                logTest.logger.info("newCrle body: " + newCrle.ExtractPoolTypeBody(aType));
+                logTest.logger.info("oldCrle " + aType + " body: " + oldCrle.ExtractPoolTypeBody(aType));
+                logTest.logger.info("newCrle " + aType + " body: " + newCrle.ExtractPoolTypeBody(aType));
                 //kludge
                 switch (aType){
                     case HAD:
@@ -357,6 +357,7 @@ public class MatchCrawlee extends baseCrawlee {
     public String toString() {
         StringBuilder tmp = new StringBuilder();
 
+        tmp.append("\n");
         tmp.append("stage: ").append(matchStage).append("\n");
         tmp.append("score: ").append(scores).append("\n");
 

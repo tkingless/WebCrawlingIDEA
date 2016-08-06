@@ -30,7 +30,7 @@ public class WebCrawlingApp implements ServletContextListener {
         logTest.DoALog();
 
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(new ScheduledHKJCcrlr(),0,30000, TimeUnit.MILLISECONDS);
+        scheduler.scheduleAtFixedRate(new ScheduledHKJCcrlr(),0,30 * 1000 * 10, TimeUnit.MILLISECONDS);
 
     }
 
