@@ -206,4 +206,14 @@ public class BasicTest {
         }
         return result;
     }
+
+    @Test
+    public void DropTestDB() throws Exception {
+        client.getDatabase(MongoDBparam.webCrawlingTestDB).drop();
+    }
+
+    @Test
+    public  void DropProdDB() throws Exception{
+        client.getDatabase(MongoDBparam.webCrawlingDB).drop();
+    }
 }
