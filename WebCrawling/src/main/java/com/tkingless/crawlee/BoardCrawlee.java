@@ -68,12 +68,26 @@ public class BoardCrawlee extends baseCrawlee {
         searchNodes.put("onboardChildUrls", "td[class$=cdAllIn] > a[href]");
         //searchNodes.put("MatchNo", "td[class$=\"cday ttgR2\"] > span > a[title$=\"All Odds\"]");
         searchNodes.put("MatchNo", "td[class$=\"cday ttgR2\"]");
-        searchNodes.put("MatchTeams", "td[class$=\"cteams ttgR2\"]");
+        searchNodes.put("MatchTeams", "td[class$=\"cteams ttgR2\"]>span>span[class$=teamname]");
         searchNodes.put("Status", "td[class$=\"cesst\"] > span");
 
         Elements onboardChildUrls = Jdoc.select(searchNodes.get("onboardChildUrls"));
         Elements matchNos = Jdoc.select(searchNodes.get("MatchNo"));
         Elements matchTeams = Jdoc.select(searchNodes.get("MatchTeams"));
+
+        //Teams special treatments==============================
+        Elements homeTeams = new Elements();
+        Elements awayTeams = new Elements();
+
+        for(int i = 0; i < matchTeams.size(); i++){
+            if(i%2 == 0){
+                homeTeams.add(matchTeams.get(i));
+            } else {
+                awayTeams.add(matchTeams.get(i));
+            }
+        }
+        //Teams special treatments==============================
+
         Elements statuses = Jdoc.select(searchNodes.get("Status"));
 
         List<Elements> cardinalityChecks = new ArrayList<Elements>();
@@ -93,12 +107,26 @@ public class BoardCrawlee extends baseCrawlee {
         searchNodes.put("onboardChildUrls", "td[class$=cdAllIn] > a[href]");
         //searchNodes.put("MatchNo", "td[class$=\"cday ttgR2\"] > span > a[title$=\"All Odds\"]");
         searchNodes.put("MatchNo", "td[class$=\"cday ttgR2\"]");
-        searchNodes.put("MatchTeams", "td[class$=\"cteams ttgR2\"]");
+        searchNodes.put("MatchTeams", "td[class$=\"cteams ttgR2\"]>span>span[class$=teamname]");
         searchNodes.put("Status", "td[class$=\"cesst\"] > span");
 
         Elements onboardChildUrls = jDoc.select(searchNodes.get("onboardChildUrls"));
         Elements matchNos = jDoc.select(searchNodes.get("MatchNo"));
         Elements matchTeams = jDoc.select(searchNodes.get("MatchTeams"));
+
+        //Teams special treatments==============================
+        Elements homeTeams = new Elements();
+        Elements awayTeams = new Elements();
+
+        for(int i = 0; i < matchTeams.size(); i++){
+            if(i%2 == 0){
+                homeTeams.add(matchTeams.get(i));
+            } else {
+                awayTeams.add(matchTeams.get(i));
+            }
+        }
+        //Teams special treatments==============================
+
         Elements statuses = jDoc.select(searchNodes.get("Status"));
 
         List<Elements> checks = new ArrayList<Elements>();

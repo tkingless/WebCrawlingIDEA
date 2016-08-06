@@ -56,8 +56,18 @@ public class Miscs {
         for(APoolOddsData Adata : sortedList){
             System.out.println(Adata.getRecorded());
         }
+    }
 
+    @Test
+    public void TestEvenOddLoop() throws Exception {
 
+        for(int i =0; i<20; i++){
+            if(i%2 == 0){
+                System.out.println("it is even: "+ i);
+            }
+            else
+                System.out.println("it is odd: " + i);
+        }
 
     }
 }
