@@ -93,11 +93,12 @@ public class BoardCrawlee extends baseCrawlee {
         List<Elements> cardinalityChecks = new ArrayList<Elements>();
         cardinalityChecks.add(onboardChildUrls);
         cardinalityChecks.add(matchNos);
-        cardinalityChecks.add(matchTeams);
+        cardinalityChecks.add(homeTeams);
+        cardinalityChecks.add(awayTeams);
         cardinalityChecks.add(statuses);
 
         if (CardinalityChecking(cardinalityChecks)) {
-            parsedWorkers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, matchTeams, statuses);
+            parsedWorkers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, homeTeams, awayTeams, statuses);
         }
     }
 
@@ -133,14 +134,15 @@ public class BoardCrawlee extends baseCrawlee {
 
         checks.add(onboardChildUrls);
         checks.add(matchNos);
-        checks.add(matchTeams);
+        checks.add(homeTeams);
+        checks.add(awayTeams);
         checks.add(statuses);
 
         if (CardinalityChecking(checks)) {
             if (test_type != null) {
-                workers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, matchTeams, statuses, test_type);
+                workers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, homeTeams, awayTeams, statuses, test_type);
             } else {
-                workers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, matchTeams, statuses);
+                workers = ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, homeTeams, awayTeams, statuses);
             }
         }
 
@@ -177,13 +179,13 @@ public class BoardCrawlee extends baseCrawlee {
     }
 
     private static List<MatchEventWorker> ParsingDocIntoMatchWorker(Elements onboardChildUrls,
-                                                                    Elements matchNos, Elements matchTeams,
+                                                                    Elements matchNos, Elements homeTeams, Elements awayTeams,
                                                                     Elements statuses) throws ParseException {
-        return ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, matchTeams, statuses, null);
+        return ParsingDocIntoMatchWorker(onboardChildUrls, matchNos, homeTeams, awayTeams, statuses, null);
     }
 
     private static List<MatchEventWorker> ParsingDocIntoMatchWorker(Elements onboardChildUrls,
-                                                                    Elements matchNos, Elements matchTeams,
+                                                                    Elements matchNos, Elements homeTeams, Elements awayTeams,
                                                                     Elements statuses, TestType test_type)
             throws ParseException {
 
@@ -191,7 +193,8 @@ public class BoardCrawlee extends baseCrawlee {
 
         logTest.logger.info("[Iterator loop start:]");
         Iterator<Element> matchNoIte = matchNos.iterator();
-        Iterator<Element> matchTeamIte = matchTeams.iterator();
+        Iterator<Element> homeTeamIte = homeTeams.iterator();
+        Iterator<Element> awayTeamIte = awayTeams.iterator();
         Iterator<Element> matchStatIte = statuses.iterator();
 
         //Get match indexes
@@ -212,10 +215,10 @@ public class BoardCrawlee extends baseCrawlee {
 
             if (test_type == null) {
                 crleWorker = new MatchEventWorker(matchId, matchNoIte.next(),
-                        matchStatIte.next(), matchTeamIte.next(), null);
+                        matchStatIte.next(), homeTeamIte.next(), awayTeamIte.next(), null);
             } else {
                 crleWorker = new MatchEventWorker(matchId, matchNoIte.next(),
-                        matchStatIte.next(), matchTeamIte.next(), test_type);
+                        matchStatIte.next(), homeTeamIte.next(), awayTeamIte.next(), test_type);
             }
             workerList.add(crleWorker);
         }

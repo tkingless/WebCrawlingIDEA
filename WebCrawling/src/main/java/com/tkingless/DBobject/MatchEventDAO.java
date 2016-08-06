@@ -58,9 +58,8 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
     private void EventWorkerToDBdata(MatchEventWorker worker, MatchEventData data){
         data.setMatchId(Integer.parseInt(worker.getMatchId()));
         data.setMatchKey(worker.getMatchKey());
-        String[] teams = worker.getMatchTeams().split("vs");
-        data.setHomeTeam(teams[0]);
-        data.setAwayTeam(teams[1]);
+        data.setHomeTeam(worker.getHomeTeam());
+        data.setAwayTeam(worker.getAwayTeam());
 
         if(worker.getCommenceTime() != null){
             data.setCommence(worker.getCommenceTime().GetTheInstant());

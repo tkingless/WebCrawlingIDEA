@@ -51,12 +51,13 @@ public class MatchEventWorker extends baseCrawler {
     Set<InplayPoolType> matchPools = null;
     //the secondary key to be used
     String matchKey;
-    String matchTeams;
+    String homeTeam;
+    String awayTeam;
 
     MatchEventDAO workerDAO;
     APoolOddsDAO crleOddsDAO;
 
-    public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element teamsEle, MatchTestCONSTANTS.TestType type) throws ParseException {
+    public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element homeEle, Element awayEle, MatchTestCONSTANTS.TestType type) throws ParseException {
         super(CrawlerKeyBinding.MatchEvent, threadName + "-" + aMatchId);
         testTypeSwitch = type;
 
@@ -75,7 +76,7 @@ public class MatchEventWorker extends baseCrawler {
         ///logTest.logger.info("and allOddsLink: " + linkAddr);
 
         ExtractMatcdKey(matchKeyEle);
-        ExtractTeams(teamsEle);
+        ExtractTeams(homeEle,awayEle);
 
         if (type == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
             preRegperiod = 1000 * 10;
@@ -232,9 +233,10 @@ public class MatchEventWorker extends baseCrawler {
         }
     }
 
-    private void ExtractTeams(Element teamsEle) {
-        matchTeams = teamsEle.text();
-        logTest.logger.info("GetChildNodes(), matchTeams: " + matchTeams);
+    private void ExtractTeams(Element homeEle, Element awayEle) {
+        homeTeam = homeEle.text();
+        awayTeam = awayEle.text();
+        logTest.logger.info("ExtractTeams(), matchTeams: " + homeTeam + " vs " + awayTeam);
     }
 
     /*
@@ -443,10 +445,6 @@ public class MatchEventWorker extends baseCrawler {
         return matchKey;
     }
 
-    public String getMatchTeams() {
-        return matchTeams;
-    }
-
     //return worker constructed time
     public DateTimeEntity getWorkerTime() {
         return workerTime;
@@ -458,6 +456,15 @@ public class MatchEventWorker extends baseCrawler {
         else
             return lastMatchCrle.getRecordTime();
     }
+
+    public String getHomeTeam() {
+        return homeTeam;
+    }
+
+    public String getAwayTeam() {
+        return awayTeam;
+    }
+
     /*
     Subsidary functions(): end
      */
