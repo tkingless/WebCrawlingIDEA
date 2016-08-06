@@ -330,13 +330,15 @@ public class MatchEventWorker extends baseCrawler {
 
         //This is added later on as workaround for service started just at pre-reg time, the chance is supposed to be low though...
         if(stage == MatchStage.STAGE_ESST){
-            if(!workerDAO.IsMatchRegisteredBefore(matchId))
+            if(!workerDAO.IsMatchRegisteredBefore(matchId)) {
                 workerDAO.RegisterMatchEventWorker(this);
+            }
         }
 
         if(!BoardCrawlee.IsRegisteredByID(this)) {
             registerOnlocal();
         }
+
     }
 
     void OnStateMatchStart() throws XPathExpressionException {
@@ -344,8 +346,6 @@ public class MatchEventWorker extends baseCrawler {
         if(terminateStates.contains(status)) {
             return;
         }
-
-        System.out.println("trace1");
 
         //init the match DB data
         if(workerDAO.QueryDataFieldExists(this,"stageUpdates"))
@@ -556,6 +556,7 @@ public class MatchEventWorker extends baseCrawler {
             matchPools = crle.getPoolType();
             logTest.logger.info("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());
         }
+
         stage = crle.getMatchStage();
     }
 
