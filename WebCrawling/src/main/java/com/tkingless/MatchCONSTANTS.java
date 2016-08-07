@@ -46,7 +46,11 @@ public class MatchCONSTANTS {
         UPDATE_SCORES,
         UPDATE_CORNER,
         UPDATE_POOL_HAD,
-        UPDATE_POOL_CHL
+        UPDATE_POOL_HIL,
+        UPDATE_POOL_TQL,
+        UPDATE_POOL_NTS,
+        UPDATE_POOL_CHL,
+        UPDATE_POOL_CRS
     }
 
     public static InplayPoolType GetInplayPoolType(String input) {

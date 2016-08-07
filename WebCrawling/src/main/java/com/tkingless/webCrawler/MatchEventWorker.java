@@ -87,8 +87,6 @@ public class MatchEventWorker extends baseCrawler {
             ExtractStatus(statusEle);
         }
 
-        logTest.logger.info("MatcherEventWorker finished constructer.");
-
         //do not use run(), to create worker threads
         this.NewThreadRun();
     }
@@ -137,6 +135,9 @@ public class MatchEventWorker extends baseCrawler {
 
         if (status == MatchStatus.STATE_MATCH_ENDED || status == MatchStatus.STATE_TERMINATED) {
             logTest.logger.info("Threadname: " + threadName + matchId + " STATE_MATCH_ENDED||STATE_TERMINATED");
+
+            logTest.logger.debug("status is end|terminated, last crle: " + lastMatchCrle.toString());
+
             if(status == MatchStatus.STATE_MATCH_ENDED){
                 logTest.logger.debug("trace2");
 
@@ -153,7 +154,7 @@ public class MatchEventWorker extends baseCrawler {
                 logTest.logger.info("Actual end time: "+ endTime.toString());
 
             }
-            logTest.logger.debug("trace3");
+            logTest.logger.debug("trace5");
             BoardCrawlee.DetachWorker(this);
         }
 
@@ -166,7 +167,7 @@ public class MatchEventWorker extends baseCrawler {
 
     private void ExtractMatcdKey(Element matchKeyEle) {
         matchKey = matchKeyEle.text();
-        logTest.logger.info("GetChildNodes(), matchKey: " + matchKey);
+        //logTest.logger.info("GetChildNodes(), matchKey: " + matchKey);
     }
 
     private boolean noDBcommenceTimeHistory = false;
@@ -267,7 +268,11 @@ public class MatchEventWorker extends baseCrawler {
         }
 
         if(workerDAO.QueryDataFieldExists(this,"endTime")){
+            logTest.logger.debug("match worker id: "+ matchId + "found ended time");
             status = MatchStatus.STATE_TERMINATED;
+            return;
+        }else{
+            logTest.logger.debug("match worker id: "+ matchId + "not found ended time yet");
         }
 
         long timediff = 0;

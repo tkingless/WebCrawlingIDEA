@@ -208,7 +208,7 @@ public class BoardCrawlee extends baseCrawlee {
             if (idMatcher.find()) {
                 matchId = idMatcher.group();
                 matchId = matchId.substring(matchId.lastIndexOf('=') + 1);
-                logTest.logger.info("GetChildNodes(), match indexes: " + matchId);
+                //logTest.logger.info("GetChildNodes(), match indexes: " + matchId);
             }
 
             MatchEventWorker crleWorker = null;

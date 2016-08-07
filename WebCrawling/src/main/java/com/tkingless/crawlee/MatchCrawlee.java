@@ -343,6 +343,18 @@ public class MatchCrawlee extends baseCrawlee {
                     case CHL:
                         difftr.add(UpdateDifferentiator.UPDATE_POOL_CHL);
                         break;
+                    case NTS:
+                        difftr.add(UpdateDifferentiator.UPDATE_POOL_NTS);
+                        break;
+                    case HIL:
+                        difftr.add(UpdateDifferentiator.UPDATE_POOL_HIL);
+                        break;
+                    case TQL:
+                        difftr.add(UpdateDifferentiator.UPDATE_POOL_TQL);
+                        break;
+                    case CRS:
+                        difftr.add(UpdateDifferentiator.UPDATE_POOL_CRS);
+                        break;
                     default:
                         logTest.logger.warn("[UpdateDifferentiator] this type " + aType.toString() + " is not catched yet");
                         break;
