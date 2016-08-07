@@ -82,3 +82,5 @@ war {
     //classpath configurations.moreLibs // adds a configuration to the WEB-INF/lib dir.
     webXml = file('src/web.xml') // copies a file to WEB-INF/web.xml
 }
+
+//TODO make file sharing to download only, not to present

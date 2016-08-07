@@ -136,7 +136,9 @@ public class MatchEventWorker extends baseCrawler {
         if (status == MatchStatus.STATE_MATCH_ENDED || status == MatchStatus.STATE_TERMINATED) {
             logTest.logger.info("Threadname: " + threadName + matchId + " STATE_MATCH_ENDED||STATE_TERMINATED");
 
-            logTest.logger.debug("status is end|terminated, last crle: " + lastMatchCrle.toString());
+            if(lastMatchCrle != null) {
+                logTest.logger.debug("status is end|terminated, last crle: " + lastMatchCrle.toString());
+            }
 
             if(status == MatchStatus.STATE_MATCH_ENDED){
                 logTest.logger.debug("trace2");
@@ -364,7 +366,7 @@ public class MatchEventWorker extends baseCrawler {
         if(terminateStates.contains(status)) {
             return;
         }
-
+        logTest.logger.debug("trace100");
         //init the match DB data
         if(workerDAO.QueryDataFieldExists(this,"stageUpdates"))
             updateDifftr.remove(UpdateDifferentiator.UPDATE_STAGE);
@@ -372,15 +374,28 @@ public class MatchEventWorker extends baseCrawler {
             updateDifftr.remove(UpdateDifferentiator.UPDATE_SCORES);
         if(workerDAO.QueryDataFieldExists(this,"cornerTotUpdates"))
             updateDifftr.remove(UpdateDifferentiator.UPDATE_CORNER);
-
+        logTest.logger.debug("trace101");
         UpdateDBByDifftr(updateDifftr,lastMatchCrle);
+        logTest.logger.debug("trace102");
+        if(lastMatchCrle == null){
+            logTest.logger.debug("[Worker] lastMatchCrle is null");
+        }
+        logTest.logger.debug("trace103");
         actualCommence = lastMatchCrle.getRecordTime();
+        logTest.logger.debug("trace104");
         workerDAO.SetField(this,"actualCommence",actualCommence.GetTheInstant());
+        logTest.logger.debug("trace105");
         scanPeriod = 1000;
         updateDifftr.clear();
+        logTest.logger.debug("trace106");
         status = MatchStatus.STATE_MATCH_LOGGING;
         logTest.logger.info("Threadname: " + threadName + matchId + "Entered STATE_MATCH_LOGGING");
     }
+
+    private int endGameConfirmCnt =0;
+    private int endGameConfirm = 25;
+    private int invalidEndCnt =0;
+    private int invalidEndConfirm = 150;
 
     void OnStateMatchLogging() throws XPathExpressionException {
 
@@ -388,20 +403,30 @@ public class MatchEventWorker extends baseCrawler {
             return;
         }
 
-        if (!updateDifftr.isEmpty()) {
-            UpdateDBByDifftr(updateDifftr,lastMatchCrle);
-            logTest.logger.info("updateDifftr not empty, last crle is: \n" + lastMatchCrle.toString());
-        }
-
         if(!lastMatchCrle.isMatchXmlValid()) {
-            logTest.logger.debug("lastMatchCrle is not valid");
-            status = MatchStatus.STATE_MATCH_ENDED;
+            logTest.logger.debug("[ENDREASON]lastMatchCrle is not valid");
+            invalidEndCnt++;
+            if(invalidEndCnt > invalidEndConfirm) {
+                status = MatchStatus.STATE_MATCH_ENDED;
+                return;
+            }
         }
 
         if(stage == MatchStage.STAGE_SECOND){
-            if(lastMatchCrle.isAllPoolClosed())
-                logTest.logger.debug("last crle shown all pool closed");
-                status = MatchStatus.STATE_MATCH_ENDED;
+            if(lastMatchCrle.isAllPoolClosed()) {
+                logTest.logger.debug("[ENDREASON]last crle shown all pool closed");
+                endGameConfirmCnt++;
+
+                if(endGameConfirmCnt > endGameConfirm) {
+                    status = MatchStatus.STATE_MATCH_ENDED;
+                    return;
+                }
+            }
+        }
+
+        if (!updateDifftr.isEmpty()) {
+            UpdateDBByDifftr(updateDifftr,lastMatchCrle);
+            logTest.logger.info("updateDifftr not empty, last crle is: \n" + lastMatchCrle.toString());
         }
 
     }
@@ -530,10 +555,13 @@ public class MatchEventWorker extends baseCrawler {
                     break;
                 default:
                     logTest.logger.error("[Worker] UpdateDBByDifftr() undefined type");
+                    break;
             }
         }
 
+        logTest.logger.debug("trace107");
         difftr.clear();
+        logTest.logger.debug("trace108");
     }
 
 
@@ -547,6 +575,8 @@ public class MatchEventWorker extends baseCrawler {
     MatchCrawlee functions()
      */
     private MatchCrawlee lastMatchCrle = null;
+    private int invalidTolerate = 0;
+    private int maxInvalidTolerate = 150;
 
     private void EmitRequest() throws XPathExpressionException {
         MatchCrawlee newMatchCrle;
@@ -562,7 +592,11 @@ public class MatchEventWorker extends baseCrawler {
 
         if (!newMatchCrle.isMatchXmlValid()) {
             logTest.logger.error("[Error] the grabbed xml is not valid");
-            status = MatchStatus.STATE_TERMINATED;
+            invalidTolerate ++;
+
+            if(invalidTolerate>maxInvalidTolerate) {
+                status = MatchStatus.STATE_TERMINATED;
+            }
             return;
         }
 
