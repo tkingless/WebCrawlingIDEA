@@ -554,14 +554,11 @@ public class MatchEventWorker extends baseCrawler {
                     crleOddsDAO.InsertOddPoolUpdates(matchId,crle,InplayPoolType.CHL);
                     break;
                 default:
-                    logTest.logger.error("[Worker] UpdateDBByDifftr() undefined type");
+                    logTest.logger.warn("[Worker] UpdateDBByDifftr() undefined type");
                     break;
             }
         }
-
-        logTest.logger.debug("trace107");
         difftr.clear();
-        logTest.logger.debug("trace108");
     }
 
 
