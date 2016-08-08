@@ -26,6 +26,9 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-web', version: '2.6.2'
     compile group: 'org.apache.logging.log4j', name: 'log4j-iostreams', version: '2.6.2'
 
+    //ref http://showcase.omnifaces.org/servlets/FileServlet
+    //compile 'org.omnifaces:omnifaces:2.4'
+
     compile project(':WebCrawling')
     //runtime project(':api')
 }
