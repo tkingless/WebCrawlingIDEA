@@ -3,7 +3,9 @@
     <Properties>
         <Property name="filename_HelloWorld">Logs/AppRun_HelloWorld.log</Property>
         <Property name="filename_WebCrawlingMain">Logs/AppRun_WebCrawlingMain.log</Property>
+        <Property name="filename_WebCrawledDataIO">Logs/AppRun_WebCrawledDataIO.log</Property>
     </Properties>
+
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
@@ -14,6 +16,11 @@
             </PatternLayout>
         </File>
         <File name="File_WebCrawlingMain" fileName="${filename_WebCrawlingMain}">
+            <PatternLayout>
+                <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+        </File>
+        <File name="File_WebCrawledDataIO" fileName="${filename_WebCrawledDataIO}">
             <PatternLayout>
                 <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
             </PatternLayout>
@@ -32,6 +39,10 @@
 
         <Logger name="com.tkingless.WebCrawlingApp" level="trace" additivity="true">
             <AppenderRef ref="File_WebCrawlingMain"/>
+        </Logger>
+
+        <Logger name="com.tkingless.WebCrawledDataIO" level="info" additivity="true">
+            <AppenderRef ref="File_WebCrawledDataIO"/>
         </Logger>
 
         <Logger name="com.tkingless.utils.logTest" level="trace" additivity="true">

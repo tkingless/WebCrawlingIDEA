@@ -21,7 +21,8 @@
     </servlet>
 
     <listener>
-        <listener-class>com.tkingless.WebCrawlingApp</listener-class>
+        <!--listener-class>com.tkingless.WebCrawlingApp</listener-class-->
+        <listener-class>com.tkingless.WebCrawledDataIO</listener-class>
     </listener>
 
     <servlet>
