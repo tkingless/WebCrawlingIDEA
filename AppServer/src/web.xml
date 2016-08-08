@@ -20,9 +20,9 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-    <!--listener>
+    <listener>
         <listener-class>com.tkingless.WebCrawlingApp</listener-class>
-    </listener-->
+    </listener>
 
     <servlet>
         <servlet-name>FileSharingServlet</servlet-name>
