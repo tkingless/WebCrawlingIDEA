@@ -30,7 +30,7 @@ public class HKJCcrawler extends baseCrawler {
             logTest.logger.info("HKJCcrwaler run()");
             GetIndexesFromBoard();
         } catch (Exception e) {
-            logTest.logger.error(e);
+            logTest.logger.error("[HKJC] error",e);
         }
     }
 
