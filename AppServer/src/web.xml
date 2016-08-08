@@ -37,12 +37,22 @@
             <param-value>true</param-value>
         </init-param>
         <init-param>
-            <param-name>contextXsltFile</param-name>
+            <param-name>contextXsltFile</param-name> <!--this is just for flavour use-->
             <param-value>/FilesSharing/context.xsl</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>fileServlet</servlet-name>
+        <servlet-class>com.tkingless.WebCrawledDataIO</servlet-class>
+    </servlet>
+
+
+    <servlet-mapping>
+        <servlet-name>fileServlet</servlet-name>
+        <url-pattern>/HostedFiles/*</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>FileSharingServlet</servlet-name>
         <url-pattern>/FilesSharing/*</url-pattern>
