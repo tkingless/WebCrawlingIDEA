@@ -1,5 +1,6 @@
 package com.tkingless;
 
+import com.tkingless.DBobject.MatchEventDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,11 +26,13 @@ public class WebCrawledDataIO extends HttpServlet {
 
     private static final int DEFAULT_BUFFER_SIZE = 10240; // 10KB.
     private String filePath;
+    private MatchEventDAO workerDAO;
 
     //ref: http://balusc.omnifaces.org/2007/07/fileservlet.html
 
     public void init() throws ServletException {
 
+        this.workerDAO = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
         this.filePath = WCDIOconstants.testEnvFileSerlvetABSpath;
 
     }
