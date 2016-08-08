@@ -331,6 +331,7 @@ public class MatchCrawlee extends baseCrawlee {
             difftr.add(UpdateDifferentiator.UPDATE_CORNER);
 
         for (InplayPoolType aType : oldCrle.getPoolType()) {
+
             if (MapComparator.CompareMapsDifferent(oldCrle.ExtractPoolTypeBody(aType)
                     , newCrle.ExtractPoolTypeBody(aType))) {
                 logTest.logger.info("oldCrle " + aType + " body: " + oldCrle.ExtractPoolTypeBody(aType));
@@ -360,8 +361,10 @@ public class MatchCrawlee extends baseCrawlee {
                         break;
                 }
             }
+
         }
 
+        logTest.logger.debug("trace201");
         return difftr;
     }
 

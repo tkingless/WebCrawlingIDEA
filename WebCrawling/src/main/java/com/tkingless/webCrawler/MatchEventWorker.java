@@ -366,7 +366,6 @@ public class MatchEventWorker extends baseCrawler {
         if(terminateStates.contains(status)) {
             return;
         }
-        logTest.logger.debug("trace100");
         //init the match DB data
         if(workerDAO.QueryDataFieldExists(this,"stageUpdates"))
             updateDifftr.remove(UpdateDifferentiator.UPDATE_STAGE);
@@ -374,20 +373,20 @@ public class MatchEventWorker extends baseCrawler {
             updateDifftr.remove(UpdateDifferentiator.UPDATE_SCORES);
         if(workerDAO.QueryDataFieldExists(this,"cornerTotUpdates"))
             updateDifftr.remove(UpdateDifferentiator.UPDATE_CORNER);
-        logTest.logger.debug("trace101");
+
         UpdateDBByDifftr(updateDifftr,lastMatchCrle);
-        logTest.logger.debug("trace102");
         if(lastMatchCrle == null){
             logTest.logger.debug("[Worker] lastMatchCrle is null");
         }
-        logTest.logger.debug("trace103");
+
         actualCommence = lastMatchCrle.getRecordTime();
-        logTest.logger.debug("trace104");
-        workerDAO.SetField(this,"actualCommence",actualCommence.GetTheInstant());
-        logTest.logger.debug("trace105");
+
+        if(!workerDAO.QueryDataFieldExists(this,"actualCommence")) {
+            workerDAO.SetField(this, "actualCommence", actualCommence.GetTheInstant());
+        }
+
         scanPeriod = 1000;
         updateDifftr.clear();
-        logTest.logger.debug("trace106");
         status = MatchStatus.STATE_MATCH_LOGGING;
         logTest.logger.info("Threadname: " + threadName + matchId + "Entered STATE_MATCH_LOGGING");
     }
@@ -425,6 +424,7 @@ public class MatchEventWorker extends baseCrawler {
         }
 
         if (!updateDifftr.isEmpty()) {
+            logTest.logger.debug("trace200");
             UpdateDBByDifftr(updateDifftr,lastMatchCrle);
             logTest.logger.info("updateDifftr not empty, last crle is: \n" + lastMatchCrle.toString());
         }
@@ -522,24 +522,42 @@ public class MatchEventWorker extends baseCrawler {
 
     private void UpdateDBByDifftr(Set<UpdateDifferentiator> difftr, MatchCrawlee crle) throws XPathExpressionException {
 
+        logTest.logger.debug("trace202");
+
+        if(crle == null){
+            logTest.logger.debug("crle input is null");
+        }
+
+        if(crle.getRecordTime() == null){
+            logTest.logger.debug("input crle.getRecordTime() is null");
+        }
+
+        if(crle.getMatchStage() == null){
+            logTest.logger.debug("input crle.getMatchStage() is null");
+        }
+
         for (UpdateDifferentiator differentiator : difftr) {
             switch (differentiator) {
                 case UPDATE_STAGE:
+                    logTest.logger.debug("trace203");
                     DateValuePair DVPstage = new DateValuePair();
                     DVPstage.setTime(crle.getRecordTime().GetTheInstant());
                     DVPstage.setVal(MatchCONSTANTS.GetMatchStageStr(crle.getMatchStage()));
                     workerDAO.AddItemToListField(this,"stageUpdates", DVPstage);
                     break;
                 case UPDATE_POOLS:
+                    logTest.logger.debug("trace204");
                     workerDAO.SetField(this,"poolTypes",matchPools);
                     break;
                 case UPDATE_SCORES:
+                    logTest.logger.debug("trace205");
                     DateValuePair DVPscore = new DateValuePair();
                     DVPscore.setTime(crle.getRecordTime().GetTheInstant());
                     DVPscore.setVal(crle.getScores());
                     workerDAO.AddItemToListField(this,"scoreUpdates",DVPscore);
                     break;
                 case UPDATE_CORNER:
+                    logTest.logger.debug("trace206");
                     if(!crle.getTotalCorners().contains("-")) {
                         DateValuePair DVPcorner = new DateValuePair();
                         DVPcorner.setTime(crle.getRecordTime().GetTheInstant());
@@ -548,9 +566,11 @@ public class MatchEventWorker extends baseCrawler {
                     }
                     break;
                 case UPDATE_POOL_HAD:
+                    logTest.logger.debug("trace207");
                     crleOddsDAO.InsertOddPoolUpdates(matchId,crle,InplayPoolType.HAD);
                     break;
                 case UPDATE_POOL_CHL:
+                    logTest.logger.debug("trace208");
                     crleOddsDAO.InsertOddPoolUpdates(matchId,crle,InplayPoolType.CHL);
                     break;
                 default:
@@ -558,7 +578,9 @@ public class MatchEventWorker extends baseCrawler {
                     break;
             }
         }
+        logTest.logger.debug("trace209");
         difftr.clear();
+        logTest.logger.debug("trace210");
     }
 
 
@@ -614,7 +636,11 @@ public class MatchEventWorker extends baseCrawler {
             logTest.logger.info("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());
         }
 
-        stage = crle.getMatchStage();
+        if(crle.getMatchStage() != null) {
+            stage = crle.getMatchStage();
+        }else{
+            logTest.logger.error("[getStage] crle get Match has null pointer exception");
+        }
     }
 
     /*
