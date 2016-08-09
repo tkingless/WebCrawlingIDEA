@@ -563,7 +563,7 @@ public class MatchEventWorker extends baseCrawler {
                         break;
                     case UPDATE_CORNER:
                         logTest.logger.debug("trace206");
-                        if (!crle.getTotalCorners().contains("-")) {
+                        if (!crle.getTotalCorners().contains("-") || crle.getTotalCorners().isEmpty()) {
                             DateValuePair DVPcorner = new DateValuePair();
                             DVPcorner.setTime(crle.getRecordTime().GetTheInstant());
                             DVPcorner.setVal(crle.getTotalCorners());
