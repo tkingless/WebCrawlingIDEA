@@ -31,7 +31,9 @@ public class WebCrawledDataIO implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         logger.info("WebCrawledDataIO init() called.");
 
-        FileManager fileManager = new FileManager(WCDIOconstants.testEnvFileSerlvetABSpath + "/helloWorld.txt");
+        filePath = WCDIOconstants.testEnvFileSerlvetABSpath;
+
+        FileManager fileManager = new FileManager(filePath + "/helloWorld.txt");
 
         try {
             fileManager.Append("you are the best!");
