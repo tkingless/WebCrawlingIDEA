@@ -41,3 +41,5 @@ Outputs/
 /.idea/workspace.xml
 AppServer/logs/
 Logs/
+
+HostedFiles/

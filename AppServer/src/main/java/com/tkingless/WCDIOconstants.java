@@ -5,5 +5,5 @@ package com.tkingless;
  */
 public class WCDIOconstants {
 
-    public final static String testEnvFileSerlvetABSpath = "/home/tsangkk/Development/Github/WebCrawlingIDEA/AppServer/HostedFiles";
+    public final static String testEnvFileSerlvetABSpath = "/home/tkingless/Development/Github/WebCrawlingIDEA/AppServer/HostedFiles";
 }
