@@ -525,67 +525,70 @@ public class MatchEventWorker extends baseCrawler {
 
     Set<UpdateDifferentiator> updateDifftr = EnumSet.noneOf(UpdateDifferentiator.class);
 
-    private void UpdateDBByDifftr(Set<UpdateDifferentiator> difftr, MatchCrawlee crle) throws XPathExpressionException {
+    private void UpdateDBByDifftr(Set<UpdateDifferentiator> difftr, MatchCrawlee crle) {
+        try {
+            logTest.logger.debug("trace202");
 
-        logTest.logger.debug("trace202");
-
-        if(crle == null){
-            logTest.logger.debug("crle input is null");
-        }
-
-        if(crle.getRecordTime() == null){
-            logTest.logger.debug("input crle.getRecordTime() is null");
-        }
-
-        if(crle.getMatchStage() == null){
-            logTest.logger.debug("input crle.getMatchStage() is null");
-        }
-
-        for (UpdateDifferentiator differentiator : difftr) {
-            switch (differentiator) {
-                case UPDATE_STAGE:
-                    logTest.logger.debug("trace203");
-                    DateValuePair DVPstage = new DateValuePair();
-                    DVPstage.setTime(crle.getRecordTime().GetTheInstant());
-                    DVPstage.setVal(MatchCONSTANTS.GetMatchStageStr(crle.getMatchStage()));
-                    workerDAO.AddItemToListField(this,"stageUpdates", DVPstage);
-                    break;
-                case UPDATE_POOLS:
-                    logTest.logger.debug("trace204");
-                    workerDAO.SetField(this,"poolTypes",matchPools);
-                    break;
-                case UPDATE_SCORES:
-                    logTest.logger.debug("trace205");
-                    DateValuePair DVPscore = new DateValuePair();
-                    DVPscore.setTime(crle.getRecordTime().GetTheInstant());
-                    DVPscore.setVal(crle.getScores());
-                    workerDAO.AddItemToListField(this,"scoreUpdates",DVPscore);
-                    break;
-                case UPDATE_CORNER:
-                    logTest.logger.debug("trace206");
-                    if(!crle.getTotalCorners().contains("-")) {
-                        DateValuePair DVPcorner = new DateValuePair();
-                        DVPcorner.setTime(crle.getRecordTime().GetTheInstant());
-                        DVPcorner.setVal(crle.getTotalCorners());
-                        workerDAO.AddItemToListField(this, "cornerTotUpdates", DVPcorner);
-                    }
-                    break;
-                case UPDATE_POOL_HAD:
-                    logTest.logger.debug("trace207");
-                    crleOddsDAO.InsertOddPoolUpdates(matchId,crle,InplayPoolType.HAD);
-                    break;
-                case UPDATE_POOL_CHL:
-                    logTest.logger.debug("trace208");
-                    crleOddsDAO.InsertOddPoolUpdates(matchId,crle,InplayPoolType.CHL);
-                    break;
-                default:
-                    logTest.logger.warn("[Worker] UpdateDBByDifftr() undefined type");
-                    break;
+            if (crle == null) {
+                logTest.logger.debug("crle input is null");
             }
+
+            if (crle.getRecordTime() == null) {
+                logTest.logger.debug("input crle.getRecordTime() is null");
+            }
+
+            if (crle.getMatchStage() == null) {
+                logTest.logger.debug("input crle.getMatchStage() is null");
+            }
+
+            for (UpdateDifferentiator differentiator : difftr) {
+                switch (differentiator) {
+                    case UPDATE_STAGE:
+                        logTest.logger.debug("trace203");
+                        DateValuePair DVPstage = new DateValuePair();
+                        DVPstage.setTime(crle.getRecordTime().GetTheInstant());
+                        DVPstage.setVal(MatchCONSTANTS.GetMatchStageStr(crle.getMatchStage()));
+                        workerDAO.AddItemToListField(this, "stageUpdates", DVPstage);
+                        break;
+                    case UPDATE_POOLS:
+                        logTest.logger.debug("trace204");
+                        workerDAO.SetField(this, "poolTypes", matchPools);
+                        break;
+                    case UPDATE_SCORES:
+                        logTest.logger.debug("trace205");
+                        DateValuePair DVPscore = new DateValuePair();
+                        DVPscore.setTime(crle.getRecordTime().GetTheInstant());
+                        DVPscore.setVal(crle.getScores());
+                        workerDAO.AddItemToListField(this, "scoreUpdates", DVPscore);
+                        break;
+                    case UPDATE_CORNER:
+                        logTest.logger.debug("trace206");
+                        if (!crle.getTotalCorners().contains("-")) {
+                            DateValuePair DVPcorner = new DateValuePair();
+                            DVPcorner.setTime(crle.getRecordTime().GetTheInstant());
+                            DVPcorner.setVal(crle.getTotalCorners());
+                            workerDAO.AddItemToListField(this, "cornerTotUpdates", DVPcorner);
+                        }
+                        break;
+                    case UPDATE_POOL_HAD:
+                        logTest.logger.debug("trace207");
+                        crleOddsDAO.InsertOddPoolUpdates(matchId, crle, InplayPoolType.HAD);
+                        break;
+                    case UPDATE_POOL_CHL:
+                        logTest.logger.debug("trace208");
+                        crleOddsDAO.InsertOddPoolUpdates(matchId, crle, InplayPoolType.CHL);
+                        break;
+                    default:
+                        logTest.logger.warn("[Worker] UpdateDBByDifftr() undefined type");
+                        break;
+                }
+            }
+            logTest.logger.debug("trace209");
+            difftr.clear();
+            logTest.logger.debug("trace210");
+        }catch (Exception e){
+            logTest.logger.error("MatchEventworker error: ", e);
         }
-        logTest.logger.debug("trace209");
-        difftr.clear();
-        logTest.logger.debug("trace210");
     }
 
 

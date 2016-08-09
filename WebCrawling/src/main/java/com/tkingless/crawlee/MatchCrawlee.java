@@ -307,61 +307,96 @@ public class MatchCrawlee extends baseCrawlee {
         return toUpdate;
     }
 
-    public static Set<UpdateDifferentiator> UpdateDifferentiator (MatchCrawlee oldCrle, MatchCrawlee newCrle) throws XPathExpressionException {
+    public static Set<UpdateDifferentiator> UpdateDifferentiator (MatchCrawlee oldCrle, MatchCrawlee newCrle){
+
         Set<UpdateDifferentiator> difftr = EnumSet.noneOf(UpdateDifferentiator.class);
 
-        if (newCrle == null)
-            return difftr;
-        if (oldCrle == null)
-            return EnumSet.allOf(UpdateDifferentiator.class);
+        try {
+            if (newCrle == null)
+                return difftr;
+            if (oldCrle == null) {
+                difftr.addAll(EnumSet.of(UpdateDifferentiator.UPDATE_STAGE, UpdateDifferentiator.UPDATE_STAGE, UpdateDifferentiator.UPDATE_SCORES));
 
-        if (newCrle.getRecordTime().GetTheInstant().getTime() <= oldCrle.getRecordTime().GetTheInstant().getTime())
-            return difftr;
+                for (InplayPoolType aType : newCrle.getPoolType()) {
 
-        if (oldCrle.getMatchStage() != newCrle.getMatchStage())
-            difftr.add(UpdateDifferentiator.UPDATE_STAGE);
-
-        if (!oldCrle.getPoolType().equals(newCrle.getPoolType()))
-            difftr.add(UpdateDifferentiator.UPDATE_POOLS);
-
-        if (!oldCrle.getScores().equals(newCrle.getScores()))
-            difftr.add(UpdateDifferentiator.UPDATE_SCORES);
-
-        if( !oldCrle.getTotalCorners().equals(newCrle.getTotalCorners()))
-            difftr.add(UpdateDifferentiator.UPDATE_CORNER);
-
-        for (InplayPoolType aType : oldCrle.getPoolType()) {
-
-            if (MapComparator.CompareMapsDifferent(oldCrle.ExtractPoolTypeBody(aType)
-                    , newCrle.ExtractPoolTypeBody(aType))) {
-                logTest.logger.info("oldCrle " + aType + " body: " + oldCrle.ExtractPoolTypeBody(aType));
-                logTest.logger.info("newCrle " + aType + " body: " + newCrle.ExtractPoolTypeBody(aType));
-                //kludge
-                switch (aType){
-                    case HAD:
-                        difftr.add(UpdateDifferentiator.UPDATE_POOL_HAD);
-                        break;
-                    case CHL:
-                        difftr.add(UpdateDifferentiator.UPDATE_POOL_CHL);
-                        break;
-                    case NTS:
-                        difftr.add(UpdateDifferentiator.UPDATE_POOL_NTS);
-                        break;
-                    case HIL:
-                        difftr.add(UpdateDifferentiator.UPDATE_POOL_HIL);
-                        break;
-                    case TQL:
-                        difftr.add(UpdateDifferentiator.UPDATE_POOL_TQL);
-                        break;
-                    case CRS:
-                        difftr.add(UpdateDifferentiator.UPDATE_POOL_CRS);
-                        break;
-                    default:
-                        logTest.logger.warn("[UpdateDifferentiator] this type " + aType.toString() + " is not catched yet");
-                        break;
+                    switch (aType) {
+                        case HAD:
+                            difftr.add(UpdateDifferentiator.UPDATE_POOL_HAD);
+                            break;
+                        case CHL:
+                            difftr.add(UpdateDifferentiator.UPDATE_CORNER);
+                            difftr.add(UpdateDifferentiator.UPDATE_POOL_CHL);
+                            break;
+                        case NTS:
+                            difftr.add(UpdateDifferentiator.UPDATE_POOL_NTS);
+                            break;
+                        case HIL:
+                            difftr.add(UpdateDifferentiator.UPDATE_POOL_HIL);
+                            break;
+                        case TQL:
+                            difftr.add(UpdateDifferentiator.UPDATE_POOL_TQL);
+                            break;
+                        case CRS:
+                            difftr.add(UpdateDifferentiator.UPDATE_POOL_CRS);
+                            break;
+                        default:
+                            logTest.logger.warn("[UpdateDifferentiator] this type " + aType.toString() + " is not catched yet");
+                            break;
+                    }
                 }
+                return difftr;
             }
 
+            if (newCrle.getRecordTime().GetTheInstant().getTime() <= oldCrle.getRecordTime().GetTheInstant().getTime())
+                return difftr;
+
+            if (oldCrle.getMatchStage() != newCrle.getMatchStage())
+                difftr.add(UpdateDifferentiator.UPDATE_STAGE);
+
+            if (!oldCrle.getPoolType().equals(newCrle.getPoolType()))
+                difftr.add(UpdateDifferentiator.UPDATE_POOLS);
+
+            if (!oldCrle.getScores().equals(newCrle.getScores()))
+                difftr.add(UpdateDifferentiator.UPDATE_SCORES);
+
+            if (!oldCrle.getTotalCorners().equals(newCrle.getTotalCorners()))
+                difftr.add(UpdateDifferentiator.UPDATE_CORNER);
+
+            for (InplayPoolType aType : oldCrle.getPoolType()) {
+
+                if (MapComparator.CompareMapsDifferent(oldCrle.ExtractPoolTypeBody(aType)
+                        , newCrle.ExtractPoolTypeBody(aType))) {
+                    logTest.logger.info("oldCrle " + aType + " body: " + oldCrle.ExtractPoolTypeBody(aType));
+                    logTest.logger.info("newCrle " + aType + " body: " + newCrle.ExtractPoolTypeBody(aType));
+                    //kludge
+                    switch (aType) {
+                        case HAD:
+                            difftr.add(UpdateDifferentiator.UPDATE_POOL_HAD);
+                            break;
+                        case CHL:
+                            difftr.add(UpdateDifferentiator.UPDATE_POOL_CHL);
+                            break;
+                        case NTS:
+                            difftr.add(UpdateDifferentiator.UPDATE_POOL_NTS);
+                            break;
+                        case HIL:
+                            difftr.add(UpdateDifferentiator.UPDATE_POOL_HIL);
+                            break;
+                        case TQL:
+                            difftr.add(UpdateDifferentiator.UPDATE_POOL_TQL);
+                            break;
+                        case CRS:
+                            difftr.add(UpdateDifferentiator.UPDATE_POOL_CRS);
+                            break;
+                        default:
+                            logTest.logger.warn("[UpdateDifferentiator] this type " + aType.toString() + " is not catched yet");
+                            break;
+                    }
+                }
+
+            }
+        }catch (Exception e){
+            logTest.logger.error("UpdateDifferentiator error: ",e);
         }
 
         logTest.logger.debug("trace201");

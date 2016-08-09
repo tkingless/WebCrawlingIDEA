@@ -70,35 +70,44 @@ public class APoolOddsDAO extends BasicDAO<APoolOddsData, ObjectId> {
     }
 
     //this function coupled with MatchCrawlee::ExplainHADpool(), ExplainCHIpool(), ExtractPoolTypeBody()
-    public void InsertOddPoolUpdates(String matchId, MatchCrawlee lastCrle, MatchCONSTANTS.InplayPoolType aPool) throws XPathExpressionException {
+    public void InsertOddPoolUpdates(String matchId, MatchCrawlee lastCrle, MatchCONSTANTS.InplayPoolType aPool) {
 
+        try {
             APoolOddsData data = new APoolOddsData();
             data.setMatchId(Integer.parseInt(matchId));
             data.setRecorded(lastCrle.getRecordTime().GetTheInstant());
 
-            switch (aPool){
+            switch (aPool) {
                 case HAD:
-                    HashMap<String,String> toUpdateHAD = lastCrle.ExtractPoolTypeBody(MatchCONSTANTS.InplayPoolType.HAD);
-                    data.setType("HAD");
-                    data.setPoolStatus(toUpdateHAD.get("PoolStat"));
-                    data.setHADhomeOdd(Double.parseDouble(toUpdateHAD.get("home")));
-                    data.setHADdrawOdd(Double.parseDouble(toUpdateHAD.get("draw")));
-                    data.setHADawayOdd(Double.parseDouble(toUpdateHAD.get("away")));
+                    HashMap<String, String> toUpdateHAD = lastCrle.ExtractPoolTypeBody(MatchCONSTANTS.InplayPoolType.HAD);
+                    if(toUpdateHAD.get("Exist").equals("true")) {
+                        data.setPoolStatus(toUpdateHAD.get("PoolStat"));
+                        data.setType("HAD");
+                        data.setHADhomeOdd(Double.parseDouble(toUpdateHAD.get("home")));
+                        data.setHADdrawOdd(Double.parseDouble(toUpdateHAD.get("draw")));
+                        data.setHADawayOdd(Double.parseDouble(toUpdateHAD.get("away")));
+                        save(data);
+                    }
                     break;
                 case CHL:
-                    HashMap<String,String> toUpdateCHL = lastCrle.ExtractPoolTypeBody(MatchCONSTANTS.InplayPoolType.CHL);
-                    data.setType("CHL");
-                    data.setPoolStatus(toUpdateCHL.get("PoolStat"));
-                    data.setCHLline(Double.parseDouble(toUpdateCHL.get("line")));
-                    data.setCHLhigh(Double.parseDouble(toUpdateCHL.get("high")));
-                    data.setCHLlow(Double.parseDouble(toUpdateCHL.get("low")));
+                    HashMap<String, String> toUpdateCHL = lastCrle.ExtractPoolTypeBody(MatchCONSTANTS.InplayPoolType.CHL);
+                    if(toUpdateCHL.get("Exist").equals("true")) {
+                        data.setType("CHL");
+                        data.setPoolStatus(toUpdateCHL.get("PoolStat"));
+                        data.setCHLline(Double.parseDouble(toUpdateCHL.get("line")));
+                        data.setCHLhigh(Double.parseDouble(toUpdateCHL.get("high")));
+                        data.setCHLlow(Double.parseDouble(toUpdateCHL.get("low")));
+                        save(data);
+                    }
                     break;
                 default:
                     logTest.logger.error("[PoolOddInsertion] Undefined pool yet");
                     return;
             }
 
-            save(data);
+        }catch (Exception e){
+            logTest.logger.error("pool error: ", e);
+        }
     }
 
     //CRUD: READ
