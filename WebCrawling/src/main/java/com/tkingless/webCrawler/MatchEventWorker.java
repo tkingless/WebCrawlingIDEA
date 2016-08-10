@@ -18,7 +18,6 @@ import org.jsoup.nodes.Element;
 import javax.xml.xpath.XPathExpressionException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -128,8 +127,8 @@ public class MatchEventWorker extends baseCrawler {
 
             try {
                 sleep(scanPeriod);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                logTest.logger.error("Proc() error", e);
             }
         }
 
@@ -403,35 +402,41 @@ public class MatchEventWorker extends baseCrawler {
 
     void OnStateMatchLogging() throws XPathExpressionException {
 
-        if(terminateStates.contains(status)) {
-            return;
-        }
+        try {
 
-        if(!lastMatchCrle.isMatchXmlValid()) {
-            logTest.logger.debug("[ENDREASON]lastMatchCrle is not valid");
-            invalidEndCnt++;
-            if(invalidEndCnt > invalidEndConfirm) {
-                status = MatchStatus.STATE_MATCH_ENDED;
+            if (terminateStates.contains(status)) {
                 return;
             }
-        }
 
-        if(stage == MatchStage.STAGE_SECOND){
-            if(lastMatchCrle.isAllPoolClosed()) {
-                logTest.logger.debug("[ENDREASON]last crle shown all pool closed");
-                endGameConfirmCnt++;
-
-                if(endGameConfirmCnt > endGameConfirm) {
+            if (!lastMatchCrle.isMatchXmlValid()) {
+                logTest.logger.debug("[ENDREASON]lastMatchCrle is not valid");
+                invalidEndCnt++;
+                if (invalidEndCnt > invalidEndConfirm) {
                     status = MatchStatus.STATE_MATCH_ENDED;
                     return;
                 }
             }
-        }
 
-        if (!updateDifftr.isEmpty()) {
-            logTest.logger.debug("trace200");
-            UpdateDBByDifftr(updateDifftr,lastMatchCrle);
-            logTest.logger.info("updateDifftr not empty, last crle is: \n" + lastMatchCrle.toString());
+            if (stage == MatchStage.STAGE_SECOND) {
+                if (lastMatchCrle.isAllPoolClosed()) {
+                    logTest.logger.debug("[ENDREASON]last crle shown all pool closed");
+                    endGameConfirmCnt++;
+
+                    if (endGameConfirmCnt > endGameConfirm) {
+                        status = MatchStatus.STATE_MATCH_ENDED;
+                        return;
+                    }
+                }
+            }
+
+            if (!updateDifftr.isEmpty()) {
+                logTest.logger.debug("trace200");
+                UpdateDBByDifftr(updateDifftr, lastMatchCrle);
+                logTest.logger.info("updateDifftr not empty, last crle is: \n" + lastMatchCrle.toString());
+            }
+
+        }catch (Exception e){
+            logTest.logger.error("MatchEventWorker error", e);
         }
 
     }
@@ -526,6 +531,7 @@ public class MatchEventWorker extends baseCrawler {
     Set<UpdateDifferentiator> updateDifftr = EnumSet.noneOf(UpdateDifferentiator.class);
 
     private void UpdateDBByDifftr(Set<UpdateDifferentiator> difftr, MatchCrawlee crle) {
+
         try {
             logTest.logger.debug("trace202");
 
@@ -639,15 +645,19 @@ public class MatchEventWorker extends baseCrawler {
     //this function is not touching DB part
     private void UpdateWorkerFromCrle(MatchCrawlee crle) {
 
-        if (matchPools == null) {
-            matchPools = crle.getPoolType();
-            logTest.logger.info("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());
-        }
+        try {
+            if (matchPools == null) {
+                matchPools = crle.getPoolType();
+                logTest.logger.info("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());
+            }
 
-        if(crle.getMatchStage() != null) {
-            stage = crle.getMatchStage();
-        }else{
-            logTest.logger.error("[getStage] crle get Match has null pointer exception");
+            if (crle.getMatchStage() != null) {
+                stage = crle.getMatchStage();
+            } else {
+                logTest.logger.error("[getStage] crle get Match has null pointer exception");
+            }
+        } catch (Exception e){
+            logTest.logger.error("[UpdateWorkerFromCrle] error",e);
         }
     }
 

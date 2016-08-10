@@ -39,10 +39,10 @@ public class BoardCrawlee extends baseCrawlee {
         try {
             Process();
         } catch (IOException e) {
-            e.printStackTrace();
+            logTest.logger.error("Board Crawlee error: ",e);
 
         } catch (ParseException e) {
-            e.printStackTrace();
+            logTest.logger.error("Board Crawlee error: ",e);
         }
         return Jdoc;
     }
@@ -269,7 +269,7 @@ public class BoardCrawlee extends baseCrawlee {
         try {
             outputs = GetTestWorkers(type, doc);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logTest.logger.error("Board Crawlee error: ",e);
         }
 
         return outputs;
