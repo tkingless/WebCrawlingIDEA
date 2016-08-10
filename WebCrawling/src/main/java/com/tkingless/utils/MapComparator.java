@@ -28,6 +28,7 @@ public class MapComparator {
                 }
             }
         } catch (NullPointerException np){
+            logTest.logger.error("intentional null point exception");
             return true;
         }
         return false;

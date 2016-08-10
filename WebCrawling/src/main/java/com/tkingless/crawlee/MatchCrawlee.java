@@ -120,14 +120,8 @@ public class MatchCrawlee extends baseCrawlee {
                 logTest.logger.info("MatchCrawlee CheckXMLNodeValid() not valid.");
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logTest.logger.error("Match Crawlee error: ",e);
         }
     }
 
@@ -142,8 +136,8 @@ public class MatchCrawlee extends baseCrawlee {
 
             return node.getNodeValue();
 
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logTest.logger.error("Match Crawlee error: ",e);
         }
 
         return "";
@@ -277,36 +271,6 @@ public class MatchCrawlee extends baseCrawlee {
         totalCorners = GetValueByQuery(CornerTotalQuery);
     }
 
-    public static boolean HasUpdate(MatchCrawlee oldCrle, MatchCrawlee newCrle) throws XPathExpressionException {
-        boolean toUpdate = true;
-
-        if (newCrle == null)
-            return false;
-        if (oldCrle == null)
-            return true;
-
-        if (newCrle.getRecordTime().GetTheInstant().getTime() <= oldCrle.getRecordTime().GetTheInstant().getTime())
-            return false;
-
-        if (oldCrle.getMatchStage() == newCrle.getMatchStage())
-            if (oldCrle.getPoolType().equals(newCrle.getPoolType()))
-                if(oldCrle.getTotalCorners().equals(newCrle.getTotalCorners()) || newCrle.getTotalCorners().contains("-"))
-                if (oldCrle.getScores().equals(newCrle.getScores())) {
-                    toUpdate = false;
-                    for (InplayPoolType aType : oldCrle.getPoolType()) {
-                        if (MapComparator.CompareMapsDifferent(oldCrle.ExtractPoolTypeBody(aType)
-                                , newCrle.ExtractPoolTypeBody(aType))) {
-                            logTest.logger.info("oldCrle body: " + oldCrle.ExtractPoolTypeBody(aType));
-                            logTest.logger.info("newCrle body: " + newCrle.ExtractPoolTypeBody(aType));
-                            toUpdate = true;
-                            break;
-                        }
-                    }
-                }
-
-        return toUpdate;
-    }
-
     public static Set<UpdateDifferentiator> UpdateDifferentiator (MatchCrawlee oldCrle, MatchCrawlee newCrle){
 
         Set<UpdateDifferentiator> difftr = EnumSet.noneOf(UpdateDifferentiator.class);
@@ -395,7 +359,7 @@ public class MatchCrawlee extends baseCrawlee {
                 }
 
             }
-        }catch (Exception e){
+        } catch (Exception e){
             logTest.logger.error("UpdateDifferentiator error: ",e);
         }
 
@@ -406,18 +370,23 @@ public class MatchCrawlee extends baseCrawlee {
     public String toString() {
         StringBuilder tmp = new StringBuilder();
 
-        tmp.append("\n");
-        tmp.append("stage: ").append(matchStage).append("\n");
-        tmp.append("score: ").append(scores).append("\n");
+        try {
 
-        for (InplayPoolType aType : this.getPoolType()) {
-            try {
-                tmp.append("Type, ").append(aType.toString()).append(": ");
-                tmp.append(ExtractPoolTypeBody(aType).toString());
-                tmp.append("\n");
-            } catch (XPathExpressionException e) {
-                e.printStackTrace();
+            tmp.append("\n");
+            tmp.append("stage: ").append(matchStage).append("\n");
+            tmp.append("score: ").append(scores).append("\n");
+
+            for (InplayPoolType aType : this.getPoolType()) {
+                try {
+                    tmp.append("Type, ").append(aType.toString()).append(": ");
+                    tmp.append(ExtractPoolTypeBody(aType).toString());
+                    tmp.append("\n");
+                } catch (Exception e) {
+                    logTest.logger.error("Match Crawlee error: ", e);
+                }
             }
+        } catch (Exception e){
+            logTest.logger.error("To String error: ",e);
         }
 
         return tmp.toString();
