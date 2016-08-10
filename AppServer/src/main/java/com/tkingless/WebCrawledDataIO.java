@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -32,14 +33,25 @@ public class WebCrawledDataIO implements ServletContextListener {
         logger.info("WebCrawledDataIO init() called.");
 
         filePath = WCDIOconstants.testEnvFileSerlvetABSpath;
+        FileManager fileManager;
 
-        FileManager fileManager = new FileManager(filePath + "/helloWorld.txt");
+        if(FileManager.CreateFolder(filePath)){
+            fileManager = new FileManager(filePath + "/helloWorld.txt");
 
-        try {
-            fileManager.Append("you are the best!");
-            fileManager.Close();
-        } catch (IOException e) {
-            logger.error("filemanager: ",e);
+            try {
+                fileManager.Append("you are the best!");
+                fileManager.Close();
+            } catch (IOException e) {
+                logger.error("filemanager: ",e);
+            }
+        }
+
+        logger.info("[Important] The WDCIO config json file should be placed at: current path: " + (new File(".")).getAbsolutePath());
+
+        if(FileManager.CheckFileExist("WCDIOconfig.json")){
+            System.out.println("found the json");
+        } else {
+            System.out.println("Not found the json");
         }
 
     }
