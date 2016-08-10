@@ -337,7 +337,7 @@ public class MatchEventWorker extends baseCrawler {
                 scanPeriod = scanPeriod + 1000 * 2;
                 logTest.logger.info("dry waiting for start state");
 
-                if(timediff <= 1000 * 60 * 180 * 4){
+                if(timediff <= -1 * 1000 * 60 * 180 * 4){
                     logTest.logger.error("waited too long for start state, terminating...");
                     status = MatchStatus.STATE_TERMINATED;
                 }
