@@ -134,6 +134,10 @@ public class MatchCrawlee extends baseCrawlee {
 
             Node node = (Node) expr.evaluate(doc, XPathConstants.NODE);
 
+            if(node == null){
+                return "";
+            }
+
             return node.getNodeValue();
 
         } catch (Exception e) {
