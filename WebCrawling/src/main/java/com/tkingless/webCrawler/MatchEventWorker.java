@@ -628,6 +628,15 @@ public class MatchEventWorker extends baseCrawler {
             invalidTolerate ++;
 
             if(invalidTolerate>maxInvalidTolerate) {
+
+                //somtimes, the match xml just close too quickly, so add a consideration to exemplify it as ended match
+                if(workerDAO.QueryDataFieldExists(this,"scoreUpdates"))
+                    if(workerDAO.QueryDataFieldExists(this,"stageUpdates"))
+                        if(workerDAO.QueryDataFieldExists(this,"actualCommence")){
+                            status = MatchStatus.STATE_MATCH_ENDED;
+                            return;
+                        }
+
                 status = MatchStatus.STATE_TERMINATED;
             }
             return;
