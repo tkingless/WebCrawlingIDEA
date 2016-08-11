@@ -633,6 +633,7 @@ public class MatchEventWorker extends baseCrawler {
                 if(workerDAO.QueryDataFieldExists(this,"scoreUpdates"))
                     if(workerDAO.QueryDataFieldExists(this,"stageUpdates"))
                         if(workerDAO.QueryDataFieldExists(this,"actualCommence")){
+                            logTest.logger.info("[nullpo] this exceptional case happened");
                             status = MatchStatus.STATE_MATCH_ENDED;
                             return;
                         }
