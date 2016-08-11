@@ -121,7 +121,7 @@ public class MatchCrawlee extends baseCrawlee {
             }
 
         } catch (Exception e) {
-            logTest.logger.error("Match Crawlee error: ",e);
+            logTest.logger.error("Match Crawlee error 1: ",e);
         }
     }
 
@@ -137,7 +137,7 @@ public class MatchCrawlee extends baseCrawlee {
             return node.getNodeValue();
 
         } catch (Exception e) {
-            logTest.logger.error("Match Crawlee error: ",e);
+            logTest.logger.error("Match Crawlee error 2: ",e);
         }
 
         return "";
@@ -157,16 +157,24 @@ public class MatchCrawlee extends baseCrawlee {
     public Boolean isAllPoolClosed() {
         Boolean allPoolClosed = true;
 
-        if (isMatchXmlValid())
-            if (!poolType.isEmpty()) {
-                for (InplayPoolType aType : poolType) {
-                    String poolStatQuery = String.format("//pool[@type=\"%s\"]/@match_pool_status", MatchCONSTANTS.GetCapPoolType(aType));
-                    if (!MatchCONSTANTS.GetPoolStatusStr(MatchPoolStatus.STATUS_CLOSED).equals(GetValueByQuery(poolStatQuery))){
-                        allPoolClosed = false;
-                        break;
+        try {
+
+            if (isMatchXmlValid())
+                if (!poolType.isEmpty()) {
+                    for (InplayPoolType aType : poolType) {
+                        String poolStatQuery = String.format("//pool[@type=\"%s\"]/@match_pool_status", MatchCONSTANTS.GetCapPoolType(aType));
+                        String result = GetValueByQuery(poolStatQuery);
+                        if(result != null) {
+                            if (!MatchCONSTANTS.GetPoolStatusStr(MatchPoolStatus.STATUS_CLOSED).equals(result)) {
+                                allPoolClosed = false;
+                                break;
+                            }
+                        }
                     }
                 }
-            }
+        } catch (Exception e){
+            logTest.logger.error("isAllPoolClosed() error",e);
+        }
 
         return allPoolClosed;
     }
@@ -382,7 +390,7 @@ public class MatchCrawlee extends baseCrawlee {
                     tmp.append(ExtractPoolTypeBody(aType).toString());
                     tmp.append("\n");
                 } catch (Exception e) {
-                    logTest.logger.error("Match Crawlee error: ", e);
+                    logTest.logger.error("Match Crawlee to String error 3: ", e);
                 }
             }
         } catch (Exception e){
