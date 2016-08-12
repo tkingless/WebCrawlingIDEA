@@ -1,11 +1,9 @@
 package com.tkingless;
 
-import com.mongodb.Block;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.ServerAddress;
+import com.mongodb.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.ListCollectionsIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.tkingless.utils.DateTimeEntity;
 import org.bson.Document;
@@ -45,14 +43,14 @@ public class WebCrawledDataIOTest {
         }
     }
 
+    List<Integer> onMatchingIds = new ArrayList<>();
+    List<Integer> lostMatchingIds = new ArrayList<>();
+
     @Test
     public void GetConsideredWorkersByTime() throws Exception {
 
         long threshold = (new Date()).getTime() - 1000 * 60 * 60 * 72;
         DateTimeEntity timeAfterToConsider = new DateTimeEntity(threshold);
-
-        List<Integer> onMatchingIds = new ArrayList<>();
-        List<Integer> lostMatchingIds = new ArrayList<>();
 
         FindIterable<Document> consideredIds = tmpProdDB.getCollection("MatchEvents").find(
                 //Multiple criteria
@@ -95,6 +93,8 @@ public class WebCrawledDataIOTest {
 
     @Test
     public void importDBcollections() throws Exception {
+        GetConsideredWorkersByTime();
 
+        MongoCollection WCDIO = tmpProdDB.getCollection("WCDIOcsv");
     }
 }
