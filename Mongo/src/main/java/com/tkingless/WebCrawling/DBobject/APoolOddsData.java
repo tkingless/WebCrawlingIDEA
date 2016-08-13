@@ -27,7 +27,7 @@ public class APoolOddsData {
     private Double HADhomeOdd;
     private Double HADdrawOdd;
     private Double HADawayOdd;
-    private Double CHLline;
+    private String CHLline;
     private Double CHLhigh;
     private Double CHLlow;
 
@@ -77,11 +77,11 @@ public class APoolOddsData {
         this.HADawayOdd = HADawayOdd;
     }
 
-    public Double getCHLline() {
+    public String getCHLline() {
         return CHLline;
     }
 
-    public void setCHLline(Double CHLline) {
+    public void setCHLline(String CHLline) {
         this.CHLline = CHLline;
     }
 

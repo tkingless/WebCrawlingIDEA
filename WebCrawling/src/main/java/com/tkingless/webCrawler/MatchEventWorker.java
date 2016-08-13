@@ -178,59 +178,64 @@ public class MatchEventWorker extends baseCrawler {
 
         IdentifyStage(statusEle);
 
-        switch (stage) {
-            case STAGE_ESST:
-                String startTimeWeb = statusEle.childNode(3).toString();
+        try {
+            switch (stage) {
+                case STAGE_ESST:
+                    String startTimeWeb = statusEle.childNode(3).toString();
 
-                Pattern dayPattern = Pattern.compile("[0-9]{1,2}/[0-9]{1,2}");
-                Pattern timePattern = Pattern.compile("[0-9]{1,2}:[0-9]{1,2}");
+                    Pattern dayPattern = Pattern.compile("[0-9]{1,2}/[0-9]{1,2}");
+                    Pattern timePattern = Pattern.compile("[0-9]{1,2}:[0-9]{1,2}");
 
-                Matcher dayMatch = dayPattern.matcher(startTimeWeb);
-                Matcher timeMatch = timePattern.matcher(startTimeWeb);
+                    Matcher dayMatch = dayPattern.matcher(startTimeWeb);
+                    Matcher timeMatch = timePattern.matcher(startTimeWeb);
 
-                dayMatch.find();
-                timeMatch.find();
+                    dayMatch.find();
+                    timeMatch.find();
 
-                String day = dayMatch.group();
-                String time = timeMatch.group();
+                    String day = dayMatch.group();
+                    String time = timeMatch.group();
 
-                StringBuilder dateTimeBuilder = new StringBuilder(time).append(":00 ");
-                dateTimeBuilder.append(day);
-                dateTimeBuilder.append("/");
-                dateTimeBuilder.append(DateTimeEntity.GetCurrentYear());
-
-
-                //=========================check whether next year datetime
-                DateTimeEntity checkIfNextYear = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
-
-                if(checkIfNextYear.CalTimeIntervalDiff(new DateTimeEntity()) < 0){
-                    dateTimeBuilder = new StringBuilder(time).append(":00 ");
+                    StringBuilder dateTimeBuilder = new StringBuilder(time).append(":00 ");
                     dateTimeBuilder.append(day);
                     dateTimeBuilder.append("/");
-                    dateTimeBuilder.append(DateTimeEntity.GetYearPlus(1));
-                }
-                //=========================check whether next year datetime: end
+                    dateTimeBuilder.append(DateTimeEntity.GetCurrentYear());
 
-                commenceTime = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
-                logTest.logger.info("ExtractStatus(),commenceTime: " + commenceTime.toString());
-                break;
-            case STAGE_FIRST:
-            case STAGE_HALFTIME:
-            case STAGE_SECOND:
 
-                if(workerDAO.QueryDataFieldExists(this,"commence")){
-                    long timestampOfcommence = workerDAO.findByMatchId(matchId).getCommence().getTime();
-                    commenceTime = new DateTimeEntity(timestampOfcommence);
-                }
+                    //=========================check whether next year datetime
+                    DateTimeEntity checkIfNextYear = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
 
-                if (commenceTime == null) {
-                    logTest.logger.info("[Warning] commenceTime is null");
-                    noDBcommenceTimeHistory = true;
-                }
-                break;
-            default:
-                logTest.logger.info("[Error] no proper type input");
-                break;
+                    if (checkIfNextYear.CalTimeIntervalDiff(new DateTimeEntity()) < 0) {
+                        dateTimeBuilder = new StringBuilder(time).append(":00 ");
+                        dateTimeBuilder.append(day);
+                        dateTimeBuilder.append("/");
+                        dateTimeBuilder.append(DateTimeEntity.GetYearPlus(1));
+                    }
+                    //=========================check whether next year datetime: end
+
+                    commenceTime = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
+                    logTest.logger.info("ExtractStatus(),commenceTime: " + commenceTime.toString());
+                    break;
+                case STAGE_FIRST:
+                case STAGE_HALFTIME:
+                case STAGE_SECOND:
+
+                    if (workerDAO.QueryDataFieldExists(this, "commence")) {
+                        long timestampOfcommence = workerDAO.findByMatchId(matchId).getCommence().getTime();
+                        commenceTime = new DateTimeEntity(timestampOfcommence);
+                    }
+
+                    if (commenceTime == null) {
+                        logTest.logger.info("[Warning] commenceTime is null");
+                        noDBcommenceTimeHistory = true;
+                    }
+                    break;
+                default:
+                    logTest.logger.info("[Error] no proper type input");
+                    break;
+            }
+        } catch(Exception e){
+            logTest.logger.error("ExtractStatus() error",e);
+
         }
     }
 
@@ -243,6 +248,8 @@ public class MatchEventWorker extends baseCrawler {
             stage = MatchStage.STAGE_HALFTIME;
         } else if (statusEle.text().contains("2nd Half In Progress")) {
             stage = MatchStage.STAGE_SECOND;
+        } else {
+            logTest.logger.error("This is unknwon stage: " + statusEle.text());
         }
     }
 

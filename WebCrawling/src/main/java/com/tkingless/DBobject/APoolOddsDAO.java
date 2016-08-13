@@ -56,7 +56,7 @@ public class APoolOddsDAO extends BasicDAO<APoolOddsData, ObjectId> {
                     HashMap<String,String> toUpdateCHL = lastCrle.ExtractPoolTypeBody(MatchCONSTANTS.InplayPoolType.CHL);
                     data.setType("CHL");
                     data.setPoolStatus(toUpdateCHL.get("PoolStat"));
-                    data.setCHLline(Double.parseDouble(toUpdateCHL.get("line")));
+                    data.setCHLline(toUpdateCHL.get("line"));
                     data.setCHLhigh(Double.parseDouble(toUpdateCHL.get("high")));
                     data.setCHLlow(Double.parseDouble(toUpdateCHL.get("low")));
                     break;
@@ -94,8 +94,7 @@ public class APoolOddsDAO extends BasicDAO<APoolOddsData, ObjectId> {
                     if(toUpdateCHL.get("Exist").equals("true")) {
                         data.setType("CHL");
                         data.setPoolStatus(toUpdateCHL.get("PoolStat"));
-                        //TODO this line can be 10.5_11.5, not double
-                        data.setCHLline(Double.parseDouble(toUpdateCHL.get("line")));
+                        data.setCHLline(toUpdateCHL.get("line"));
                         data.setCHLhigh(Double.parseDouble(toUpdateCHL.get("high")));
                         data.setCHLlow(Double.parseDouble(toUpdateCHL.get("low")));
                         save(data);
