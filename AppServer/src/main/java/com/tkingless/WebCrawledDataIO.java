@@ -1,6 +1,11 @@
 package com.tkingless;
 
+import com.mongodb.Block;
+import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoDatabase;
 import com.tkingless.DBobject.MatchEventDAO;
+import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.utils.FileManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +16,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by tsangkk on 8/8/16.
@@ -27,9 +35,8 @@ public class WebCrawledDataIO implements ServletContextListener {
 
     private static final int DEFAULT_BUFFER_SIZE = 10240; // 10KB.
     private String filePath;
-    private MatchEventDAO workerDAO;
     private Document config;
-
+    private MongoDatabase db;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -61,6 +68,12 @@ public class WebCrawledDataIO implements ServletContextListener {
             System.out.println("Not found the json");
         }
 
+        try {
+            db = DBManager.getInstance().getClient().getDatabase(MongoDBparam.webCrawlingDB);
+        } catch (Exception e){
+            logger.error("context init error", e);
+        }
+
     }
 
     @Override
@@ -84,5 +97,57 @@ public class WebCrawledDataIO implements ServletContextListener {
         }
 
         return config;
+    }
+
+
+    //=======================================
+    //WDCIO rundown
+    //=======================================
+
+    void GetConsideredWorkersByTime() {
+
+        long threshold = (new Date()).getTime() - 1000 * 60 * 60 * 72;
+        DateTimeEntity timeAfterToConsider = new DateTimeEntity(threshold);
+
+        List<Integer> onMatchingIds = new ArrayList<>();
+        List<Integer> lostMatchingIds = new ArrayList<>();
+
+        FindIterable<Document> consideredIds = db.getCollection("MatchEvents").find(
+                //Multiple criteria
+                new Document("actualCommence", new Document("$exists", true)).append(
+                        "actualCommence", new Document("$gte", timeAfterToConsider.GetTheInstant())).append(
+                        "scoreUpdates", new Document("$exists", true)).append(
+                        "stageUpdates", new Document("$exists", true))
+        ).projection(new Document("MatchId", 1).append("scoreUpdates", 1).append("stageUpdates", 1).append("actualCommence", 1).append("endTime", 1))
+                .sort(new Document("actualCommence",-1))
+                .limit(20);
+
+        consideredIds.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document.toJson());
+                //if(document.keySet().containsAll(Arrays.asList("scoreUpdates","stageUpdates"))){
+
+                try {
+
+                    Date docCommenceDate = (Date) document.get("actualCommence");
+                    DateTimeEntity docCommence = new DateTimeEntity(docCommenceDate.getTime());
+
+                    if (docCommence.CalTimeIntervalDiff(timeAfterToConsider) >= 0) {
+                        onMatchingIds.add(document.getInteger("MatchId"));
+                    } else {
+                        lostMatchingIds.add(document.getInteger("MatchId"));
+                    }
+
+                } catch (Exception e) {
+                    logger.error("Considered id error",e);
+                }
+
+            }
+        });
+
+        logger.info("onMatchingIds : " + onMatchingIds.toString());
+        logger.info("lostMatchingIds : " + lostMatchingIds.toString());
+
     }
 }
