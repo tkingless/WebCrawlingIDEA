@@ -1,10 +1,7 @@
 package com.tkingless;
 
 import com.mongodb.*;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.ListCollectionsIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import com.tkingless.utils.DateTimeEntity;
 import org.bson.Document;
 import org.junit.Before;
@@ -49,7 +46,7 @@ public class WebCrawledDataIOTest {
     @Test
     public void GetConsideredWorkersByTime() throws Exception {
 
-        long threshold = (new Date()).getTime() - 1000 * 60 * 60 * 72;
+        long threshold = (new Date()).getTime() - 1000 * 60 * 60 * 96;
         DateTimeEntity timeAfterToConsider = new DateTimeEntity(threshold);
 
         FindIterable<Document> consideredIds = tmpProdDB.getCollection("MatchEvents").find(
@@ -96,5 +93,28 @@ public class WebCrawledDataIOTest {
         GetConsideredWorkersByTime();
 
         MongoCollection WCDIO = tmpProdDB.getCollection("WCDIOcsv");
+
+        for(Integer id : onMatchingIds){
+           Document doc = (Document) WCDIO.find(new Document("MatchId", id)).first();
+
+            if(doc == null){
+                System.out.println("This onMatchingIds not existing, adding new csv object");
+                Document initDoc = new Document("MatchId",id);
+
+            MongoCursor<Document> idOddsCursor = tmpProdDB.getCollection("AllOdds").find(new Document("MatchId",id)).iterator();
+
+                if (idOddsCursor.hasNext()){
+                    System.out.println("there is odd update for id:" + id);
+                    //doSomethingCrazyHere()
+                }
+
+
+            }
+        }
+    }
+
+    @Test
+    public void DoSomethingCrazy() throws Exception {
+
     }
 }

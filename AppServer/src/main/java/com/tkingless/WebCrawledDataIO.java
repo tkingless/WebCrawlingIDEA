@@ -1,10 +1,8 @@
 package com.tkingless;
 
 import com.mongodb.Block;
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
-import com.tkingless.DBobject.MatchEventDAO;
 import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.utils.FileManager;
 import org.apache.commons.io.IOUtils;
@@ -106,7 +104,7 @@ public class WebCrawledDataIO implements ServletContextListener {
 
     void GetConsideredWorkersByTime() {
 
-        long threshold = (new Date()).getTime() - 1000 * 60 * 60 * 72;
+        long threshold = (new Date()).getTime() - 1000 * 60 * 60 * 96;
         DateTimeEntity timeAfterToConsider = new DateTimeEntity(threshold);
 
         List<Integer> onMatchingIds = new ArrayList<>();
@@ -145,9 +143,7 @@ public class WebCrawledDataIO implements ServletContextListener {
 
             }
         });
-
         logger.info("onMatchingIds : " + onMatchingIds.toString());
         logger.info("lostMatchingIds : " + lostMatchingIds.toString());
-
     }
 }
