@@ -140,13 +140,10 @@ public class MatchEventWorker extends baseCrawler {
             }
 
             if(status == MatchStatus.STATE_MATCH_ENDED){
-                logTest.logger.debug("trace2");
 
                 if(lastMatchCrle == null || lastMatchCrle.getRecordTime() == null){
-                    logTest.logger.debug("trace3");
                     endTime = new DateTimeEntity();
                 }else{
-                    logTest.logger.debug("trace4");
                     endTime = lastMatchCrle.getRecordTime();
                 }
 
@@ -155,7 +152,6 @@ public class MatchEventWorker extends baseCrawler {
                 logTest.logger.info("Actual end time: "+ endTime.toString());
 
             }
-            logTest.logger.debug("trace5");
             BoardCrawlee.DetachWorker(this);
         }
 
@@ -437,7 +433,6 @@ public class MatchEventWorker extends baseCrawler {
             }
 
             if (!updateDifftr.isEmpty()) {
-                logTest.logger.debug("trace200");
                 UpdateDBByDifftr(updateDifftr, lastMatchCrle);
                 logTest.logger.info("updateDifftr not empty, last crle is: \n" + lastMatchCrle.toString());
             }
@@ -540,7 +535,6 @@ public class MatchEventWorker extends baseCrawler {
     private void UpdateDBByDifftr(Set<UpdateDifferentiator> difftr, MatchCrawlee crle) {
 
         try {
-            logTest.logger.debug("trace202");
 
             if (crle == null) {
                 logTest.logger.debug("crle input is null");
@@ -557,25 +551,21 @@ public class MatchEventWorker extends baseCrawler {
             for (UpdateDifferentiator differentiator : difftr) {
                 switch (differentiator) {
                     case UPDATE_STAGE:
-                        logTest.logger.debug("trace203");
                         DateValuePair DVPstage = new DateValuePair();
                         DVPstage.setTime(crle.getRecordTime().GetTheInstant());
                         DVPstage.setVal(MatchCONSTANTS.GetMatchStageStr(crle.getMatchStage()));
                         workerDAO.AddItemToListField(this, "stageUpdates", DVPstage);
                         break;
                     case UPDATE_POOLS:
-                        logTest.logger.debug("trace204");
                         workerDAO.SetField(this, "poolTypes", matchPools);
                         break;
                     case UPDATE_SCORES:
-                        logTest.logger.debug("trace205");
                         DateValuePair DVPscore = new DateValuePair();
                         DVPscore.setTime(crle.getRecordTime().GetTheInstant());
                         DVPscore.setVal(crle.getScores());
                         workerDAO.AddItemToListField(this, "scoreUpdates", DVPscore);
                         break;
                     case UPDATE_CORNER:
-                        logTest.logger.debug("trace206");
                         if (!crle.getTotalCorners().contains("-") || crle.getTotalCorners().isEmpty()) {
                             DateValuePair DVPcorner = new DateValuePair();
                             DVPcorner.setTime(crle.getRecordTime().GetTheInstant());
@@ -584,11 +574,9 @@ public class MatchEventWorker extends baseCrawler {
                         }
                         break;
                     case UPDATE_POOL_HAD:
-                        logTest.logger.debug("trace207");
                         crleOddsDAO.InsertOddPoolUpdates(matchId, crle, InplayPoolType.HAD);
                         break;
                     case UPDATE_POOL_CHL:
-                        logTest.logger.debug("trace208");
                         crleOddsDAO.InsertOddPoolUpdates(matchId, crle, InplayPoolType.CHL);
                         break;
                     default:
@@ -596,9 +584,7 @@ public class MatchEventWorker extends baseCrawler {
                         break;
                 }
             }
-            logTest.logger.debug("trace209");
             difftr.clear();
-            logTest.logger.debug("trace210");
         }catch (Exception e){
             logTest.logger.error("MatchEventworker error: ", e);
         }
