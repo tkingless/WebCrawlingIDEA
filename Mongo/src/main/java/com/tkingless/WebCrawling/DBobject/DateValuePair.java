@@ -1,5 +1,6 @@
 package com.tkingless.WebCrawling.DBobject;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.*;
 
 import java.util.Date;
@@ -19,6 +20,7 @@ import static org.mongodb.morphia.utils.IndexType.ASC;
 public class DateValuePair {
 
     @Id
+    ObjectId id;
     Date time;
     String val;
 

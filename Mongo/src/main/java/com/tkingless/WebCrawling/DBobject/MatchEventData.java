@@ -27,11 +27,11 @@ public class MatchEventData {
     private Integer MatchId;
 
     private String MatchKey;
-    @Embedded("stageUpdates")
+    @Reference("stageUpdates")
     private List<DateValuePair> stageUpdates;
-    @Embedded("scoreUpdates")
+    @Reference("scoreUpdates")
     private List<DateValuePair> scoreUpdates;
-    @Embedded("cornerTotUpdates")
+    @Reference("cornerTotUpdates")
     private List<DateValuePair> cornerTotUpdates;
 
 
