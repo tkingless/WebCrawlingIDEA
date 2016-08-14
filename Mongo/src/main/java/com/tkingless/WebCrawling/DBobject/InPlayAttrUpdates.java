@@ -11,18 +11,19 @@ import static org.mongodb.morphia.utils.IndexType.ASC;
  * Created by tkingless on 8/1/16.
  */
 
-@Entity("DateValuePair")
+@Entity("InPlayAttrUpdates")
 @Indexes({
         @Index(value = "time", fields = @Field(value = "time", type = ASC), options = @IndexOptions(unique = true) )
 })
 
 @Embedded
-public class DateValuePair {
+public class InPlayAttrUpdates {
 
     @Id
     ObjectId id;
     Date time;
     String val;
+    String updateType;
 
     public Date getTime() {
         return time;
@@ -38,5 +39,13 @@ public class DateValuePair {
 
     public void setVal(String val) {
         this.val = val;
+    }
+
+    public String getUpdateType() {
+        return updateType;
+    }
+
+    public void setUpdateType(String updateType) {
+        this.updateType = updateType;
     }
 }

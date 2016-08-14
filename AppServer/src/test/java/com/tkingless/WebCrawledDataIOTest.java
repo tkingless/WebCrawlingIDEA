@@ -2,22 +2,17 @@ package com.tkingless;
 
 import com.mongodb.*;
 import com.mongodb.client.*;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.UpdateOptions;
 import com.tkingless.DBobject.MatchEventDAO;
-import com.tkingless.WebCrawling.DBobject.APoolOddsData;
-import com.tkingless.WebCrawling.DBobject.DateValuePair;
+import com.tkingless.WebCrawling.DBobject.InPlayAttrUpdates;
 import com.tkingless.WebCrawling.DBobject.MatchEventData;
 import com.tkingless.utils.DateTimeEntity;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.*;
 
 import static com.tkingless.MongoDBparam.*;
-import static java.util.Arrays.asList;
 
 /**
  * Created by tsangkk on 8/10/16.
@@ -132,7 +127,7 @@ public class WebCrawledDataIOTest {
             @Override
             public void apply(Document document) {
 
-                for(DateValuePair dvp : (List<DateValuePair>) document.get("scoreUpdates")){
+                for(InPlayAttrUpdates dvp : (List<InPlayAttrUpdates>) document.get("scoreUpdates")){
                     //updateTimeOrders.add( dvp.getTime(), document, DateDocumentObj.HistoryType.UPDATE_SCORE));
                 }
             }
@@ -175,9 +170,9 @@ public class WebCrawledDataIOTest {
 
         //System.out.println( projectedDoc.get("scoreUpdates") );
 
-       /* List<DateValuePair> dvps = (List<DateValuePair>) projectedDoc.get("scoreUpdates");
+       /* List<InPlayAttrUpdates> dvps = (List<InPlayAttrUpdates>) projectedDoc.get("scoreUpdates");
 
-        for(DateValuePair dvp : dvps) {
+        for(InPlayAttrUpdates dvp : dvps) {
             System.out.println("dvp key: " + dvp.getTime());
             System.out.println("dvp value: " + dvp.getVal());
         }*/
@@ -185,11 +180,11 @@ public class WebCrawledDataIOTest {
 
         MatchEventDAO dao = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
         MatchEventData data = dao.findByMatchId("104971");
-        List<DateValuePair> scoreHistory = data.getScoreUpdates();
+        List<InPlayAttrUpdates> scoreHistory = data.getScoreUpdates();
 
         System.out.println("[Data] " + data.toString());
 
-        for (DateValuePair dvp : scoreHistory){
+        for (InPlayAttrUpdates dvp : scoreHistory){
             System.out.println("dvp key: " + dvp.getTime());
             System.out.println("dvp value: " + dvp.getVal());
         }

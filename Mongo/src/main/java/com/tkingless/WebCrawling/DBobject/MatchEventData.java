@@ -28,11 +28,11 @@ public class MatchEventData {
 
     private String MatchKey;
     @Reference("stageUpdates")
-    private List<DateValuePair> stageUpdates;
+    private List<InPlayAttrUpdates> stageUpdates;
     @Reference("scoreUpdates")
-    private List<DateValuePair> scoreUpdates;
+    private List<InPlayAttrUpdates> scoreUpdates;
     @Reference("cornerTotUpdates")
-    private List<DateValuePair> cornerTotUpdates;
+    private List<InPlayAttrUpdates> cornerTotUpdates;
 
 
     private String homeTeam;
@@ -73,7 +73,7 @@ public class MatchEventData {
         this.lastModifiedAt = lastModifiedAt;
     }
 
-    public void setScoreUpdates(List<DateValuePair> scoreUpdates) {
+    public void setScoreUpdates(List<InPlayAttrUpdates> scoreUpdates) {
         this.scoreUpdates = scoreUpdates;
     }
 
@@ -105,15 +105,15 @@ public class MatchEventData {
         return endTime;
     }
 
-    public List<DateValuePair> getStageUpdates() {
+    public List<InPlayAttrUpdates> getStageUpdates() {
         return stageUpdates;
     }
 
-    public List<DateValuePair> getScoreUpdates() {
+    public List<InPlayAttrUpdates> getScoreUpdates() {
         return scoreUpdates;
     }
 
-    public List<DateValuePair> getCornerTotUpdates() {
+    public List<InPlayAttrUpdates> getCornerTotUpdates() {
         return cornerTotUpdates;
     }
 

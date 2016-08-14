@@ -6,7 +6,7 @@ import com.mongodb.ServerAddress;
 import com.tkingless.MatchCONSTANTS;
 import com.tkingless.MatchTestCONSTANTS;
 import com.tkingless.MongoDBparam;
-import com.tkingless.WebCrawling.DBobject.DateValuePair;
+import com.tkingless.WebCrawling.DBobject.InPlayAttrUpdates;
 import com.tkingless.WebCrawling.DBobject.MatchEventData;
 import com.tkingless.crawlee.BoardCrawlee;
 import com.tkingless.crawlee.MatchCrawlee;
@@ -134,7 +134,7 @@ public class MorphiaBasicTest {
     public void TestUpdateDateValuePairList() throws Exception {
         preRegWorker = workers.get(0);
 
-        DateValuePair data = new DateValuePair();
+        InPlayAttrUpdates data = new InPlayAttrUpdates();
         data.setTime(new Date());
         data.setVal("0 : 23");
         matchDao.AddItemToListField(preRegWorker,"scoreBoard",data);

@@ -6,7 +6,7 @@ import com.tkingless.DBobject.MatchEventDAO;
 import com.tkingless.MatchCONSTANTS;
 import com.tkingless.MatchTestCONSTANTS;
 import com.tkingless.MongoDBparam;
-import com.tkingless.WebCrawling.DBobject.DateValuePair;
+import com.tkingless.WebCrawling.DBobject.InPlayAttrUpdates;
 import com.tkingless.crawlee.BoardCrawlee;
 import com.tkingless.crawlee.MatchCrawlee;
 import com.tkingless.utils.logTest;
@@ -551,7 +551,7 @@ public class MatchEventWorker extends baseCrawler {
             for (UpdateDifferentiator differentiator : difftr) {
                 switch (differentiator) {
                     case UPDATE_STAGE:
-                        DateValuePair DVPstage = new DateValuePair();
+                        InPlayAttrUpdates DVPstage = new InPlayAttrUpdates();
                         DVPstage.setTime(crle.getRecordTime().GetTheInstant());
                         DVPstage.setVal(MatchCONSTANTS.GetMatchStageStr(crle.getMatchStage()));
                         workerDAO.AddItemToListField(this, "stageUpdates", DVPstage);
@@ -560,14 +560,14 @@ public class MatchEventWorker extends baseCrawler {
                         workerDAO.SetField(this, "poolTypes", matchPools);
                         break;
                     case UPDATE_SCORES:
-                        DateValuePair DVPscore = new DateValuePair();
+                        InPlayAttrUpdates DVPscore = new InPlayAttrUpdates();
                         DVPscore.setTime(crle.getRecordTime().GetTheInstant());
                         DVPscore.setVal(crle.getScores());
                         workerDAO.AddItemToListField(this, "scoreUpdates", DVPscore);
                         break;
                     case UPDATE_CORNER:
                         if (!crle.getTotalCorners().contains("-") || crle.getTotalCorners().isEmpty()) {
-                            DateValuePair DVPcorner = new DateValuePair();
+                            InPlayAttrUpdates DVPcorner = new InPlayAttrUpdates();
                             DVPcorner.setTime(crle.getRecordTime().GetTheInstant());
                             DVPcorner.setVal(crle.getTotalCorners());
                             workerDAO.AddItemToListField(this, "cornerTotUpdates", DVPcorner);
