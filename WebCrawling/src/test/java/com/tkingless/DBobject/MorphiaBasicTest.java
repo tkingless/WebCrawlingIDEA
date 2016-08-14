@@ -137,7 +137,8 @@ public class MorphiaBasicTest {
         InPlayAttrUpdates data = new InPlayAttrUpdates();
         data.setTime(new Date());
         data.setVal("0 : 23");
-        matchDao.AddItemToListField(preRegWorker,"scoreBoard",data);
+        data.setUpdateType("score");
+        matchDao.AddItemToListField(preRegWorker,"scoreUpdates",data);
     }
 
     @Test

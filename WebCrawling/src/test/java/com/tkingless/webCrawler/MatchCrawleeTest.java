@@ -54,21 +54,21 @@ public class MatchCrawleeTest {
         preRegCrle.run();
         startCrle.run();
 
-        Assert.assertEquals(true,MatchCrawlee.HasUpdate(preRegCrle,startCrle));
+       //Deprecated Assert.assertEquals(true,MatchCrawlee.HasUpdate(preRegCrle,startCrle));
 
         MatchCrawlee preRegCrle2 = new MatchCrawlee(MatchCrawleeTestSample.preReg103904NotStartYet);
         preRegCrle2.run();
 
-        Assert.assertEquals(false,MatchCrawlee.HasUpdate(preRegCrle,preRegCrle2));
+        //Deprecated Assert.assertEquals(false,MatchCrawlee.HasUpdate(preRegCrle,preRegCrle2));
 
         MatchCrawlee nullCrle=null;
 
-        Assert.assertEquals(true,MatchCrawlee.HasUpdate(nullCrle,preRegCrle));
+        //Deprecated Assert.assertEquals(true,MatchCrawlee.HasUpdate(nullCrle,preRegCrle));
 
         MatchCrawlee startCrle2 = new MatchCrawlee((MatchCrawleeTestSample.preReg103904firstHalf2));
         startCrle2.run();
 
-        Assert.assertEquals(true,MatchCrawlee.HasUpdate(startCrle,startCrle2));
+        //Deprecated Assert.assertEquals(true,MatchCrawlee.HasUpdate(startCrle,startCrle2));
     }
 
     @Test
