@@ -11,7 +11,7 @@ import static org.mongodb.morphia.utils.IndexType.DESC;
  * Created by tsangkk on 6/27/16.
  */
 
-@Entity("AllOdds")
+@Entity("InPlayOddsUpdates")
 @Indexes({
         @Index(value = "MatchId", fields = @Field(value = "MatchdId", type = DESC)),
         @Index(value = "recorded", fields = @Field(value = "recorded", type = DESC))
