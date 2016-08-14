@@ -107,7 +107,7 @@ public class WebCrawledDataIO implements ServletContextListener {
         long threshold = (new Date()).getTime() - 1000 * 60 * 60 * 96;
         DateTimeEntity timeAfterToConsider = new DateTimeEntity(threshold);
 
-        List<Integer> onMatchingIds = new ArrayList<>();
+        List<Integer> launchedMatchIds = new ArrayList<>();
         List<Integer> lostMatchingIds = new ArrayList<>();
 
         FindIterable<Document> consideredIds = db.getCollection("MatchEvents").find(
@@ -132,7 +132,7 @@ public class WebCrawledDataIO implements ServletContextListener {
                     DateTimeEntity docCommence = new DateTimeEntity(docCommenceDate.getTime());
 
                     if (docCommence.CalTimeIntervalDiff(timeAfterToConsider) >= 0) {
-                        onMatchingIds.add(document.getInteger("MatchId"));
+                        launchedMatchIds.add(document.getInteger("MatchId"));
                     } else {
                         lostMatchingIds.add(document.getInteger("MatchId"));
                     }
@@ -143,7 +143,7 @@ public class WebCrawledDataIO implements ServletContextListener {
 
             }
         });
-        logger.info("onMatchingIds : " + onMatchingIds.toString());
+        logger.info("launchedMatchIds : " + launchedMatchIds.toString());
         logger.info("lostMatchingIds : " + lostMatchingIds.toString());
     }
 }
