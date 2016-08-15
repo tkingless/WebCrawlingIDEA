@@ -9,6 +9,7 @@ import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
 import static com.tkingless.MongoDBparam.*;
@@ -18,6 +19,7 @@ public class DBManager {
     private static DBManager instance = new DBManager();
     private MongoClient client;
     private Morphia morphia;
+    private Datastore datastore;
     final public static Logger logger = LogManager.getLogger(DBManager.class);
 
 
@@ -32,6 +34,11 @@ public class DBManager {
         MongoClientOptions.Builder o = MongoClientOptions.builder().connectTimeout(3000);
         client = new MongoClient(new ServerAddress(DBaddr,DBport));
         morphia = new Morphia();
+
+        morphia.mapPackage("com.tkingless.WebCrawling.DBobject");
+
+        datastore = morphia.createDatastore(new MongoClient(), webCrawlingDB);
+        datastore.ensureIndexes();
 
     }
 
