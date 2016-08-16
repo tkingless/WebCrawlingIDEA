@@ -139,7 +139,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         MatchEventData matchData = findByMatchId(worker.getMatchId());
 
         inplayAttrDAO.save(updates);
-        matchData.getStageUpdates().add(updates);
+        matchData.getScoreUpdates().add(updates);
 
         getDatastore().save(matchData);
         ApplyLastModified(worker);

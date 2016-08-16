@@ -13,7 +13,8 @@ import static org.mongodb.morphia.utils.IndexType.ASC;
 
 @Entity("InPlayAttrUpdates")
 @Indexes({
-        @Index(value = "time", fields = @Field(value = "time", type = ASC), options = @IndexOptions(unique = true) )
+        //@Index(value = "time", fields = @Field(value = "time", type = ASC), options = @IndexOptions(unique = true) )
+        @Index(value = "time", fields = @Field(value = "time", type = ASC), options = @IndexOptions(unique = false) )
 })
 
 public class InPlayAttrUpdates {

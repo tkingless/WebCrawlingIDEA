@@ -78,7 +78,7 @@ public class OnMatchingWorkerTest {
 
         onMatchingWorker.setMatchCrleTestTarget(MatchCrawleeTestSample.onMatching103909allBettingClosed);
 
-        Thread.sleep(1000 * 5);
+        Thread.sleep(1000 * 20);
     }
 
     @Test
