@@ -133,12 +133,13 @@ public class MorphiaBasicTest {
     @Test
     public void TestUpdateDateValuePairList() throws Exception {
         preRegWorker = workers.get(0);
+        preRegWorker.setMatchCrleTestTarget(MatchCrawleeTestSample.preReg103904NotStartYet);
 
         InPlayAttrUpdates data = new InPlayAttrUpdates();
         data.setTime(new Date());
         data.setVal("0 : 23");
         data.setUpdateType("score");
-        matchDao.AddItemToListField(preRegWorker,"scoreUpdates",data);
+        matchDao.UpdateInplayScore(preRegWorker,data);
     }
 
     @Test
