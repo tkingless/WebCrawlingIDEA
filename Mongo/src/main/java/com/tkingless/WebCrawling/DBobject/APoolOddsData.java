@@ -13,7 +13,7 @@ import static org.mongodb.morphia.utils.IndexType.DESC;
 
 @Entity("InPlayOddsUpdates")
 @Indexes({
-        @Index(value = "MatchId", fields = @Field(value = "MatchdId", type = DESC)),
+        @Index(value = "MatchId", fields = @Field(value = "MatchId", type = DESC)),
         @Index(value = "recorded", fields = @Field(value = "recorded", type = DESC))
 })
 
