@@ -9,6 +9,8 @@ import com.tkingless.utils.DateTimeEntity;
 import org.bson.Document;
 import org.junit.Before;
 import org.junit.Test;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Morphia;
 
 import java.util.*;
 
@@ -26,7 +28,9 @@ public class WebCrawledDataIOTest {
 
     MongoClient client;
 
-    MongoDatabase tmpProdDB;
+    MongoDatabase DB;
+    Morphia morphia;
+    Datastore datastore;
 
     @Before
     public void init() throws Exception {
@@ -35,12 +39,19 @@ public class WebCrawledDataIOTest {
 
         try {
             client.getAddress();
-            tmpProdDB = client.getDatabase(webCrawlingDB);
+
+            morphia = new Morphia();
+            morphia.mapPackage("com.tkingless.WebCrawling.DBobject");
+
+            datastore = morphia.createDatastore(new MongoClient(), webCrawlingTestDB);
+            datastore.ensureIndexes();
+            DB = client.getDatabase(webCrawlingTestDB);
         } catch (Exception e) {
             System.out.println("Mongo is down");
             client.close();
             return;
         }
+
     }
 
     List<Integer> launchedMatchIds = new ArrayList<>();
@@ -52,7 +63,7 @@ public class WebCrawledDataIOTest {
         long threshold = (new Date()).getTime() - 1000 * 60 * 60 * 96;
         DateTimeEntity timeAfterToConsider = new DateTimeEntity(threshold);
 
-        FindIterable<Document> consideredIds = tmpProdDB.getCollection("MatchEvents").find(
+        FindIterable<Document> consideredIds = DB.getCollection("MatchEvents").find(
                 //Multiple criteria
                 new Document("actualCommence", new Document("$exists", true)).append(
                         "actualCommence", new Document("$gte", timeAfterToConsider.GetTheInstant())).append(
@@ -95,7 +106,7 @@ public class WebCrawledDataIOTest {
     public void InitWCDIOcsv() throws Exception {
         GetConsideredWorkersByTime();
 
-        MongoCollection WCDIO = tmpProdDB.getCollection("WCDIOcsv");
+        MongoCollection WCDIO = DB.getCollection("WCDIOcsv");
 
         for(Integer id : launchedMatchIds){
            Document doc = (Document) WCDIO.find(new Document("MatchId", id)).first();
@@ -104,15 +115,13 @@ public class WebCrawledDataIOTest {
                 System.out.println("This launchedMatchIds not existing, adding new csv object");
                 Document initDoc = new Document("MatchId",id);
 
-            MongoCursor<Document> idOddsCursor = tmpProdDB.getCollection("AllOdds").find(new Document("MatchId",id)).iterator();
+            MongoCursor<Document> idOddsCursor = DB.getCollection("AllOdds").find(new Document("MatchId",id)).iterator();
 
                 if (idOddsCursor.hasNext()){
                     System.out.println("there is odd update for id:" + id);
-                    DoSomethingCrazy(id, tmpProdDB.getCollection("MatchEvents") ,tmpProdDB.getCollection("AllOdds"));
+                    DoSomethingCrazy(id, DB.getCollection("MatchEvents") , DB.getCollection("AllOdds"));
                     //doSomethingCrazyHere()
                 }
-
-
             }
         }
     }
@@ -164,7 +173,7 @@ public class WebCrawledDataIOTest {
 
     @Test
     public void LoopArrayObject() throws Exception {
-       // Document projectedDoc = tmpProdDB.getCollection("MatchEvents").find(new Document("MatchId",104971)).first();
+       // Document projectedDoc = DB.getCollection("MatchEvents").find(new Document("MatchId",104971)).first();
 
         //System.out.println("Doc" + projectedDoc);
 
@@ -178,8 +187,8 @@ public class WebCrawledDataIOTest {
         }*/
 
 
-        MatchEventDAO dao = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
-        MatchEventData data = dao.findByMatchId("104971");
+        MatchEventDAO dao = new MatchEventDAO(datastore);
+        MatchEventData data = dao.findByMatchId("103909");
         List<InPlayAttrUpdates> scoreHistory = data.getScoreUpdates();
 
         System.out.println("[Data] " + data.toString());
