@@ -2,11 +2,14 @@ package com.tkingless;
 
 import com.mongodb.*;
 import com.mongodb.client.*;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.UpdateOptions;
 import com.tkingless.DBobject.MatchEventDAO;
 import com.tkingless.WebCrawling.DBobject.InPlayAttrUpdates;
 import com.tkingless.WebCrawling.DBobject.MatchEventData;
 import com.tkingless.utils.DateTimeEntity;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
@@ -31,6 +34,8 @@ public class WebCrawledDataIOTest {
     MongoDatabase DB;
     Morphia morphia;
     Datastore datastore;
+
+    Date now = new Date();
 
     @Before
     public void init() throws Exception {
@@ -70,7 +75,7 @@ public class WebCrawledDataIOTest {
                         "scoreUpdates", new Document("$exists", true)).append(
                         "stageUpdates", new Document("$exists", true))
         ).projection(new Document("MatchId", 1).append("scoreUpdates", 1).append("stageUpdates", 1).append("actualCommence", 1).append("endTime", 1))
-                .sort(new Document("actualCommence",-1))
+                .sort(new Document("actualCommence", -1))
                 .limit(20);
 
         consideredIds.forEach(new Block<Document>() {
@@ -107,84 +112,78 @@ public class WebCrawledDataIOTest {
         GetConsideredWorkersByTime();
 
         MongoCollection WCDIO = DB.getCollection("WCDIOcsv");
+        //TODO now should be the time from fixedrateexecutor
+        now = new Date();
 
-        for(Integer id : launchedMatchIds){
-           Document doc = (Document) WCDIO.find(new Document("MatchId", id)).first();
+        for (Integer id : launchedMatchIds) {
 
-            if(doc == null){
-                System.out.println("This launchedMatchIds not existing, adding new csv object");
-                Document initDoc = new Document("MatchId",id);
+                MongoCursor<Document> idOddsCursor = DB.getCollection("InPlayOddsUpdates").find(new Document("MatchId", id)).iterator();
 
-            MongoCursor<Document> idOddsCursor = DB.getCollection("InPlayOddsUpdates").find(new Document("MatchId",id)).iterator();
-
-                if (idOddsCursor.hasNext()){
+                if (idOddsCursor.hasNext()) {
                     System.out.println("there is odd update for id:" + id);
-                    DoSomethingCrazy(id, DB.getCollection("InPlayAttrUpdates") , DB.getCollection("InPlayOddsUpdates"));
-                    //doSomethingCrazyHere()
+                    List<DateDocumentObj> updateHistory = GetUpdateHistory(id, DB.getCollection("InPlayAttrUpdates"), DB.getCollection("InPlayOddsUpdates"));
+
+                    if(!updateHistory.isEmpty()){
+
+                        FormDataField(id,null,updateHistory);
+                    }
                 }
-            }
         }
     }
 
 
-    public void DoSomethingCrazy(Integer id, MongoCollection matchAttrColl, MongoCollection oddsColl) throws Exception {
+    public List<DateDocumentObj> GetUpdateHistory(Integer id, MongoCollection matchAttrColl, MongoCollection oddsColl) throws Exception {
 
         List<DateDocumentObj> updateTimeOrders = new ArrayList<>();
 
         //Match inPlay attr streaming in
-        matchAttrColl.find(new Document("MatchId",id)).projection(new Document("scoreUpdates",1)).forEach(new Block<Document>() {
+        matchAttrColl.find(new Document("MatchId", id)).forEach(new Block<Document>() {
             @Override
             public void apply(Document document) {
+                updateTimeOrders.add(new DateDocumentObj(document.getDate("time"), document));
+            }
+        });
 
-                for(InPlayAttrUpdates dvp : (List<InPlayAttrUpdates>) document.get("scoreUpdates")){
-                    //updateTimeOrders.add( dvp.getTime(), document, DateDocumentObj.HistoryType.UPDATE_SCORE));
-                }
-            }
-        });
-        //stageHistory
-        matchAttrColl.find(new Document("MatchId",id)).projection(new Document("stageUpdates",1)).forEach(new Block<Document>() {
+        //oddsHistory
+        oddsColl.find(new Document("MatchId", id)).forEach(new Block<Document>() {
             @Override
             public void apply(Document document) {
-                //updateTimeOrders.add(new DateDocumentObj(document.getObjectId("_id").getDate(),document));
-            }
-        });
-        //oddsHistory
-        oddsColl.find(new Document("MatchId",id)).forEach(new Block<Document>(){
-            @Override
-            public void apply(Document document){
-                if(document.getString("type").equals("HAD")) {
-                    updateTimeOrders.add(new DateDocumentObj(document.getDate("recorded"), document, DateDocumentObj.HistoryType.UPDATE_HAD_ODD));
-                }else if(document.getString("type").equals("CHL")) {
-                    updateTimeOrders.add(new DateDocumentObj(document.getDate("recorded"), document, DateDocumentObj.HistoryType.UPDATE_CHL_ODD));
-                }
+                updateTimeOrders.add(new DateDocumentObj(document.getDate("recorded"), document));
             }
         });
 
         DateDocumentObj.SortByAscendOrder(updateTimeOrders);
 
-        for(DateDocumentObj Adata : updateTimeOrders){
+        for (DateDocumentObj Adata : updateTimeOrders) {
             System.out.println(Adata.getDate());
-            System.out.println(Adata.getDoc().keySet());
+            System.out.println(Adata.getDoc().getString("type"));
         }
 
-        //UpdateOptions updateOpts = new UpdateOptions().upsert(true);
-        //Bson filter = Filters.eq("MatchId", id);
+        return updateTimeOrders;
+    }
+
+    public void FormDataField(Integer id, Date sinceLastIn, List<DateDocumentObj> updateHistory) throws Exception {
+        MongoCollection WCDIO = DB.getCollection("WCDIOcsv");
+
+        UpdateOptions updateOpts = new UpdateOptions().upsert(true);
+        Bson filter = Filters.eq("MatchId", id);
+        Document update = new Document("MatchId", id).append("lastIn", now);
+
+
+        Document data = new Document();
+        WCDIOcsvData head = new WCDIOcsvData();
+
+
+
+        WCDIO.updateOne(filter, update, updateOpts);
+    }
+
+    public void FormDataField(Integer id, List<DateDocumentObj> updateHistory) throws Exception {
+
     }
 
     @Test
     public void LoopArrayObject() throws Exception {
-       // Document projectedDoc = DB.getCollection("MatchEvents").find(new Document("MatchId",104971)).first();
-
-        //System.out.println("Doc" + projectedDoc);
-
-        //System.out.println( projectedDoc.get("scoreUpdates") );
-
-       /* List<InPlayAttrUpdates> dvps = (List<InPlayAttrUpdates>) projectedDoc.get("scoreUpdates");
-
-        for(InPlayAttrUpdates dvp : dvps) {
-            System.out.println("dvp key: " + dvp.getTime());
-            System.out.println("dvp value: " + dvp.getVal());
-        }*/
 
         MatchEventDAO dao = new MatchEventDAO(datastore);
         MatchEventData data = dao.findByMatchId("103909");
@@ -192,11 +191,10 @@ public class WebCrawledDataIOTest {
 
         System.out.println("[Data] " + data.toString());
 
-        for (InPlayAttrUpdates dvp : scoreHistory){
+        for (InPlayAttrUpdates dvp : scoreHistory) {
             System.out.println("dvp key: " + dvp.getTime());
             System.out.println("dvp value: " + dvp.getVal());
         }
 
-       // projectedDoc.get()
     }
 }

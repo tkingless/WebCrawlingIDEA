@@ -11,21 +11,12 @@ import java.util.List;
  */
 public class DateDocumentObj {
 
-    public enum HistoryType {
-        UPDATE_SCORE,
-        UPDATE_STAGE,
-        UPDATE_HAD_ODD,
-        UPDATE_CHL_ODD
-    }
-
     Date date;
     Document doc;
-    HistoryType type;
 
-    public DateDocumentObj(Date date, Document doc, HistoryType type) {
+    public DateDocumentObj(Date date, Document doc) {
         this.date = date;
         this.doc = doc;
-        this.type = type;
     }
 
     public Date getDate() {
@@ -34,10 +25,6 @@ public class DateDocumentObj {
 
     public Document getDoc() {
         return doc;
-    }
-
-    public HistoryType getType() {
-        return type;
     }
 
     public static void SortByAscendOrder(List<DateDocumentObj> list){
