@@ -31,6 +31,7 @@ public class APoolOddsDAO extends BasicDAO<APoolOddsData, ObjectId> {
 
     public APoolOddsDAO(MongoClient mongoClient, Morphia morphia, String DBname){
         super(mongoClient, morphia, DBname);
+        getDatastore().ensureIndexes();
     }
 
     //CRUD: CREATE

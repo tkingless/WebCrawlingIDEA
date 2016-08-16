@@ -552,9 +552,10 @@ public class MatchEventWorker extends baseCrawler {
                 switch (differentiator) {
                     case UPDATE_STAGE:
                         InPlayAttrUpdates DVPstage = new InPlayAttrUpdates();
+                        DVPstage.setMatchId(Integer.parseInt(matchId));
                         DVPstage.setTime(crle.getRecordTime().GetTheInstant());
                         DVPstage.setVal(MatchCONSTANTS.GetMatchStageStr(crle.getMatchStage()));
-                        DVPstage.setUpdateType("stage");
+                        DVPstage.setType("stage");
                         workerDAO.UpdateInplayStage(this,DVPstage);
                         break;
                     case UPDATE_POOLS:
@@ -562,17 +563,19 @@ public class MatchEventWorker extends baseCrawler {
                         break;
                     case UPDATE_SCORES:
                         InPlayAttrUpdates DVPscore = new InPlayAttrUpdates();
+                        DVPscore.setMatchId(Integer.parseInt(matchId));
                         DVPscore.setTime(crle.getRecordTime().GetTheInstant());
                         DVPscore.setVal(crle.getScores());
-                        DVPscore.setUpdateType("score");
+                        DVPscore.setType("score");
                         workerDAO.UpdateInplayScore(this,DVPscore);
                         break;
                     case UPDATE_CORNER:
                         if (!crle.getTotalCorners().contains("-") || crle.getTotalCorners().isEmpty()) {
                             InPlayAttrUpdates DVPcorner = new InPlayAttrUpdates();
+                            DVPcorner.setMatchId(Integer.parseInt(matchId));
                             DVPcorner.setTime(crle.getRecordTime().GetTheInstant());
                             DVPcorner.setVal(crle.getTotalCorners());
-                            DVPcorner.setUpdateType("corner");
+                            DVPcorner.setType("corner");
                             workerDAO.UpdateInplayCorner(this,DVPcorner);
                         }
                         break;

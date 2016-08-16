@@ -138,7 +138,8 @@ public class MorphiaBasicTest {
         InPlayAttrUpdates data = new InPlayAttrUpdates();
         data.setTime(new Date());
         data.setVal("0 : 23");
-        data.setUpdateType("score");
+        data.setType("score");
+        data.setMatchId(103904);
         matchDao.UpdateInplayScore(preRegWorker,data);
     }
 
