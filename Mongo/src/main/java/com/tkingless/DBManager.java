@@ -61,4 +61,8 @@ public class DBManager {
     public Morphia getMorphia() {
         return morphia;
     }
+
+    public Datastore getDatastore() {
+        return datastore;
+    }
 }

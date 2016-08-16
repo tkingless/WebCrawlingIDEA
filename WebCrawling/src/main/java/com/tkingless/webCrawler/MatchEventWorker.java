@@ -64,8 +64,8 @@ public class MatchEventWorker extends baseCrawler {
             workerDAO = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
             crleOddsDAO = new APoolOddsDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
         }else{
-            workerDAO = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
-            crleOddsDAO = new APoolOddsDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia());
+            workerDAO = new MatchEventDAO(DBManager.getInstance().getDatastore());
+            crleOddsDAO = new APoolOddsDAO(DBManager.getInstance().getDatastore());
         }
 
         workerTime = new DateTimeEntity();
@@ -554,7 +554,8 @@ public class MatchEventWorker extends baseCrawler {
                         InPlayAttrUpdates DVPstage = new InPlayAttrUpdates();
                         DVPstage.setTime(crle.getRecordTime().GetTheInstant());
                         DVPstage.setVal(MatchCONSTANTS.GetMatchStageStr(crle.getMatchStage()));
-                        workerDAO.AddItemToListField(this, "stageUpdates", DVPstage);
+                        DVPstage.setUpdateType("stage");
+                        workerDAO.UpdateInplayStage(this,DVPstage);
                         break;
                     case UPDATE_POOLS:
                         workerDAO.SetField(this, "poolTypes", matchPools);
@@ -563,14 +564,16 @@ public class MatchEventWorker extends baseCrawler {
                         InPlayAttrUpdates DVPscore = new InPlayAttrUpdates();
                         DVPscore.setTime(crle.getRecordTime().GetTheInstant());
                         DVPscore.setVal(crle.getScores());
-                        workerDAO.AddItemToListField(this, "scoreUpdates", DVPscore);
+                        DVPscore.setUpdateType("score");
+                        workerDAO.UpdateInplayScore(this,DVPscore);
                         break;
                     case UPDATE_CORNER:
                         if (!crle.getTotalCorners().contains("-") || crle.getTotalCorners().isEmpty()) {
                             InPlayAttrUpdates DVPcorner = new InPlayAttrUpdates();
                             DVPcorner.setTime(crle.getRecordTime().GetTheInstant());
                             DVPcorner.setVal(crle.getTotalCorners());
-                            workerDAO.AddItemToListField(this, "cornerTotUpdates", DVPcorner);
+                            DVPcorner.setUpdateType("corner");
+                            workerDAO.UpdateInplayCorner(this,DVPcorner);
                         }
                         break;
                     case UPDATE_POOL_HAD:

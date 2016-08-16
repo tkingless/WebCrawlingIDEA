@@ -9,6 +9,7 @@ import com.tkingless.crawlee.MatchCrawlee;
 import com.tkingless.utils.logTest;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.dao.BasicDAO;
 
@@ -24,8 +25,8 @@ import java.util.Set;
 
 public class APoolOddsDAO extends BasicDAO<APoolOddsData, ObjectId> {
 
-    public APoolOddsDAO(MongoClient mongoClient, Morphia morphia) {
-        super(mongoClient, morphia, MongoDBparam.webCrawlingDB);
+    public APoolOddsDAO(Datastore ds) {
+        super(ds);
     }
 
     public APoolOddsDAO(MongoClient mongoClient, Morphia morphia, String DBname){

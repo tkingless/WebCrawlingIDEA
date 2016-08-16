@@ -16,7 +16,6 @@ import static org.mongodb.morphia.utils.IndexType.ASC;
         @Index(value = "time", fields = @Field(value = "time", type = ASC), options = @IndexOptions(unique = true) )
 })
 
-@Embedded
 public class InPlayAttrUpdates {
 
     @Id

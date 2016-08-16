@@ -9,6 +9,7 @@ import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.utils.logTest;
 import com.tkingless.webCrawler.MatchEventWorker;
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.query.Query;
@@ -25,13 +26,14 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
 
     InplayAttrDAO inplayAttrDAO;
 
-    public MatchEventDAO(MongoClient mongoClient, Morphia morphia) {
-        super(mongoClient, morphia, MongoDBparam.webCrawlingDB);
-        inplayAttrDAO = new InplayAttrDAO(getDatastore());
+    public MatchEventDAO(Datastore ds) {
+        super(ds);
+        inplayAttrDAO = new InplayAttrDAO(ds);
     }
 
     public MatchEventDAO(MongoClient mongoClient, Morphia morphia, String DBname){
         super(mongoClient, morphia, DBname);
+        getDatastore().ensureIndexes();
         inplayAttrDAO = new InplayAttrDAO(mongoClient, morphia, DBname);
     }
 

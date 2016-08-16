@@ -21,6 +21,7 @@ public class APoolOddsData {
 
     @Id
     private ObjectId id;
+    @Property("MatchdId")
     private Integer MatchId;
     private String type;
 
@@ -33,6 +34,7 @@ public class APoolOddsData {
 
     private String poolStatus;
 
+    @Property("recorded")
     private Date recorded;
 
     //cannot define constructor due to use of Morphia pattern while defining this POJO
