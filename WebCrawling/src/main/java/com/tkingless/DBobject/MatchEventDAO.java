@@ -3,6 +3,7 @@ package com.tkingless.DBobject;
 import com.mongodb.MongoClient;
 import com.tkingless.MatchCONSTANTS;
 import com.tkingless.MongoDBparam;
+import com.tkingless.WebCrawling.DBobject.InPlayAttrUpdates;
 import com.tkingless.WebCrawling.DBobject.MatchEventData;
 import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.utils.logTest;
@@ -22,12 +23,16 @@ import java.util.*;
 //The Integer is Match id
 public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
 
+    InplayAttrDAO inplayAttrDAO;
+
     public MatchEventDAO(MongoClient mongoClient, Morphia morphia) {
         super(mongoClient, morphia, MongoDBparam.webCrawlingDB);
+        inplayAttrDAO = new InplayAttrDAO(getDatastore());
     }
 
     public MatchEventDAO(MongoClient mongoClient, Morphia morphia, String DBname){
         super(mongoClient, morphia, DBname);
+        inplayAttrDAO = new InplayAttrDAO(mongoClient, morphia, DBname);
     }
 
     //CRUD: create
@@ -114,10 +119,38 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
 
     //CRUD: update
 
-    public void AddItemToListField(MatchEventWorker worker, String ArrayField,Object val){
-        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
-        UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).add(ArrayField,val);
-        getDatastore().update(query,ops);
+    public void UpdateInplayStage(MatchEventWorker worker,InPlayAttrUpdates updates){
+        //Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
+        //UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).add(ArrayField,val);
+        //getDatastore().update(query,ops);
+        MatchEventData matchData = findByMatchId(worker.getMatchId());
+
+        inplayAttrDAO.save(updates);
+        matchData.getStageUpdates().add(updates);
+
+        getDatastore().save(matchData);
+        ApplyLastModified(worker);
+    }
+
+    public void UpdateInplayScore(MatchEventWorker worker,InPlayAttrUpdates updates){
+
+        MatchEventData matchData = findByMatchId(worker.getMatchId());
+
+        inplayAttrDAO.save(updates);
+        matchData.getStageUpdates().add(updates);
+
+        getDatastore().save(matchData);
+        ApplyLastModified(worker);
+    }
+
+    public void UpdateInplayCorner(MatchEventWorker worker,InPlayAttrUpdates updates){
+
+        MatchEventData matchData = findByMatchId(worker.getMatchId());
+
+        inplayAttrDAO.save(updates);
+        matchData.getCornerTotUpdates().add(updates);
+
+        getDatastore().save(matchData);
         ApplyLastModified(worker);
     }
 
