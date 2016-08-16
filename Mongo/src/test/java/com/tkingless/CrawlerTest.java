@@ -43,7 +43,7 @@ public class CrawlerTest {
     @Test
     public void ShowBettingEndedOdds() throws Exception{
         MongoDatabase DB = client.getDatabase(TestDBname);
-        MongoCollection dbCollection = DB.getCollection("AllOdds");
+        MongoCollection dbCollection = DB.getCollection("InPlayOddsUpdates");
 
         FindIterable<Document> embeddedDocQuery = dbCollection.find(new Document("poolStatus", "bettingclosed"));
 
@@ -58,7 +58,7 @@ public class CrawlerTest {
     @Test
     public void ShowAMatchOdds() throws Exception{
         MongoDatabase DB = client.getDatabase(TestDBname);
-        MongoCollection dbCollection = DB.getCollection("AllOdds");
+        MongoCollection dbCollection = DB.getCollection("InPlayOddsUpdates");
 
         FindIterable<Document> embeddedDocQuery = dbCollection.find(new Document("MatchId", 104790));
 

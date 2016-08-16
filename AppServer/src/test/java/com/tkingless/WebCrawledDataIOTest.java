@@ -115,11 +115,11 @@ public class WebCrawledDataIOTest {
                 System.out.println("This launchedMatchIds not existing, adding new csv object");
                 Document initDoc = new Document("MatchId",id);
 
-            MongoCursor<Document> idOddsCursor = DB.getCollection("AllOdds").find(new Document("MatchId",id)).iterator();
+            MongoCursor<Document> idOddsCursor = DB.getCollection("InPlayOddsUpdates").find(new Document("MatchId",id)).iterator();
 
                 if (idOddsCursor.hasNext()){
                     System.out.println("there is odd update for id:" + id);
-                    DoSomethingCrazy(id, DB.getCollection("MatchEvents") , DB.getCollection("AllOdds"));
+                    DoSomethingCrazy(id, DB.getCollection("InPlayAttrUpdates") , DB.getCollection("InPlayOddsUpdates"));
                     //doSomethingCrazyHere()
                 }
             }
@@ -127,12 +127,12 @@ public class WebCrawledDataIOTest {
     }
 
 
-    public void DoSomethingCrazy(Integer id, MongoCollection matchColl, MongoCollection oddsColl) throws Exception {
+    public void DoSomethingCrazy(Integer id, MongoCollection matchAttrColl, MongoCollection oddsColl) throws Exception {
 
         List<DateDocumentObj> updateTimeOrders = new ArrayList<>();
 
-        //scoreHistory streaming in
-        matchColl.find(new Document("MatchId",id)).projection(new Document("scoreUpdates",1)).forEach(new Block<Document>() {
+        //Match inPlay attr streaming in
+        matchAttrColl.find(new Document("MatchId",id)).projection(new Document("scoreUpdates",1)).forEach(new Block<Document>() {
             @Override
             public void apply(Document document) {
 
@@ -142,7 +142,7 @@ public class WebCrawledDataIOTest {
             }
         });
         //stageHistory
-        matchColl.find(new Document("MatchId",id)).projection(new Document("stageUpdates",1)).forEach(new Block<Document>() {
+        matchAttrColl.find(new Document("MatchId",id)).projection(new Document("stageUpdates",1)).forEach(new Block<Document>() {
             @Override
             public void apply(Document document) {
                 //updateTimeOrders.add(new DateDocumentObj(document.getObjectId("_id").getDate(),document));
@@ -185,7 +185,6 @@ public class WebCrawledDataIOTest {
             System.out.println("dvp key: " + dvp.getTime());
             System.out.println("dvp value: " + dvp.getVal());
         }*/
-
 
         MatchEventDAO dao = new MatchEventDAO(datastore);
         MatchEventData data = dao.findByMatchId("103909");
