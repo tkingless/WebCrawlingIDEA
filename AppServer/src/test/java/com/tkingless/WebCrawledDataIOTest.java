@@ -155,7 +155,7 @@ public class WebCrawledDataIOTest {
                 if(document.getString("type").equals("HAD")) {
                     updateTimeOrders.add(new DateDocumentObj(document.getDate("recorded"), document, DateDocumentObj.HistoryType.UPDATE_HAD_ODD));
                 }else if(document.getString("type").equals("CHL")) {
-                    updateTimeOrders.add(new DateDocumentObj(document.getDate("recorded"), document, DateDocumentObj.HistoryType.UPDATe_CHL_ODD));
+                    updateTimeOrders.add(new DateDocumentObj(document.getDate("recorded"), document, DateDocumentObj.HistoryType.UPDATE_CHL_ODD));
                 }
             }
         });

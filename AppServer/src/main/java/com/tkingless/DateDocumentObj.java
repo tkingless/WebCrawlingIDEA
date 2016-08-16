@@ -15,7 +15,7 @@ public class DateDocumentObj {
         UPDATE_SCORE,
         UPDATE_STAGE,
         UPDATE_HAD_ODD,
-        UPDATe_CHL_ODD
+        UPDATE_CHL_ODD
     }
 
     Date date;
