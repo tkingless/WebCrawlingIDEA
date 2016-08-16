@@ -12,7 +12,7 @@ import static org.mongodb.morphia.utils.IndexType.DESC;
  * Created by tkingless on 7/29/16.
  */
 
-//TODO: the MatchID index unique property is not working, test on Mongo DB
+//the MatchID index unique property is not working, test on Mongo DB: solution: call datastore.ensureindexes() and add @Property to the class field
 
 @Entity("MatchEvents")
 @Indexes({
