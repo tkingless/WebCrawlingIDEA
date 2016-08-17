@@ -26,7 +26,7 @@ public class WebCrawledDataIOTest {
 
     String DBaddr = TestDBAddr;
     int DBport = TestDBport;
-    String TestDBname = webCrawlingTestDB;
+    String TestDBname = webCrawlingDB;
     String TestCollname = "testCollWebCrawling";
 
     MongoClient client;
@@ -81,7 +81,7 @@ public class WebCrawledDataIOTest {
         consideredIds.forEach(new Block<Document>() {
             @Override
             public void apply(final Document document) {
-                System.out.println(document.toJson());
+                //System.out.println(document.toJson());
                 //if(document.keySet().containsAll(Arrays.asList("scoreUpdates","stageUpdates"))){
 
                 try {
@@ -111,7 +111,6 @@ public class WebCrawledDataIOTest {
     public void InitWCDIOcsv() throws Exception {
         GetConsideredWorkersByTime();
 
-        MongoCollection WCDIO = DB.getCollection("WCDIOcsv");
         //TODO now should be the time from fixedrateexecutor
         now = new Date();
 
@@ -124,7 +123,6 @@ public class WebCrawledDataIOTest {
                     List<DateDocumentObj> updateHistory = GetUpdateHistory(id, DB.getCollection("InPlayAttrUpdates"), DB.getCollection("InPlayOddsUpdates"));
 
                     if(!updateHistory.isEmpty()){
-
                         FormDataField(id,null,updateHistory);
                     }
                 }

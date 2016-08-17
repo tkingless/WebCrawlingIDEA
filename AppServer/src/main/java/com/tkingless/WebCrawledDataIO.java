@@ -65,7 +65,7 @@ public class WebCrawledDataIO implements ServletContextListener {
         }
 
 
-
+        //TODO csvout worker should delay sometime after csvin worker, sensibly, and lower frequency
     }
 
     @Override
