@@ -48,9 +48,9 @@ public class WebCrawledDataIOTest {
             morphia = new Morphia();
             morphia.mapPackage("com.tkingless.WebCrawling.DBobject");
 
-            datastore = morphia.createDatastore(new MongoClient(), webCrawlingTestDB);
+            datastore = morphia.createDatastore(client, TestDBname);
             datastore.ensureIndexes();
-            DB = client.getDatabase(webCrawlingTestDB);
+            DB = client.getDatabase(TestDBname);
         } catch (Exception e) {
             System.out.println("Mongo is down");
             client.close();
