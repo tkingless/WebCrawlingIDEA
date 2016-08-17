@@ -162,13 +162,25 @@ public class WCDIOcsvData {
                     head.setHADhomeOdd(doc.getDouble("HADhomeOdd"));
                     head.setHADpoolStatus(doc.getString("poolStatus"));
                 }else if(type.equals("CHL")){
-
+                    head.setCHLline(doc.getString("CHLline"));
+                    head.setCHLhigh(doc.getDouble("CHLhigh"));
+                    head.setCHLlow(doc.getDouble("CHLlow"));
+                    head.setCHLpoolStatus(doc.getString("poolStatus"));
                 }else if(type.equals("stage")){
-
+                    head.setStage(doc.getString("val"));
                 }else if(type.equals("score")){
+                    String scores = doc.getString("val");
+                    String[] splitScores = scores.split(" : ");
+
+                    for(String str : splitScores) {
+                        WebCrawledDataIO.logger.debug("split score str: " + str);
+                    }
+
+                    head.setHomeScore(Integer.parseInt(splitScores[0]));
+                    head.setAwayScore(Integer.parseInt(splitScores[1]));
 
                 }else if(type.equals("corner")){
-
+                    head.setCorner(doc.getInteger("val"));
                 }
 
                 head.setRecorded(doc.getDate("recorded"));
