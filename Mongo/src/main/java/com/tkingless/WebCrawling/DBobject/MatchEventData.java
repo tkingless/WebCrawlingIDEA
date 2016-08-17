@@ -24,7 +24,7 @@ public class MatchEventData {
 
     @Id
     private ObjectId id;
-    @Property("MatchdId")
+    @Property("MatchId")
     private Integer MatchId;
 
     private String MatchKey;
