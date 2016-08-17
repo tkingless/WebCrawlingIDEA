@@ -27,6 +27,7 @@ public class WCDIOcsvIn extends Thread{
     }
 
     private MongoDatabase db;
+    private long thresholdToConsider = 1000 * 60 * 60 * 96;
 
     public WCDIOcsvIn() {
         try {
@@ -42,7 +43,7 @@ public class WCDIOcsvIn extends Thread{
 
     void GetConsideredWorkersByTime() {
 
-        long threshold = (new Date()).getTime() - 1000 * 60 * 60 * 96;
+        long threshold = (new Date()).getTime() - thresholdToConsider;
         DateTimeEntity timeAfterToConsider = new DateTimeEntity(threshold);
 
         List<Integer> launchedMatchIds = new ArrayList<>();
