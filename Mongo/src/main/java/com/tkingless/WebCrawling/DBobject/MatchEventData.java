@@ -16,7 +16,7 @@ import static org.mongodb.morphia.utils.IndexType.DESC;
 
 @Entity("MatchEvents")
 @Indexes({
-        @Index(value = "MatchId", fields = @Field(value = "MatchdId", type = DESC), options = @IndexOptions(unique = true) ),
+        @Index(value = "MatchId", fields = @Field(value = "MatchId", type = DESC), options = @IndexOptions(unique = true) ),
         @Index(value = "createdAt", fields = @Field(value = "createdAt", type = DESC))
 })
 

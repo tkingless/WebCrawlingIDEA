@@ -22,7 +22,7 @@ public class InPlayAttrUpdates {
 
     @Id
     ObjectId id;
-    @Property("MatchdId")
+    @Property("MatchId")
     Integer MatchId;
     @Property("time")
     Date time;
