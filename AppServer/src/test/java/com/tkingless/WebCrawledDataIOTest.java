@@ -168,21 +168,30 @@ public class WebCrawledDataIOTest {
         Document update;
         Document content = new Document("MatchId", id).append("lastIn", now);
 
-        Document data;
+
         WCDIOcsvData head = new WCDIOcsvData();
 
         //WCDIOcsvData.InitializeRecordHead(updateHistory,head);
 
         //testing
-        data = new Document("first field","first ele");
-        content.append("data",data);
+
 
         update = new Document("$set", content);
         WCDIO.updateOne(filter, update, updateOpts);
+
+        PushToDataField(WCDIO,filter);
     }
 
-    void PushToDataField () {
+    void PushToDataField (MongoCollection aColl, Bson filter) {
+        Document update;
+        Document data;
+        Document content;
 
+        data = new Document("second field","second ele");
+        content = new Document("data", data);
+
+        update = new Document("$push", content);
+        aColl.updateOne(filter, update);
     }
 
     public void FormDataField(Integer id, List<DateDocumentObj> updateHistory) throws Exception {
