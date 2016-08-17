@@ -13,8 +13,8 @@ import static org.mongodb.morphia.utils.IndexType.DESC;
 
 @Entity("InPlayAttrUpdates")
 @Indexes({
-        //@Index(value = "time", fields = @Field(value = "time", type = ASC), options = @IndexOptions(unique = true) )
-        @Index(value = "time", fields = @Field(value = "time", type = DESC), options = @IndexOptions(unique = false)),
+        //@Index(value = "recorded", fields = @Field(value = "recorded", type = ASC), options = @IndexOptions(unique = true) )
+        @Index(value = "recorded", fields = @Field(value = "recorded", type = DESC), options = @IndexOptions(unique = false)),
         @Index(value = "MatchId", fields = @Field(value = "MatchId", type = DESC), options = @IndexOptions(unique = false))
 })
 
@@ -24,17 +24,17 @@ public class InPlayAttrUpdates {
     ObjectId id;
     @Property("MatchId")
     Integer MatchId;
-    @Property("time")
-    Date time;
+    @Property("recorded")
+    Date recorded;
     String val;
     String type;
 
-    public Date getTime() {
-        return time;
+    public Date getRecorded() {
+        return recorded;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setRecorded(Date recorded) {
+        this.recorded = recorded;
     }
 
     public String getVal() {

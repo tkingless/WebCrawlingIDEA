@@ -553,7 +553,7 @@ public class MatchEventWorker extends baseCrawler {
                     case UPDATE_STAGE:
                         InPlayAttrUpdates DVPstage = new InPlayAttrUpdates();
                         DVPstage.setMatchId(Integer.parseInt(matchId));
-                        DVPstage.setTime(crle.getRecordTime().GetTheInstant());
+                        DVPstage.setRecorded(crle.getRecordTime().GetTheInstant());
                         DVPstage.setVal(MatchCONSTANTS.GetMatchStageStr(crle.getMatchStage()));
                         DVPstage.setType("stage");
                         workerDAO.UpdateInplayStage(this,DVPstage);
@@ -564,7 +564,7 @@ public class MatchEventWorker extends baseCrawler {
                     case UPDATE_SCORES:
                         InPlayAttrUpdates DVPscore = new InPlayAttrUpdates();
                         DVPscore.setMatchId(Integer.parseInt(matchId));
-                        DVPscore.setTime(crle.getRecordTime().GetTheInstant());
+                        DVPscore.setRecorded(crle.getRecordTime().GetTheInstant());
                         DVPscore.setVal(crle.getScores());
                         DVPscore.setType("score");
                         workerDAO.UpdateInplayScore(this,DVPscore);
@@ -573,7 +573,7 @@ public class MatchEventWorker extends baseCrawler {
                         if (!crle.getTotalCorners().contains("-") || crle.getTotalCorners().isEmpty()) {
                             InPlayAttrUpdates DVPcorner = new InPlayAttrUpdates();
                             DVPcorner.setMatchId(Integer.parseInt(matchId));
-                            DVPcorner.setTime(crle.getRecordTime().GetTheInstant());
+                            DVPcorner.setRecorded(crle.getRecordTime().GetTheInstant());
                             DVPcorner.setVal(crle.getTotalCorners());
                             DVPcorner.setType("corner");
                             workerDAO.UpdateInplayCorner(this,DVPcorner);

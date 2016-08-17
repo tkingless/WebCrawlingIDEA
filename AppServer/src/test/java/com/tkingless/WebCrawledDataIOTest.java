@@ -167,11 +167,10 @@ public class WebCrawledDataIOTest {
         Bson filter = Filters.eq("MatchId", id);
         Document update = new Document("MatchId", id).append("lastIn", now);
 
-
         Document data = new Document();
         WCDIOcsvData head = new WCDIOcsvData();
 
-
+        WCDIOcsvData.InitializeRecordHead(updateHistory,head);
 
         WCDIO.updateOne(filter, update, updateOpts);
     }
@@ -190,7 +189,7 @@ public class WebCrawledDataIOTest {
         System.out.println("[Data] " + data.toString());
 
         for (InPlayAttrUpdates dvp : scoreHistory) {
-            System.out.println("dvp key: " + dvp.getTime());
+            System.out.println("dvp key: " + dvp.getRecorded());
             System.out.println("dvp value: " + dvp.getVal());
         }
 

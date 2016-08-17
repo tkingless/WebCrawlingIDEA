@@ -136,7 +136,7 @@ public class MorphiaBasicTest {
         preRegWorker.setMatchCrleTestTarget(MatchCrawleeTestSample.preReg103904NotStartYet);
 
         InPlayAttrUpdates data = new InPlayAttrUpdates();
-        data.setTime(new Date());
+        data.setRecorded(new Date());
         data.setVal("0 : 23");
         data.setType("score");
         data.setMatchId(103904);
@@ -149,7 +149,7 @@ public class MorphiaBasicTest {
 
         MatchEventData data = matchDao.findByMatchId(preRegWorker.getMatchId());
 
-        System.out.println("scoreBoard: " + data.getScoreUpdates().get(0).getTime());
+        System.out.println("scoreBoard: " + data.getScoreUpdates().get(0).getRecorded());
 
     }
 

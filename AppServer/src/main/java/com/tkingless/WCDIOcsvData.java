@@ -2,7 +2,10 @@ package com.tkingless;
 
 import org.bson.Document;
 
+import javax.print.Doc;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by tkingless on 8/13/16.
@@ -141,5 +144,39 @@ public class WCDIOcsvData {
         Document bson = new Document();
 
         return bson;
+    }
+
+    public static void InitializeRecordHead(List<DateDocumentObj> updateHistory, WCDIOcsvData head){
+        try{
+            Iterator<DateDocumentObj> cursor = updateHistory.iterator();
+
+            head.setMatchId(updateHistory.get(0).getDoc().getInteger("MatchId"));
+
+            while (cursor.hasNext()){
+                Document doc = cursor.next().getDoc();
+                String type = doc.getString("type");
+
+                if( type.equals("HAD")){
+                    head.setHADawayOdd(doc.getDouble("HADawayOdd"));
+                    head.setHADdrawOdd(doc.getDouble("HADdrawOdd"));
+                    head.setHADhomeOdd(doc.getDouble("HADhomeOdd"));
+                    head.setHADpoolStatus(doc.getString("poolStatus"));
+                }else if(type.equals("CHL")){
+
+                }else if(type.equals("stage")){
+
+                }else if(type.equals("score")){
+
+                }else if(type.equals("corner")){
+
+                }
+
+                head.setRecorded(doc.getDate("recorded"));
+            }
+
+
+        } catch (Exception e){
+            WebCrawledDataIO.logger.error("WCDIOcsvData error",e);
+        }
     }
 }
