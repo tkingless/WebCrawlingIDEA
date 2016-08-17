@@ -138,7 +138,7 @@ public class WebCrawledDataIOTest {
         matchAttrColl.find(new Document("MatchId", id)).forEach(new Block<Document>() {
             @Override
             public void apply(Document document) {
-                updateTimeOrders.add(new DateDocumentObj(document.getDate("time"), document));
+                updateTimeOrders.add(new DateDocumentObj(document.getDate("recorded"), document));
             }
         });
 
@@ -165,14 +165,24 @@ public class WebCrawledDataIOTest {
 
         UpdateOptions updateOpts = new UpdateOptions().upsert(true);
         Bson filter = Filters.eq("MatchId", id);
-        Document update = new Document("MatchId", id).append("lastIn", now);
+        Document update;
+        Document content = new Document("MatchId", id).append("lastIn", now);
 
-        Document data = new Document();
+        Document data;
         WCDIOcsvData head = new WCDIOcsvData();
 
-        WCDIOcsvData.InitializeRecordHead(updateHistory,head);
+        //WCDIOcsvData.InitializeRecordHead(updateHistory,head);
 
+        //testing
+        data = new Document("first field","first ele");
+        content.append("data",data);
+
+        update = new Document("$set", content);
         WCDIO.updateOne(filter, update, updateOpts);
+    }
+
+    void PushToDataField () {
+
     }
 
     public void FormDataField(Integer id, List<DateDocumentObj> updateHistory) throws Exception {
