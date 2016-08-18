@@ -5,6 +5,7 @@ import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.util.JSON;
+import com.sun.org.apache.bcel.internal.generic.DCMPG;
 import com.tkingless.DBobject.MatchEventDAO;
 import com.tkingless.WebCrawling.DBobject.InPlayAttrUpdates;
 import com.tkingless.WebCrawling.DBobject.MatchEventData;
@@ -218,6 +219,11 @@ public class WebCrawledDataIOTest {
             @Override
             public void apply(Document document) {
                 try{
+                    List<Document> data = (List<Document>) document.get("data");
+
+                    for (Document datum : data){
+                        System.out.println(datum.toJson());
+                    }
 
                 }catch (Exception e){
                     WebCrawledDataIO.logger.error("Get data error",e);
