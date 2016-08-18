@@ -217,7 +217,11 @@ public class WebCrawledDataIOTest {
         WCDIOcsv.find(filter).projection(new Document("data",1)).forEach(new Block<Document>() {
             @Override
             public void apply(Document document) {
+                try{
 
+                }catch (Exception e){
+                    WebCrawledDataIO.logger.error("Get data error",e);
+                }
             }
         });
 
