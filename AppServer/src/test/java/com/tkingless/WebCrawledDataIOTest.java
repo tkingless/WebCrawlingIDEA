@@ -116,16 +116,16 @@ public class WebCrawledDataIOTest {
 
         for (Integer id : launchedMatchIds) {
 
-                MongoCursor<Document> idOddsCursor = DB.getCollection("InPlayOddsUpdates").find(new Document("MatchId", id)).iterator();
+            MongoCursor<Document> idOddsCursor = DB.getCollection("InPlayOddsUpdates").find(new Document("MatchId", id)).iterator();
 
-                if (idOddsCursor.hasNext()) {
-                    System.out.println("there is odd update for id:" + id);
-                    List<DateDocumentObj> updateHistory = GetUpdateHistory(id, DB.getCollection("InPlayAttrUpdates"), DB.getCollection("InPlayOddsUpdates"));
+            if (idOddsCursor.hasNext()) {
+                System.out.println("there is odd update for id:" + id);
+                List<DateDocumentObj> updateHistory = GetUpdateHistory(id, DB.getCollection("InPlayAttrUpdates"), DB.getCollection("InPlayOddsUpdates"));
 
-                    if(!updateHistory.isEmpty()){
-                        InitWCDIOcsv(id,null,updateHistory);
-                    }
+                if (!updateHistory.isEmpty()) {
+                    InitWCDIOcsv(id, null, updateHistory);
                 }
+            }
         }
     }
 
@@ -152,10 +152,10 @@ public class WebCrawledDataIOTest {
 
         DateDocumentObj.SortByAscendOrder(updateTimeOrders);
 
-        for (DateDocumentObj Adata : updateTimeOrders) {
-            System.out.println(Adata.getDate());
-            System.out.println(Adata.getDoc().getString("type"));
-        }
+        /*for (DateDocumentObj Adata : updateTimeOrders) {
+            WebCrawledDataIO.logger.trace(Adata.getDate());
+            WebCrawledDataIO.logger.trace(Adata.getDoc().getString("type"));
+        }*/
 
         return updateTimeOrders;
     }
@@ -166,30 +166,39 @@ public class WebCrawledDataIOTest {
         UpdateOptions updateOpts = new UpdateOptions().upsert(true);
         Bson filter = Filters.eq("MatchId", id);
         Document update;
-        Document content = new Document("MatchId", id).append("lastIn", now);
-
+        Document content = new Document("MatchId", id);
 
         WCDIOcsvData head = new WCDIOcsvData();
 
-        //WCDIOcsvData.InitializeRecordHead(updateHistory,head);
+        WCDIOcsvData.InitializeRecordHead(updateHistory, head);
 
         //testing
         update = new Document("$set", content);
         WCDIO.updateOne(filter, update, updateOpts);
 
-        PushToDataField(WCDIO,filter, head.ToBson());
+        if(PushToDataField(WCDIO, filter, head.ToBson())){
+            content.append("lastIn", now);
+            update = new Document("$set",content);
+            WCDIO.updateOne(filter, update, updateOpts);
+        }
     }
 
-    void PushToDataField (MongoCollection aColl, Bson filter, Document aData) {
-        Document update;
-        Document data;
-        Document content;
+    boolean PushToDataField(MongoCollection aColl, Bson filter, Document data) {
 
-        data = new Document("second field","second ele");
-        content = new Document("data", data);
+        boolean writeSucess = false;
+        try {
+            Document update;
+            Document content;
+            content = new Document("data", data);
+            update = new Document("$push", content);
 
-        update = new Document("$push", content);
-        aColl.updateOne(filter, update);
+            aColl.updateOne(filter, update);
+
+            writeSucess = true;
+        } catch (Exception e) {
+            WebCrawledDataIO.logger.error("PushToDataField() error", e);
+        }
+        return writeSucess;
     }
 
     public void InitWCDIOcsv(Integer id, List<DateDocumentObj> updateHistory) throws Exception {

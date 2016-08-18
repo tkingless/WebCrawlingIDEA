@@ -18,7 +18,7 @@ public class WCDIOcsvData {
     String stage;
     Integer homeScore;
     Integer awayScore;
-    Integer corner;
+    String corner;
     Double HADhomeOdd;
     Double HADdrawOdd;
     Double HADawayOdd;
@@ -68,11 +68,11 @@ public class WCDIOcsvData {
         this.awayScore = awayScore;
     }
 
-    public Integer getCorner() {
+    public String getCorner() {
         return corner;
     }
 
-    public void setCorner(Integer corner) {
+    public void setCorner(String corner) {
         this.corner = corner;
     }
 
@@ -143,6 +143,53 @@ public class WCDIOcsvData {
     public Document ToBson (){
         Document bson = new Document();
 
+        try {
+            if(recorded != null){
+                bson.append("recorded",recorded);
+            }
+            if(matchId != null){
+                bson.append("MatchId",matchId);
+            }
+            if(stage != null){
+                bson.append("stage",stage);
+            }
+            if(homeScore != null){
+                bson.append("homeTeamScore",homeScore);
+            }
+            if(awayScore != null){
+                bson.append("awayTeamScore",awayScore);
+            }
+            if(corner != null){
+                bson.append("cornerCount",corner);
+            }
+            if(HADhomeOdd != null){
+                bson.append("HADhomeOdd", HADhomeOdd);
+            }
+            if(HADdrawOdd != null){
+                bson.append("HADdrawOdd",HADdrawOdd);
+            }
+            if(HADawayOdd != null){
+                bson.append("HADawayOdd",HADawayOdd);
+            }
+            if( HADpoolStatus != null){
+                bson.append("HADpoolStatus",HADpoolStatus);
+            }
+            if( CHLline != null){
+                bson.append("CHLline",CHLline);
+            }
+            if( CHLhigh != null){
+                bson.append("CHLhigh",CHLhigh);
+            }
+            if( CHLlow != null){
+                bson.append("CHLlow",CHLlow);
+            }
+            if( CHLpoolStatus != null){
+                bson.append("CHLpoolStatus",CHLpoolStatus);
+            }
+        }catch (Exception e){
+            WebCrawledDataIO.logger.error("to bson error",e);
+        }
+
         return bson;
     }
 
@@ -172,15 +219,15 @@ public class WCDIOcsvData {
                     String scores = doc.getString("val");
                     String[] splitScores = scores.split(" : ");
 
-                    for(String str : splitScores) {
-                        WebCrawledDataIO.logger.debug("split score str: " + str);
-                    }
+                    /*for(String str : splitScores) {
+                        WebCrawledDataIO.logger.trace("split score str: " + str);
+                    }*/
 
                     head.setHomeScore(Integer.parseInt(splitScores[0]));
                     head.setAwayScore(Integer.parseInt(splitScores[1]));
 
                 }else if(type.equals("corner")){
-                    head.setCorner(doc.getInteger("val"));
+                    head.setCorner(doc.getString("val"));
                 }
 
                 head.setRecorded(doc.getDate("recorded"));
