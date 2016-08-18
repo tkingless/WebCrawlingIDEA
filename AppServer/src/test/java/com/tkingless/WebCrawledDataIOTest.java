@@ -108,7 +108,7 @@ public class WebCrawledDataIOTest {
     }
 
     @Test
-    public void InitWCDIOcsv() throws Exception {
+    public void ProcConsideredId() throws Exception {
         GetConsideredWorkersByTime();
 
         //TODO now should be the time from fixedrateexecutor
@@ -123,7 +123,7 @@ public class WebCrawledDataIOTest {
                     List<DateDocumentObj> updateHistory = GetUpdateHistory(id, DB.getCollection("InPlayAttrUpdates"), DB.getCollection("InPlayOddsUpdates"));
 
                     if(!updateHistory.isEmpty()){
-                        FormDataField(id,null,updateHistory);
+                        InitWCDIOcsv(id,null,updateHistory);
                     }
                 }
         }
@@ -160,7 +160,7 @@ public class WebCrawledDataIOTest {
         return updateTimeOrders;
     }
 
-    public void FormDataField(Integer id, Date sinceLastIn, List<DateDocumentObj> updateHistory) throws Exception {
+    public void InitWCDIOcsv(Integer id, Date sinceLastIn, List<DateDocumentObj> updateHistory) throws Exception {
         MongoCollection WCDIO = DB.getCollection("WCDIOcsv");
 
         UpdateOptions updateOpts = new UpdateOptions().upsert(true);
@@ -174,15 +174,13 @@ public class WebCrawledDataIOTest {
         //WCDIOcsvData.InitializeRecordHead(updateHistory,head);
 
         //testing
-
-
         update = new Document("$set", content);
         WCDIO.updateOne(filter, update, updateOpts);
 
-        PushToDataField(WCDIO,filter);
+        PushToDataField(WCDIO,filter, head.ToBson());
     }
 
-    void PushToDataField (MongoCollection aColl, Bson filter) {
+    void PushToDataField (MongoCollection aColl, Bson filter, Document aData) {
         Document update;
         Document data;
         Document content;
@@ -194,7 +192,7 @@ public class WebCrawledDataIOTest {
         aColl.updateOne(filter, update);
     }
 
-    public void FormDataField(Integer id, List<DateDocumentObj> updateHistory) throws Exception {
+    public void InitWCDIOcsv(Integer id, List<DateDocumentObj> updateHistory) throws Exception {
 
     }
 
