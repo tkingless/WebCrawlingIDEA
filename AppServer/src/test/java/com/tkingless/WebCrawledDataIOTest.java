@@ -4,6 +4,7 @@ import com.mongodb.*;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.util.JSON;
 import com.tkingless.DBobject.MatchEventDAO;
 import com.tkingless.WebCrawling.DBobject.InPlayAttrUpdates;
 import com.tkingless.WebCrawling.DBobject.MatchEventData;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
+import javax.print.Doc;
 import java.util.*;
 
 import static com.tkingless.MongoDBparam.*;
@@ -208,16 +210,16 @@ public class WebCrawledDataIOTest {
     @Test
     public void LoopArrayObject() throws Exception {
 
-        MatchEventDAO dao = new MatchEventDAO(datastore);
-        MatchEventData data = dao.findByMatchId("103909");
-        List<InPlayAttrUpdates> scoreHistory = data.getScoreUpdates();
+        MongoCollection WCDIOcsv = DB.getCollection("WCDIOcsv");
 
-        System.out.println("[Data] " + data.toString());
+        Document filter = new Document("MatchId",105238);
 
-        for (InPlayAttrUpdates dvp : scoreHistory) {
-            System.out.println("dvp key: " + dvp.getRecorded());
-            System.out.println("dvp value: " + dvp.getVal());
-        }
+        WCDIOcsv.find(filter).projection(new Document("data",1)).forEach(new Block<Document>() {
+            @Override
+            public void apply(Document document) {
+
+            }
+        });
 
     }
 }

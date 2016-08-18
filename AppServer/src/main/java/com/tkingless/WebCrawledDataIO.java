@@ -1,9 +1,5 @@
 package com.tkingless;
 
-import com.mongodb.Block;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoDatabase;
-import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.utils.FileManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -14,9 +10,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by tsangkk on 8/8/16.
