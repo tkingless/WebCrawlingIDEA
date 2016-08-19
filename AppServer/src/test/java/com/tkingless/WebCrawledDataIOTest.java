@@ -49,7 +49,7 @@ public class WebCrawledDataIOTest {
             client.getAddress();
 
             morphia = new Morphia();
-            morphia.mapPackage("com.tkingless.WebCrawling.DBobject");
+            //morphia.mapPackage("com.tkingless");
 
             datastore = morphia.createDatastore(client, TestDBname);
             datastore.ensureIndexes();
@@ -222,7 +222,11 @@ public class WebCrawledDataIOTest {
                     List<Document> data = (List<Document>) document.get("data");
 
                     for (Document datum : data){
-                        System.out.println(datum.toJson());
+                        System.out.println("=============================");
+                        for(String key : datum.keySet()){
+                            System.out.println("Key: " + key);
+                            System.out.println("Value: " + datum.get(key));
+                        }
                     }
 
                 }catch (Exception e){
