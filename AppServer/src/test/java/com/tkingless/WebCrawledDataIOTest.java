@@ -49,7 +49,7 @@ public class WebCrawledDataIOTest {
             client.getAddress();
 
             morphia = new Morphia();
-            //morphia.mapPackage("com.tkingless");
+            //morphia.mapPackage("com.tkingless.WebCrawling.DBobject");
 
             datastore = morphia.createDatastore(client, TestDBname);
             datastore.ensureIndexes();
