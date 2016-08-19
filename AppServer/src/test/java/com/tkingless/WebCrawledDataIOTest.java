@@ -4,11 +4,6 @@ import com.mongodb.*;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.util.JSON;
-import com.sun.org.apache.bcel.internal.generic.DCMPG;
-import com.tkingless.DBobject.MatchEventDAO;
-import com.tkingless.WebCrawling.DBobject.InPlayAttrUpdates;
-import com.tkingless.WebCrawling.DBobject.MatchEventData;
 import com.tkingless.utils.DateTimeEntity;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -17,7 +12,6 @@ import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
-import javax.print.Doc;
 import java.util.*;
 
 import static com.tkingless.MongoDBparam.*;
@@ -37,6 +31,7 @@ public class WebCrawledDataIOTest {
     MongoDatabase DB;
     Morphia morphia;
     Datastore datastore;
+    MongoCollection WCDIO;
 
     Date now = new Date();
 
@@ -54,6 +49,7 @@ public class WebCrawledDataIOTest {
             datastore = morphia.createDatastore(client, TestDBname);
             datastore.ensureIndexes();
             DB = client.getDatabase(TestDBname);
+            WCDIO = DB.getCollection("WCDIOcsv");
         } catch (Exception e) {
             System.out.println("Mongo is down");
             client.close();
@@ -126,7 +122,21 @@ public class WebCrawledDataIOTest {
                 List<DateDocumentObj> updateHistory = GetUpdateHistory(id, DB.getCollection("InPlayAttrUpdates"), DB.getCollection("InPlayOddsUpdates"));
 
                 if (!updateHistory.isEmpty()) {
-                    InitWCDIOcsv(id, null, updateHistory);
+
+                    boolean shouldInit = true;
+
+                    FindIterable doc = WCDIO.find(new Document("MatchId", id).append("lastIn", new Document("$exists",true)));
+
+                    if(doc!= null){
+                        shouldInit = false;
+                    }
+
+                    if(shouldInit) {
+                        System.out.println("should init");
+                        InitWCDIOcsv(id, null, updateHistory);
+                    } else {
+                        System.out.println("should not init");
+                    }
                 }
             }
         }
@@ -164,7 +174,6 @@ public class WebCrawledDataIOTest {
     }
 
     public void InitWCDIOcsv(Integer id, Date sinceLastIn, List<DateDocumentObj> updateHistory) throws Exception {
-        MongoCollection WCDIO = DB.getCollection("WCDIOcsv");
 
         UpdateOptions updateOpts = new UpdateOptions().upsert(true);
         Bson filter = Filters.eq("MatchId", id);
