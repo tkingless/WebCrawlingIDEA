@@ -238,4 +238,8 @@ public class WCDIOcsvData {
             WebCrawledDataIO.logger.error("WCDIOcsvData error",e);
         }
     }
+
+    public static void ParseInFromDocument(WCDIOcsvData data, Document doc){
+
+    }
 }

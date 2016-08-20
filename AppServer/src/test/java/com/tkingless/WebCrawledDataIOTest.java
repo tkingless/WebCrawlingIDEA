@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
+import javax.print.Doc;
 import java.util.*;
 
 import static com.tkingless.MongoDBparam.*;
@@ -114,18 +115,18 @@ public class WebCrawledDataIOTest {
         now = new Date();
 
         for (Integer id : launchedMatchIds) {
+            try {
+                MongoCursor<Document> idOddsCursor = DB.getCollection("InPlayOddsUpdates").find(new Document("MatchId", id)).iterator();
 
-            MongoCursor<Document> idOddsCursor = DB.getCollection("InPlayOddsUpdates").find(new Document("MatchId", id)).iterator();
+                if (idOddsCursor.hasNext()) {
+                    System.out.println("there is odd update for id:" + id);
+                    List<DateDocumentObj> updateHistory = GetUpdateHistory(id, DB.getCollection("InPlayAttrUpdates"), DB.getCollection("InPlayOddsUpdates"));
 
-            if (idOddsCursor.hasNext()) {
-                System.out.println("there is odd update for id:" + id);
-                List<DateDocumentObj> updateHistory = GetUpdateHistory(id, DB.getCollection("InPlayAttrUpdates"), DB.getCollection("InPlayOddsUpdates"));
+                    if (!updateHistory.isEmpty()) {
 
-                if (!updateHistory.isEmpty()) {
+                        boolean shouldInit = true;
 
-                    boolean shouldInit = true;
-
-                    FindIterable doc = WCDIO.find(new Document("MatchId", id).append("lastIn", new Document("$exists",true)));
+                        FindIterable<Document> doc = WCDIO.find(new Document("MatchId", id).append("lastIn", new Document("$exists", true)));
 
                     /*doc.forEach(new Block<Document>() {
                         @Override
@@ -134,20 +135,61 @@ public class WebCrawledDataIOTest {
                         }
                     });*/
 
-                    if(doc.iterator().hasNext()){
-                        shouldInit = false;
-                    }
+                        if (doc.iterator().hasNext()) {
+                            shouldInit = false;
+                        }
 
-                    if(shouldInit) {
-                        InitWCDIOcsv(id, updateHistory);
-                    } else {
+                        if (shouldInit) {
+                            InitWCDIOcsv(id, updateHistory);
+                        } else {
+                            // if now is larger than lastIn, do Update In
+                            Date lastIn = doc.first().getDate("lastIn");
 
+                        }
                     }
                 }
+            } catch (Exception e) {
+                WebCrawledDataIO.logger.error("error ", e);
             }
         }
     }
 
+    public void InitWCDIOcsv(Integer id, List<DateDocumentObj> updateHistory) throws Exception {
+
+        UpdateOptions updateOpts = new UpdateOptions().upsert(true);
+        Bson filter = Filters.eq("MatchId", id);
+        Document update;
+        Document content = new Document("MatchId", id);
+
+        WCDIOcsvData head = new WCDIOcsvData();
+
+        WCDIOcsvData.InitializeRecordHead(updateHistory, head);
+
+        //testing
+        update = new Document("$set", content);
+        WCDIO.updateOne(filter, update, updateOpts);
+
+        if (PushToDataField(WCDIO, filter, head.ToBson())) {
+            content.append("lastIn", now);
+            update = new Document("$set", content);
+            WCDIO.updateOne(filter, update, updateOpts);
+        }
+    }
+
+    public void UpdateWCDIOcsv(Integer id, List<DateDocumentObj> updateHistor, Date since) throws Exception {
+
+        Document filter = new Document("MatchId", id);
+        FindIterable<Document> doc = WCDIO.find(filter);
+        List<Document> csv = (List<Document>) doc.first().get("data");
+        Document lastRecord = csv.get(csv.size() - 1);
+
+        WCDIOcsvData head = new WCDIOcsvData();
+
+        //init the head first
+        WCDIOcsvData.ParseInFromDocument(head, lastRecord);
+
+
+    }
 
     public List<DateDocumentObj> GetUpdateHistory(Integer id, MongoCollection matchAttrColl, MongoCollection oddsColl) throws Exception {
 
@@ -179,28 +221,6 @@ public class WebCrawledDataIOTest {
         return updateTimeOrders;
     }
 
-    public void InitWCDIOcsv(Integer id, List<DateDocumentObj> updateHistory) throws Exception {
-
-        UpdateOptions updateOpts = new UpdateOptions().upsert(true);
-        Bson filter = Filters.eq("MatchId", id);
-        Document update;
-        Document content = new Document("MatchId", id);
-
-        WCDIOcsvData head = new WCDIOcsvData();
-
-        WCDIOcsvData.InitializeRecordHead(updateHistory, head);
-
-        //testing
-        update = new Document("$set", content);
-        WCDIO.updateOne(filter, update, updateOpts);
-
-        if(PushToDataField(WCDIO, filter, head.ToBson())){
-            content.append("lastIn", now);
-            update = new Document("$set",content);
-            WCDIO.updateOne(filter, update, updateOpts);
-        }
-    }
-
     boolean PushToDataField(MongoCollection aColl, Bson filter, Document data) {
 
         boolean writeSucess = false;
@@ -222,26 +242,24 @@ public class WebCrawledDataIOTest {
     @Test
     public void LoopArrayObject() throws Exception {
 
-        MongoCollection WCDIOcsv = DB.getCollection("WCDIOcsv");
+        Document filter = new Document("MatchId", 105238);
 
-        Document filter = new Document("MatchId",105238);
-
-        WCDIOcsv.find(filter).projection(new Document("data",1)).forEach(new Block<Document>() {
+        WCDIO.find(filter).projection(new Document("data", 1)).forEach(new Block<Document>() {
             @Override
             public void apply(Document document) {
-                try{
+                try {
                     List<Document> data = (List<Document>) document.get("data");
 
-                    for (Document datum : data){
+                    for (Document datum : data) {
                         System.out.println("=============================");
-                        for(String key : datum.keySet()){
+                        for (String key : datum.keySet()) {
                             System.out.println("Key: " + key);
                             System.out.println("Value: " + datum.get(key));
                         }
                     }
 
-                }catch (Exception e){
-                    WebCrawledDataIO.logger.error("Get data error",e);
+                } catch (Exception e) {
+                    WebCrawledDataIO.logger.error("Get data error", e);
                 }
             }
         });
