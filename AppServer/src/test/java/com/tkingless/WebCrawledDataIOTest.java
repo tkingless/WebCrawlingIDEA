@@ -127,7 +127,14 @@ public class WebCrawledDataIOTest {
 
                     FindIterable doc = WCDIO.find(new Document("MatchId", id).append("lastIn", new Document("$exists",true)));
 
-                    if(doc!= null){
+                    /*doc.forEach(new Block<Document>() {
+                        @Override
+                        public void apply(Document document) {
+                            System.out.println("Json: " + doc.toString());
+                        }
+                    });*/
+
+                    if(doc.iterator().hasNext()){
                         shouldInit = false;
                     }
 
