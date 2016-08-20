@@ -139,10 +139,9 @@ public class WebCrawledDataIOTest {
                     }
 
                     if(shouldInit) {
-                        System.out.println("should init");
-                        InitWCDIOcsv(id, null, updateHistory);
+                        InitWCDIOcsv(id, updateHistory);
                     } else {
-                        System.out.println("should not init");
+
                     }
                 }
             }
@@ -180,7 +179,7 @@ public class WebCrawledDataIOTest {
         return updateTimeOrders;
     }
 
-    public void InitWCDIOcsv(Integer id, Date sinceLastIn, List<DateDocumentObj> updateHistory) throws Exception {
+    public void InitWCDIOcsv(Integer id, List<DateDocumentObj> updateHistory) throws Exception {
 
         UpdateOptions updateOpts = new UpdateOptions().upsert(true);
         Bson filter = Filters.eq("MatchId", id);
@@ -218,10 +217,6 @@ public class WebCrawledDataIOTest {
             WebCrawledDataIO.logger.error("PushToDataField() error", e);
         }
         return writeSucess;
-    }
-
-    public void InitWCDIOcsv(Integer id, List<DateDocumentObj> updateHistory) throws Exception {
-
     }
 
     @Test
