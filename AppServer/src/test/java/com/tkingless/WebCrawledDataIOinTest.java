@@ -19,7 +19,7 @@ import static com.tkingless.MongoDBparam.*;
 /**
  * Created by tsangkk on 8/10/16.
  */
-public class WebCrawledDataIOTest {
+public class WebCrawledDataIOinTest {
 
     String DBaddr = TestDBAddr;
     int DBport = TestDBport;
