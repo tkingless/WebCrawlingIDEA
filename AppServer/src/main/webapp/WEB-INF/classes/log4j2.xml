@@ -41,7 +41,7 @@
             <AppenderRef ref="File_WebCrawlingMain"/>
         </Logger>
 
-        <Logger name="com.tkingless.WebCrawledDataIO" level="info" additivity="true">
+        <Logger name="com.tkingless.WebCrawledDataIO" level="trace" additivity="true">
             <AppenderRef ref="File_WebCrawledDataIO"/>
         </Logger>
 
