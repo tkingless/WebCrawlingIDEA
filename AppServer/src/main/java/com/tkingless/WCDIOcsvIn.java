@@ -157,9 +157,13 @@ public class WCDIOcsvIn {
 
                 Document MatchEventDoc = MatchEventsColl.find(IDfilter).first();
                 if(MatchEventDoc != null) {
-                    if (MatchEventDoc.containsKey("endTime") || toEnd == true) {
+                    WebCrawledDataIO.logger.debug("[Adding MarkedEnded] MatchEventDoc is not null, id: " + id);
+                    if (MatchEventDoc.containsKey("endTime") || toEnd) {
+                        WebCrawledDataIO.logger.debug("[Adding MarkedEnded] csv markded ended, id: " + id);
                         MarkedEnded(WCDIOcsvColl, IDfilter, new Document("MarkedEnd", now));
                     }
+                } else {
+                    WebCrawledDataIO.logger.debug("[Adding MarkedEnded] MatchEventDoc is null, id: " + id);
                 }
 
             } catch (Exception e) {
