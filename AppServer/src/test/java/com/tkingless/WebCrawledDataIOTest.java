@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
+import javax.print.Doc;
 import java.util.*;
 
 import static com.tkingless.MongoDBparam.*;
@@ -139,12 +140,16 @@ public class WebCrawledDataIOTest {
                         }
 
                         if (shouldInit) {
+                            WebCrawledDataIO.logger.trace("should init");
                             InitWCDIOcsv(id, updateHistory);
                         } else {
+                            WebCrawledDataIO.logger.trace("should not init");
                             // if now is larger than lastIn, do Update In
                             Date lastIn = doc.first().getDate("lastIn");
-                            if(now.getTime() > lastIn.getTime()){ //TODO this condition is wrong, add new update event larger than lastIn from updateHistory
-                                UpdateWCDIOcsv(id,updateHistory,lastIn);
+                            Document lastRecord = GetLastRecordFromData(WCDIO.find(new Document("MatchId", id)));
+                            if (lastRecord.getDate("recorded").getTime() > lastIn.getTime()) {
+                                WebCrawledDataIO.logger.trace("should update");
+                                UpdateWCDIOcsv(id, updateHistory, lastIn, lastRecord);
                             }
 
                         }
@@ -178,19 +183,39 @@ public class WebCrawledDataIOTest {
         }
     }
 
-    public void UpdateWCDIOcsv(Integer id, List<DateDocumentObj> updateHistor, Date since) throws Exception {
+    public void UpdateWCDIOcsv(Integer id, List<DateDocumentObj> updateHistory, Date since, Document lastRecord) throws Exception {
 
         Document filter = new Document("MatchId", id);
-        FindIterable<Document> doc = WCDIO.find(filter);
-        List<Document> csv = (List<Document>) doc.first().get("data");
-        Document lastRecord = csv.get(csv.size() - 1);
 
         WCDIOcsvData head = new WCDIOcsvData();
+
+        Iterator<DateDocumentObj> ite = updateHistory.iterator();
+
+        DateDocumentObj ddo = null;
+        while (ite.hasNext()) {
+            ddo = ite.next();
+            if (ddo.getDate().getTime() > since.getTime()) {
+                WebCrawledDataIO.logger.trace("iteration end, ddo time: " + ddo.getDate() + " , and lastIn: " + since.getTime());
+                break;
+            }
+        }
+
+        if (ddo != null){
+
+        }
 
         //init the head first
         WCDIOcsvData.ParseInFromDocument(head, lastRecord);
 
 
+    }
+
+    //TODO this should really be utility of DAO
+    Document GetLastRecordFromData(FindIterable<Document> queried) {
+        Document lastRecord = null;
+        List<Document> csv = (List<Document>) queried.first().get("data");
+        lastRecord = csv.get(csv.size() - 1);
+        return lastRecord;
     }
 
     public List<DateDocumentObj> GetUpdateHistory(Integer id, MongoCollection matchAttrColl, MongoCollection oddsColl) throws Exception {

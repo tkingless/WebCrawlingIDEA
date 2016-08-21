@@ -201,42 +201,43 @@ public class WCDIOcsvData {
 
             while (cursor.hasNext()) {
                 Document doc = cursor.next().getDoc();
-                String type = doc.getString("type");
+                SetHeadByType(doc, head);
 
-                if (type.equals("HAD")) {
-                    head.setHADawayOdd(doc.getDouble("HADawayOdd"));
-                    head.setHADdrawOdd(doc.getDouble("HADdrawOdd"));
-                    head.setHADhomeOdd(doc.getDouble("HADhomeOdd"));
-                    head.setHADpoolStatus(doc.getString("poolStatus"));
-                } else if (type.equals("CHL")) {
-                    head.setCHLline(doc.getString("CHLline"));
-                    head.setCHLhigh(doc.getDouble("CHLhigh"));
-                    head.setCHLlow(doc.getDouble("CHLlow"));
-                    head.setCHLpoolStatus(doc.getString("poolStatus"));
-                } else if (type.equals("stage")) {
-                    head.setStage(doc.getString("val"));
-                } else if (type.equals("score")) {
-                    String scores = doc.getString("val");
-                    String[] splitScores = scores.split(" : ");
+            }
+        } catch (Exception e) {
+            WebCrawledDataIO.logger.error("WCDIOcsvData error", e);
+        }
+    }
+
+    public static void SetHeadByType(Document doc, WCDIOcsvData head) {
+        String type = doc.getString("type");
+
+        if (type.equals("HAD")) {
+            head.setHADawayOdd(doc.getDouble("HADawayOdd"));
+            head.setHADdrawOdd(doc.getDouble("HADdrawOdd"));
+            head.setHADhomeOdd(doc.getDouble("HADhomeOdd"));
+            head.setHADpoolStatus(doc.getString("poolStatus"));
+        } else if (type.equals("CHL")) {
+            head.setCHLline(doc.getString("CHLline"));
+            head.setCHLhigh(doc.getDouble("CHLhigh"));
+            head.setCHLlow(doc.getDouble("CHLlow"));
+            head.setCHLpoolStatus(doc.getString("poolStatus"));
+        } else if (type.equals("stage")) {
+            head.setStage(doc.getString("val"));
+        } else if (type.equals("score")) {
+            String scores = doc.getString("val");
+            String[] splitScores = scores.split(" : ");
 
                     /*for(String str : splitScores) {
                         WebCrawledDataIO.logger.trace("split score str: " + str);
                     }*/
+            head.setHomeScore(Integer.parseInt(splitScores[0]));
+            head.setAwayScore(Integer.parseInt(splitScores[1]));
 
-                    head.setHomeScore(Integer.parseInt(splitScores[0]));
-                    head.setAwayScore(Integer.parseInt(splitScores[1]));
-
-                } else if (type.equals("corner")) {
-                    head.setCorner(doc.getString("val"));
-                }
-
-                head.setRecorded(doc.getDate("recorded"));
-            }
-
-
-        } catch (Exception e) {
-            WebCrawledDataIO.logger.error("WCDIOcsvData error", e);
+        } else if (type.equals("corner")) {
+            head.setCorner(doc.getString("val"));
         }
+        head.setRecorded(doc.getDate("recorded"));
     }
 
     public static void ParseInFromDocument(WCDIOcsvData data, Document doc) {
