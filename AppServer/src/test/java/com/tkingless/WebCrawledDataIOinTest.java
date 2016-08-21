@@ -24,7 +24,6 @@ public class WebCrawledDataIOinTest {
     String DBaddr = TestDBAddr;
     int DBport = TestDBport;
     String TestDBname = webCrawlingDB;
-    String TestCollname = "testCollWebCrawling";
 
     MongoClient client;
 

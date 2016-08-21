@@ -52,8 +52,6 @@ public class WebCrawledDataIO implements ServletContextListener {
             }
         }
 
-        LoadConfigFile();
-
         logger.info("[Important] The WDCIO config json file should be placed at: current path: " + (new File(".")).getAbsolutePath());
 
         if(FileManager.CheckFileExist("WCDIOconfig_sample.json")){
