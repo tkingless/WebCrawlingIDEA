@@ -155,7 +155,7 @@ public class WCDIOcsvIn {
                     }
                 }
 
-                Document MatchEventDoc = MatchEventsColl.find(IDfilter).first();
+                Document MatchEventDoc = MatchEventsColl.find(new Document("MatchId", id)).first();
                 if(MatchEventDoc != null) {
                     WebCrawledDataIO.logger.debug("[Adding MarkedEnded] MatchEventDoc is not null, id: " + id);
                     if (MatchEventDoc.containsKey("endTime") || toEnd) {
