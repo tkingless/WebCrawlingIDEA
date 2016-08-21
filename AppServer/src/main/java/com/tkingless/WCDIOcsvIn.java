@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * Created by tsangkk on 8/16/16.
  */
-public class WCDIOcsvIn extends Thread{
+public class WCDIOcsvIn {
 
     private static WCDIOcsvIn instance = null;
 
