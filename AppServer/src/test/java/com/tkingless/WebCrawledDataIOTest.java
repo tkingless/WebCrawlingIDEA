@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
-import javax.print.Doc;
 import java.util.*;
 
 import static com.tkingless.MongoDBparam.*;
@@ -144,6 +143,9 @@ public class WebCrawledDataIOTest {
                         } else {
                             // if now is larger than lastIn, do Update In
                             Date lastIn = doc.first().getDate("lastIn");
+                            if(now.getTime() > lastIn.getTime()){ //TODO this condition is wrong, add new update event larger than lastIn from updateHistory
+                                UpdateWCDIOcsv(id,updateHistory,lastIn);
+                            }
 
                         }
                     }
