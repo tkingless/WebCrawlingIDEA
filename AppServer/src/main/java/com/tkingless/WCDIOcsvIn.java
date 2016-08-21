@@ -109,9 +109,11 @@ public class WCDIOcsvIn extends Thread{
                 MongoCursor<Document> idOddsCursor = OddsColl.find(IDfilter).iterator();
                 FindIterable<Document> WCDIOdoc = WCDIOcsvColl.find(IDfilter.append("lastIn", new Document("$exists", true)));
 
-                if (WCDIOdoc.first().containsKey("MarkedEnd")) {
-                    WebCrawledDataIO.logger.trace("skipped this id as marked end already: " + id);
-                    continue;
+                if(WCDIOdoc.iterator().hasNext()) {
+                    if (WCDIOdoc.first().containsKey("MarkedEnd")) {
+                        WebCrawledDataIO.logger.trace("skipped this id as marked end already: " + id);
+                        continue;
+                    }
                 }
 
                 List<DateDocumentObj> updateHistory = null;
@@ -153,8 +155,10 @@ public class WCDIOcsvIn extends Thread{
                 }
 
                 Document MatchEventDoc = MatchEventsColl.find(IDfilter).first();
-                if(MatchEventDoc.containsKey("endTime") || toEnd == true){
-                    MarkedEnded(WCDIOcsvColl,IDfilter,new Document("MarkedEnd",now));
+                if(MatchEventDoc != null) {
+                    if (MatchEventDoc.containsKey("endTime") || toEnd == true) {
+                        MarkedEnded(WCDIOcsvColl, IDfilter, new Document("MarkedEnd", now));
+                    }
                 }
 
             } catch (Exception e) {
