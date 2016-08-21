@@ -121,7 +121,7 @@ public class WCDIOcsvIn extends Thread{
                 List<DateDocumentObj> updateHistory = null;
 
                 if (idOddsCursor.hasNext()) {
-                    WebCrawledDataIO.logger.trace("there is odd update for id:" + id);
+                    //WebCrawledDataIO.logger.trace("there is odd update for id:" + id);
                     updateHistory = GetUpdateHistory(id, AttrColl, OddsColl);
                 }
 
@@ -148,7 +148,7 @@ public class WCDIOcsvIn extends Thread{
                         Date lastIn = WCDIOdoc.first().getDate("lastIn");
 
                         if (updateHistory.get(updateHistory.size()-1).getDate().getTime() > lastIn.getTime()) {
-                            WebCrawledDataIO.logger.trace("should update");
+                            WebCrawledDataIO.logger.trace("going to update, id: "+ id);
                             UpdateWCDIOcsv(id, updateHistory, lastIn,now);
                         }
 
