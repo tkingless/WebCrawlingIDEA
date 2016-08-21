@@ -21,6 +21,7 @@ public class WCDIOcsvIn extends Thread{
     public static WCDIOcsvIn GetInstance() {
 
         if (instance == null) {
+            WebCrawledDataIO.logger.trace("WCDIOcsvIn init()");
             instance = new WCDIOcsvIn();
         }
 
@@ -47,6 +48,7 @@ public class WCDIOcsvIn extends Thread{
     }
 
     public void run(){
+
         GetConsideredWorkersByTime();
         Date now = new Date();
         ProcConsideredId(now,launchedMatchIds,false);
@@ -124,7 +126,7 @@ public class WCDIOcsvIn extends Thread{
                 }
 
                 if (!updateHistory.isEmpty()) {
-
+                    WebCrawledDataIO.logger.debug("point 1");
                     boolean shouldInit = true;
 
                     /*doc.forEach(new Block<Document>() {
@@ -145,10 +147,10 @@ public class WCDIOcsvIn extends Thread{
                         WebCrawledDataIO.logger.trace("should not init");
                         // if now is larger than lastIn, do Update In
                         Date lastIn = WCDIOdoc.first().getDate("lastIn");
-                        Document lastRecord = GetLastRecordFromData(WCDIOcsvColl.find(IDfilter));
-                        if (lastRecord.getDate("recorded").getTime() > lastIn.getTime()) {
+
+                        if (updateHistory.get(updateHistory.size()-1).getDate().getTime() > lastIn.getTime()) {
                             WebCrawledDataIO.logger.trace("should update");
-                            UpdateWCDIOcsv(id, updateHistory, lastIn, lastRecord);
+                            UpdateWCDIOcsv(id, updateHistory, lastIn,now);
                         }
 
                     }
@@ -189,10 +191,11 @@ public class WCDIOcsvIn extends Thread{
         }
     }
 
-    public void UpdateWCDIOcsv(Integer id, List<DateDocumentObj> updateHistory, Date since, Document lastRecord){
+    public void UpdateWCDIOcsv(Integer id, List<DateDocumentObj> updateHistory, Date since, Date now) {
 
         try {
             Document filter = new Document("MatchId", id);
+            Document lastRecord = GetLastRecordFromData(WCDIOcsvColl.find(filter));
 
             WCDIOcsvData head = new WCDIOcsvData();
             //init the head first
@@ -210,19 +213,29 @@ public class WCDIOcsvIn extends Thread{
             }
 
             if (ddo != null) {
+                UpdateAction(ddo, head, id, filter, now);
                 while (ite.hasNext()) {
-                    WCDIOcsvData.SetHeadByType(ddo.getDoc(), head);
-                    PushToDataField(WCDIOcsvColl, new Document("MatchId", id), head.ToBson());
                     ddo = ite.next();
+                    UpdateAction(ddo, head, id, filter, now);
                 }
-
             }
-        }catch (Exception e){
-            WebCrawledDataIO.logger.error("UpdateWCDIOcsv()",e);
+
+            }catch(Exception e){
+                WebCrawledDataIO.logger.error("UpdateWCDIOcsv()", e);
+            }
+
+    }
+
+    void UpdateAction(DateDocumentObj ddo, WCDIOcsvData head, Integer id, Document filter, Date now){
+        WCDIOcsvData.SetHeadByType(ddo.getDoc(), head);
+        if(PushToDataField(WCDIOcsvColl, new Document("MatchId", id), head.ToBson())) {
+            Document updateLastIn = new Document("lastIn", now);
+            Document update = new Document("$set", updateLastIn);
+            WCDIOcsvColl.updateOne(filter, update);
+            WebCrawledDataIO.logger.debug("has updated lastIn as: "+ now);
         }
     }
 
-    //TODO this should really be utility of DAO
     Document GetLastRecordFromData(FindIterable<Document> queried) {
         Document lastRecord = null;
         try {
@@ -239,7 +252,7 @@ public class WCDIOcsvIn extends Thread{
         List<DateDocumentObj> updateTimeOrders = new ArrayList<>();
 
         try {
-
+            WebCrawledDataIO.logger.debug("point 3");
             //Match inPlay attr streaming in
             matchAttrColl.find(new Document("MatchId", id)).forEach(new Block<Document>() {
                 @Override
