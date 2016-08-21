@@ -101,7 +101,6 @@ public class WebCrawledDataIO implements ServletContextListener {
     public class ScheduledWCDIOin implements Runnable{
         @Override
         public void run() {
-            logger.info("WCDIOcsvIn run()");
             WCDIOcsvIn.GetInstance().run();
         }
     }

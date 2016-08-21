@@ -11,8 +11,8 @@ import java.util.List;
  */
 public class DateDocumentObj {
 
-    Date date;
-    Document doc;
+    private Date date;
+    private Document doc;
 
     public DateDocumentObj(Date date, Document doc) {
         this.date = date;

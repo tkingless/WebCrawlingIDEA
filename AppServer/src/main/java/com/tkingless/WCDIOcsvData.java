@@ -204,6 +204,8 @@ public class WCDIOcsvData {
                 SetHeadByType(doc, head);
 
             }
+
+            WebCrawledDataIO.logger.debug("InitailizeRecordHead, head: " + head.toString());
         } catch (Exception e) {
             WebCrawledDataIO.logger.error("WCDIOcsvData error", e);
         }
@@ -290,5 +292,76 @@ public class WCDIOcsvData {
         }
 
 
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder tmp = new StringBuilder();
+
+        try {
+
+            tmp.append("\n");
+            if (recorded != null) {
+                tmp.append("recorded: " + recorded);
+                tmp.append("\n");
+            }
+            if (matchId != null) {
+                tmp.append("MatchId: " + matchId);
+                tmp.append("\n");
+            }
+            if (stage != null) {
+                tmp.append("stage: " + stage);
+                tmp.append("\n");
+            }
+            if (homeScore != null) {
+                tmp.append("homeTeamScore: " + homeScore);
+                tmp.append("\n");
+            }
+            if (awayScore != null) {
+                tmp.append("awayTeamScore: " + awayScore);
+                tmp.append("\n");
+            }
+            if (corner != null) {
+                tmp.append("cornerCount " + corner);
+                tmp.append("\n");
+            }
+            if (HADhomeOdd != null) {
+                tmp.append("HADhomeOdd " + HADhomeOdd);
+                tmp.append("\n");
+            }
+            if (HADdrawOdd != null) {
+                tmp.append("HADdrawOdd " + HADdrawOdd);
+                tmp.append("\n");
+            }
+            if (HADawayOdd != null) {
+                tmp.append("HADawayOdd " + HADawayOdd);
+                tmp.append("\n");
+            }
+            if (HADpoolStatus != null) {
+                tmp.append("HADpoolStatus " + HADpoolStatus);
+                tmp.append("\n");
+            }
+            if (CHLline != null) {
+                tmp.append("CHLline " + CHLline);
+                tmp.append("\n");
+            }
+            if (CHLhigh != null) {
+                tmp.append("CHLhigh " + CHLhigh);
+                tmp.append("\n");
+            }
+            if (CHLlow != null) {
+                tmp.append("CHLlow " + CHLlow);
+                tmp.append("\n");
+            }
+            if (CHLpoolStatus != null) {
+                tmp.append("CHLpoolStatus " + CHLpoolStatus);
+                tmp.append("\n");
+            }
+
+        } catch (Exception e){
+            WebCrawledDataIO.logger.error("To String error: ",e);
+        }
+
+        return tmp.toString();
     }
 }

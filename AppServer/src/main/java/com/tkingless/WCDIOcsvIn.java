@@ -40,7 +40,7 @@ public class WCDIOcsvIn extends Thread{
             db = DBManager.getInstance().getClient().getDatabase(MongoDBparam.webCrawlingDB);
             MatchEventsColl = db.getCollection("MatchEvents");
             OddsColl = db.getCollection("InPlayOddsUpdates");
-            AttrColl = db.getCollection("InPlayOddsUpdates");
+            AttrColl = db.getCollection("InPlayAttrUpdates");
             WCDIOcsvColl = db.getCollection("WCDIOcsv");
         } catch (Exception e){
             WebCrawledDataIO.logger.error("WCDIOcsvIn init error", e);
@@ -126,7 +126,6 @@ public class WCDIOcsvIn extends Thread{
                 }
 
                 if (!updateHistory.isEmpty()) {
-                    WebCrawledDataIO.logger.debug("point 1");
                     boolean shouldInit = true;
 
                     /*doc.forEach(new Block<Document>() {
@@ -178,6 +177,7 @@ public class WCDIOcsvIn extends Thread{
 
         WCDIOcsvData head = new WCDIOcsvData();
 
+
         WCDIOcsvData.InitializeRecordHead(updateHistory, head);
 
         //testing
@@ -207,7 +207,7 @@ public class WCDIOcsvIn extends Thread{
             while (ite.hasNext()) {
                 ddo = ite.next();
                 if (ddo.getDate().getTime() > since.getTime()) {
-                    WebCrawledDataIO.logger.trace("iteration end, ddo time: " + ddo.getDate() + " , and lastIn: " + since.getTime());
+                    //WebCrawledDataIO.logger.trace("iteration end, ddo time: " + ddo.getDate() + " , and lastIn: " + since.getTime());
                     break;
                 }
             }
@@ -228,6 +228,8 @@ public class WCDIOcsvIn extends Thread{
 
     void UpdateAction(DateDocumentObj ddo, WCDIOcsvData head, Integer id, Document filter, Date now){
         WCDIOcsvData.SetHeadByType(ddo.getDoc(), head);
+        //WebCrawledDataIO.logger.debug("UpdateAction, head: " + head.toString());
+
         if(PushToDataField(WCDIOcsvColl, new Document("MatchId", id), head.ToBson())) {
             Document updateLastIn = new Document("lastIn", now);
             Document update = new Document("$set", updateLastIn);
@@ -252,11 +254,11 @@ public class WCDIOcsvIn extends Thread{
         List<DateDocumentObj> updateTimeOrders = new ArrayList<>();
 
         try {
-            WebCrawledDataIO.logger.debug("point 3");
             //Match inPlay attr streaming in
             matchAttrColl.find(new Document("MatchId", id)).forEach(new Block<Document>() {
                 @Override
                 public void apply(Document document) {
+                    //WebCrawledDataIO.logger.debug("attr doc in history found, id: " + id);
                     updateTimeOrders.add(new DateDocumentObj(document.getDate("recorded"), document));
                 }
             });
@@ -270,6 +272,11 @@ public class WCDIOcsvIn extends Thread{
             });
 
             DateDocumentObj.SortByAscendOrder(updateTimeOrders);
+
+            /*for(DateDocumentObj ddo: updateTimeOrders){
+                WebCrawledDataIO.logger.debug("GetUpdateHistory, ddo date: "+ddo.getDate()+" type: " + ddo.getDoc().get("type"));
+            }*/
+
         } catch (Exception e){
             WebCrawledDataIO.logger.error("GetUpdateHistory()",e);
         }
