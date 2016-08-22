@@ -1,7 +1,6 @@
 package com.tkingless;
 
 import com.mongodb.Block;
-import com.mongodb.DBCollection;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
@@ -29,7 +28,7 @@ public class WCDIOcsvIn {
     }
 
     private MongoDatabase db;
-    private long thresholdToConsider = 1000 * 60 * 60 * 6;
+    private long thresholdToConsider = 1000 * 60 * 60 * 4;
     private MongoCollection<Document> MatchEventsColl, OddsColl, AttrColl, WCDIOcsvColl;
 
     List<Integer> launchedMatchIds = new ArrayList<>();
@@ -92,7 +91,7 @@ public class WCDIOcsvIn {
                     }
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    WebCrawledDataIO.logger.error("GetConsideredWorkersByTime() error",e);
                 }
 
             }
