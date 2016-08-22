@@ -49,17 +49,17 @@ public class WCDIOcsvIn {
 
     public void run(){
 
-        GetConsideredWorkersByTime();
         Date now = new Date();
+        GetConsideredWorkersByTime(now);
         ProcConsideredId(now,launchedMatchIds,false);
         ProcConsideredId(now,lostMatchingIds,true);
         launchedMatchIds.clear();
         lostMatchingIds.clear();
     }
 
-    void GetConsideredWorkersByTime() {
+    void GetConsideredWorkersByTime(Date now) {
 
-        long threshold = (new Date()).getTime() - thresholdToConsider;
+        long threshold = now.getTime() - thresholdToConsider;
         DateTimeEntity timeAfterToConsider = new DateTimeEntity(threshold);
 
         FindIterable<Document> consideredIds = MatchEventsColl.find(
