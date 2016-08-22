@@ -182,4 +182,14 @@ public class WCDIOoutTest {
         return null;
     }
 
+    @Test
+    public void FileManagerTest() throws Exception{
+        if(FileManager.CheckFileExist("/home/tsangkk/Development/Github/WebCrawlingIDEA/AppServer/WCDIOconfig.json")){
+            System.out.println("found the json");
+        } else {
+            System.out.println("Not found the json");
+        }
+
+    }
+
 }

@@ -2,6 +2,7 @@ package com.tkingless;
 
 import com.tkingless.utils.CSVmanager;
 import com.tkingless.utils.DateTimeEntity;
+import com.tkingless.utils.FileManager;
 import org.bson.Document;
 
 /**
@@ -14,13 +15,11 @@ public class MatchCSVhandler {
     String csvTeamA;
     String subFolder;
     String rootPath;
-    CSVmanager csVmanager;
+    FileManager csvHdr;
 
     Document WCDIO,match;
 
     private boolean lastOutSucceed = false;
-
-    //TODO look into WCDIOcsv, look for documents that has not ended writing, defined as !(MarkedEnded&&lastOut>=lastIn), !lastOut:exists
 
     public MatchCSVhandler(Document WCDIO, Document matchDoc, String root){
         rootPath = root;
@@ -42,10 +41,13 @@ public class MatchCSVhandler {
         this.WCDIO = WCDIO;
         this.match = matchDoc;
 
+        //make sure root exist
+        FileManager.CreateFolder(root);
 
     }
 
     public void run() {
+        //TODO look into WCDIOcsv, look for documents that has not ended writing, defined as !(MarkedEnded&&lastOut>=lastIn), !lastOut:exists
 
     }
 
