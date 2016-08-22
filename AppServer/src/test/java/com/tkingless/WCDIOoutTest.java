@@ -113,8 +113,6 @@ public class WCDIOoutTest {
         return config;
     }
 
-    //TODO check file exists, check folder exists, mv files
-
     @Test
     public void GatherID() throws Exception {
 
@@ -134,7 +132,7 @@ public class WCDIOoutTest {
                     Document matchDoc = GetMatchEventDoc(document.getInteger("MatchId"));
 
 
-                    hdlrs.add(new MatchCSVhandler(document,matchDoc,fileSharingPath));
+                    hdlrs.add(new MatchCSVhandler(document,matchDoc,fileSharingPath,now));
                 }
             });
 

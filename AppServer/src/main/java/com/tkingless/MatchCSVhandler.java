@@ -5,6 +5,9 @@ import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.utils.FileManager;
 import org.bson.Document;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by tsangkk on 8/22/16.
  */
@@ -21,7 +24,7 @@ public class MatchCSVhandler {
 
     private boolean lastOutSucceed = false;
 
-    public MatchCSVhandler(Document WCDIO, Document matchDoc, String root){
+    public MatchCSVhandler(Document WCDIO, Document matchDoc, String root, Date now){
         rootPath = root;
 
         if(matchDoc.containsKey("homeTeam")){
@@ -36,7 +39,7 @@ public class MatchCSVhandler {
 
         csvFile = WCDIO.getInteger("MatchId").toString() + '.' + csvTeamH + '.' + csvTeamA + ".csv";
 
-        subFolder=DateTimeEntity.GetToday();
+        subFolder=DateTimeEntity.getDefault_dateFormat().format(now);
 
         this.WCDIO = WCDIO;
         this.match = matchDoc;
@@ -47,7 +50,55 @@ public class MatchCSVhandler {
     }
 
     public void run() {
-        //TODO look into WCDIOcsv, look for documents that has not ended writing, defined as !(MarkedEnded&&lastOut>=lastIn), !lastOut:exists
+
+        try {
+            String absCSVpath = rootPath + "/" + csvFile;
+            String archivePath = rootPath + "/";
+            if(!WCDIO.containsKey("lastOut")){
+                //TODO overwrite, set lastOutSucceed true
+                lastOutSucceed = true;
+                WebCrawledDataIO.logger.debug("no lastOut found, so overwrite");
+                return;
+            }
+
+            Date lastOutTime = WCDIO.getDate("lastOut");
+
+            if (!FileManager.CheckFileExist(absCSVpath) ) {
+                String possibleSubfolder = DateTimeEntity.getDefault_dateFormat().format(lastOutTime);
+                archivePath += possibleSubfolder;
+
+                if(FileManager.CheckFileExist(archivePath)){
+                    WebCrawledDataIO.logger.debug("markedEnded csv found in subfolder, so nothing to do");
+                    return;
+                }
+
+                //TODO overwrite, set lastOutSucceed true
+                lastOutSucceed = true;
+                WebCrawledDataIO.logger.debug("no existing csv found found, so overwrite");
+                return;
+            }
+
+            Date refTime = null;
+
+            if (WCDIO.containsKey("MarkedEnd")) {
+                refTime = WCDIO.getDate("MarkedEnd");
+
+                if(refTime.getTime() <= lastOutTime.getTime()){
+                    //TODO: mv the file to subfolder according to lastOutTime's day
+                    return;
+                }
+            } else {
+                refTime = lastOutTime;
+            }
+
+            //TODO append csv file and set lastOutSucceed true
+            lastOutSucceed = true;
+
+        } catch (Exception e){
+            WebCrawledDataIO.logger.error("handler run error",e);
+        }
+
+
 
     }
 

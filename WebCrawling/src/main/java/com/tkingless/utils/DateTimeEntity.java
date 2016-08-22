@@ -113,6 +113,10 @@ public class DateTimeEntity {
         return timeFormat.format(instant);
     }
 
+    public static SimpleDateFormat getDefault_dateFormat() {
+        return default_dateFormat;
+    }
+
     @Override
     public String toString() {
         return zonedInstant.toString();
