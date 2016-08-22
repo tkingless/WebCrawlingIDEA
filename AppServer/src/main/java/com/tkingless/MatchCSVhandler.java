@@ -99,8 +99,6 @@ public class MatchCSVhandler {
             WebCrawledDataIO.logger.error("handler run error",e);
         }
 
-
-
     }
 
     public boolean isLastOutSucceed() {
