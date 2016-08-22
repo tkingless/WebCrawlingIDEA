@@ -54,7 +54,7 @@ public class WebCrawledDataIO implements ServletContextListener {
 
         logger.info("[Important] The WDCIO config json file should be placed at: current path: " + (new File(".")).getAbsolutePath());
 
-        if(FileManager.CheckFileExist("WCDIOconfig_sample.json")){
+        if(FileManager.CheckFileExist("WCDIOconfig.json")){
             System.out.println("found the json");
         } else {
             System.out.println("Not found the json");
@@ -86,7 +86,7 @@ public class WebCrawledDataIO implements ServletContextListener {
         try {
 
             String jsonString = "";
-            jsonString = IOUtils.toString(classLoader.getResourceAsStream("WCDIOconfig_sample.json"));
+            jsonString = IOUtils.toString(classLoader.getResourceAsStream("WCDIOconfig.json"));
             config = Document.parse(jsonString);
 
         } catch (IOException e) {
