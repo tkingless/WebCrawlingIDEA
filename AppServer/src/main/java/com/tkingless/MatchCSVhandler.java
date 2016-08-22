@@ -62,10 +62,10 @@ public class MatchCSVhandler {
             }
 
             Date lastOutTime = WCDIO.getDate("lastOut");
+            String possibleSubfolder = DateTimeEntity.getDefault_dateFormat().format(lastOutTime);
+            archivePath += possibleSubfolder + csvFile;
 
             if (!FileManager.CheckFileExist(absCSVpath) ) {
-                String possibleSubfolder = DateTimeEntity.getDefault_dateFormat().format(lastOutTime);
-                archivePath += possibleSubfolder;
 
                 if(FileManager.CheckFileExist(archivePath)){
                     WebCrawledDataIO.logger.debug("markedEnded csv found in subfolder, so nothing to do");
@@ -84,7 +84,8 @@ public class MatchCSVhandler {
                 refTime = WCDIO.getDate("MarkedEnd");
 
                 if(refTime.getTime() <= lastOutTime.getTime()){
-                    //TODO: mv the file to subfolder according to lastOutTime's day
+                    WebCrawledDataIO.logger.debug("csv out finish, moved csv file");
+                    FileManager.RenameFile(absCSVpath,archivePath);
                     return;
                 }
             } else {
