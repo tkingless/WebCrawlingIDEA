@@ -63,6 +63,9 @@ public class MatchCSVhandler {
         tmp += "\ncsvTeamA:" + csvTeamA;
 
         if(WCDIO != null){
+            if(WCDIO.containsKey("MatchId")){
+                tmp += "\nMatchId: " + WCDIO.getInteger("MatchId");
+            }
             if(WCDIO.containsKey("lastIn")){
                 tmp += "\nlastIn: " + WCDIO.getDate("lastIn");
             }
