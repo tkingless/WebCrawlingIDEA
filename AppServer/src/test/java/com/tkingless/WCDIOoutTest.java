@@ -1,10 +1,13 @@
 package com.tkingless;
 
+import com.mongodb.Block;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.utils.FileManager;
 import org.apache.commons.io.IOUtils;
 import org.bson.Document;
@@ -15,6 +18,7 @@ import org.mongodb.morphia.Morphia;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,12 +41,13 @@ public class WCDIOoutTest {
     MongoDatabase DB;
     Morphia morphia;
     Datastore datastore;
-    MongoCollection WCDIO;
+    MongoCollection<Document> WCDIO, MatchEventsColl;
 
     private Document config;
     private String fileSharingPath;
 
-    List<Integer> idsConsidered;
+    List<MatchCSVhandler> hdlrs = new ArrayList<>();
+    private long thresholdToConsider = 1000 * 60 * 60 * 96;
 
 
     @Before
@@ -60,6 +65,7 @@ public class WCDIOoutTest {
             datastore.ensureIndexes();
             DB = client.getDatabase(TestDBname);
             WCDIO = DB.getCollection("WCDIOcsv");
+            MatchEventsColl = DB.getCollection("MatchEvents");
         } catch (Exception e) {
             System.out.println("Mongo is down");
             client.close();
@@ -70,14 +76,14 @@ public class WCDIOoutTest {
             config = LoadConfigFile();
             fileSharingPath = (String) config.get("HostedFilesPath");
 
-           WebCrawledDataIO.logger.info("[Important] The WDCIO config json file should be placed at: current path: " + (new File(".")).getAbsolutePath());
+            WebCrawledDataIO.logger.info("[Important] The WDCIO config json file should be placed at: current path: " + (new File(".")).getAbsolutePath());
 
-            if(FileManager.CheckFileExist("WCDIOconfig.json")){
+            if (FileManager.CheckFileExist("WCDIOconfig.json")) {
                 System.out.println("found the json");
             } else {
                 System.out.println("Not found the json");
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -87,7 +93,8 @@ public class WCDIOoutTest {
         now = new Date();
 
     }
-    private Document LoadConfigFile(){
+
+    private Document LoadConfigFile() {
 
         Document config = null;
 
@@ -107,18 +114,56 @@ public class WCDIOoutTest {
 
     //TODO check file exists, check folder exists, mv files
 
+    @Test
     public void GatherID() throws Exception {
-        //TODO look into WCDIOcsv, look for documents that has not ended writing, defined as not MarkedEnded
-
-        //TODO the csv format is {MatchID}_{HomeTeam}_{AwayTeam}.csv
-        //TODO the subfolder format is 22082016
 
         try {
 
-        } catch (Exception e){
-            WebCrawledDataIO.logger.error("GatherID() error",e);
+            long threshold = now.getTime() - thresholdToConsider;
+            DateTimeEntity timeAfterToConsider = new DateTimeEntity(threshold);
+
+            FindIterable<Document> consideredDocs = WCDIO.find(
+                    //Multiple criteria
+                    new Document("lastIn", new Document("$exists", true)).append("lastIn", new Document("$gte", timeAfterToConsider.GetTheInstant()))
+            ).sort(new Document("lastIn", -1)).limit(40);
+
+            consideredDocs.forEach(new Block<Document>() {
+                @Override
+                public void apply(Document document) {
+                    Document matchDoc = GetMatchEventDoc(document.getInteger("MatchId"));
+
+
+                    hdlrs.add(new MatchCSVhandler(document,matchDoc,fileSharingPath));
+                }
+            });
+
+        } catch (Exception e) {
+            WebCrawledDataIO.logger.error("GatherID() error", e);
         }
+
+        hdlrs.forEach(hdlr->System.out.println("considered doc: " + hdlr.toString()));
+
+    }
+
+    @Test
+    public void ProcHdlrs() throws Exception{
+
+        GatherID();
+
+        hdlrs.forEach(hdlr->{
+            hdlr.run();
+        });
 
 
     }
+
+    Document GetMatchEventDoc(Integer id) {
+        Document result = MatchEventsColl.find(new Document("MatchId", id)).first();
+        if (result != null) {
+            return result;
+        }
+
+        return null;
+    }
+
 }
