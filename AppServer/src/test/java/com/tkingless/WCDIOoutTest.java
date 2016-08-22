@@ -11,6 +11,7 @@ import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.utils.FileManager;
 import org.apache.commons.io.IOUtils;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
@@ -152,9 +153,24 @@ public class WCDIOoutTest {
 
         hdlrs.forEach(hdlr->{
             hdlr.run();
+            //TODO: check if write succeed, if yes than update lastOut
         });
 
+    }
 
+    boolean UpdateLastOut(MongoCollection aColl, Bson filter, Document data){
+        boolean writeSucess = false;
+        try {
+            Document update;
+            update = new Document("$set", data);
+
+            aColl.updateOne(filter, update);
+
+            writeSucess = true;
+        } catch (Exception e) {
+            WebCrawledDataIO.logger.error("UpdateLastOut() error", e);
+        }
+        return writeSucess;
     }
 
     Document GetMatchEventDoc(Integer id) {

@@ -1,5 +1,6 @@
 package com.tkingless;
 
+import com.tkingless.utils.CSVmanager;
 import com.tkingless.utils.DateTimeEntity;
 import org.bson.Document;
 
@@ -11,17 +12,15 @@ public class MatchCSVhandler {
     String csvFile;
     String csvTeamH;
     String csvTeamA;
-
     String subFolder;
-
     String rootPath;
+    CSVmanager csVmanager;
 
     Document WCDIO,match;
 
     private boolean lastOutSucceed = false;
 
     //TODO look into WCDIOcsv, look for documents that has not ended writing, defined as !(MarkedEnded&&lastOut>=lastIn), !lastOut:exists
-    //TODO the subfolder format is 22082016
 
     public MatchCSVhandler(Document WCDIO, Document matchDoc, String root){
         rootPath = root;
@@ -54,12 +53,20 @@ public class MatchCSVhandler {
         return lastOutSucceed;
     }
 
+    public Document getMatchDoc() {
+        return match;
+    }
+
     private void Overwrite(){
 
     }
 
     private void Append(){
 
+    }
+
+    private void lastWrite(){
+        //TODO, create subfolder, put written csv to the folder
     }
 
     @Override
