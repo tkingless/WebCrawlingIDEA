@@ -168,7 +168,7 @@ public class MatchCrawlee extends baseCrawlee {
                     for (InplayPoolType aType : poolType) {
                         String poolStatQuery = String.format("//pool[@type=\"%s\"]/@match_pool_status", MatchCONSTANTS.GetCapPoolType(aType));
                         String result = GetValueByQuery(poolStatQuery);
-                        if(result != null) {
+                        if(!result.equals("")) {
                             if (!MatchCONSTANTS.GetPoolStatusStr(MatchPoolStatus.STATUS_CLOSED).equals(result)) {
                                 allPoolClosed = false;
                                 break;
