@@ -16,25 +16,32 @@ public class MatchCSVhandler {
 
     String rootPath;
 
-    Document WCDIO;
+    Document WCDIO,match;
 
     private boolean lastOutSucceed = false;
 
     //TODO look into WCDIOcsv, look for documents that has not ended writing, defined as !(MarkedEnded&&lastOut>=lastIn), !lastOut:exists
     //TODO the subfolder format is 22082016
 
-    public MatchCSVhandler(Document WCDIO, String homeTeam, String awayTeam, String root){
+    public MatchCSVhandler(Document WCDIO, Document matchDoc, String root){
         rootPath = root;
-        csvTeamH = homeTeam;
-        csvTeamA = awayTeam;
-        csvTeamH = csvTeamH.replace(' ', '_');
-        csvTeamA = csvTeamA.replace(' ', '_');
+
+        if(matchDoc.containsKey("homeTeam")){
+            csvTeamH = matchDoc.getString("homeTeam");;
+            csvTeamH = csvTeamH.replace(' ', '_');
+        }
+
+        if(matchDoc.containsKey("awayTeam")){
+            csvTeamA = matchDoc.getString("awayTeam");
+            csvTeamA = csvTeamA.replace(' ', '_');
+        }
 
         csvFile = WCDIO.getInteger("MatchId").toString() + '.' + csvTeamH + '.' + csvTeamA + ".csv";
 
         subFolder=DateTimeEntity.GetToday();
 
         this.WCDIO = WCDIO;
+        this.match = matchDoc;
 
 
     }
