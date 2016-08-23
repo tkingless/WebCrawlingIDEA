@@ -50,7 +50,7 @@ public class FileManager {
 		fileWriter.append(str);
 	}
 
-	//this will only overwrite the existing file
+	//this will only overwrite the existing file, bufferedwriter is more efficient than filewritter if many dropped input
 	public void AppendBufferedOnNewLine(String newline) throws IOException {
 		if( fileWriter == null) {
 			fileWriter = new BufferedWriter(new FileWriter(path));

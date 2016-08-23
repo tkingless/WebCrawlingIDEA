@@ -5,6 +5,8 @@ import com.tkingless.utils.FileManager;
 import org.bson.Document;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by tsangkk on 8/22/16.
@@ -18,11 +20,11 @@ public class MatchCSVhandler {
     String rootPath;
     FileManager csvHdr;
 
-    Document WCDIO,match;
+    Document WCDIOdoc,match;
 
     private boolean lastOutSucceed = false;
 
-    public MatchCSVhandler(Document WCDIO, Document matchDoc, String root, Date now){
+    public MatchCSVhandler(Document WCDIOdoc, Document matchDoc, String root, Date now){
         rootPath = root;
 
         if(matchDoc.containsKey("homeTeam")){
@@ -35,11 +37,11 @@ public class MatchCSVhandler {
             csvTeamA = csvTeamA.replace(' ', '_');
         }
 
-        csvFile = WCDIO.getInteger("MatchId").toString() + '.' + csvTeamH + '.' + csvTeamA + ".csv";
+        csvFile = WCDIOdoc.getInteger("MatchId").toString() + '.' + csvTeamH + '.' + csvTeamA + ".csv";
 
         subFolder=DateTimeEntity.getDefault_dateFormat().format(now);
 
-        this.WCDIO = WCDIO;
+        this.WCDIOdoc = WCDIOdoc;
         this.match = matchDoc;
 
         //make sure root exist
@@ -52,14 +54,14 @@ public class MatchCSVhandler {
         try {
             String absCSVpath = rootPath + "/" + csvFile;
             String archivePath = rootPath + "/";
-            if(!WCDIO.containsKey("lastOut")){
+            if(!WCDIOdoc.containsKey("lastOut")){
                 Overwrite();
                 lastOutSucceed = true;
                 WebCrawledDataIO.logger.debug("no lastOut found, so overwrite");
                 return;
             }
 
-            Date lastOutTime = WCDIO.getDate("lastOut");
+            Date lastOutTime = WCDIOdoc.getDate("lastOut");
             String possibleSubfolder = DateTimeEntity.getDefault_dateFormat().format(lastOutTime);
             archivePath += possibleSubfolder + csvFile;
 
@@ -78,8 +80,8 @@ public class MatchCSVhandler {
 
             Date refTime = null;
 
-            if (WCDIO.containsKey("MarkedEnd")) {
-                refTime = WCDIO.getDate("MarkedEnd");
+            if (WCDIOdoc.containsKey("MarkedEnd")) {
+                refTime = WCDIOdoc.getDate("MarkedEnd");
 
                 if(refTime.getTime() <= lastOutTime.getTime()){
                     WebCrawledDataIO.logger.debug("csv out finish, moved csv file");
@@ -90,7 +92,7 @@ public class MatchCSVhandler {
                 refTime = lastOutTime;
             }
 
-            Append();
+            Append(refTime);
             lastOutSucceed = true;
 
         } catch (Exception e){
@@ -109,9 +111,32 @@ public class MatchCSVhandler {
 
     private void Overwrite(){
 
+        List<Document> data = (List<Document>) WCDIOdoc.get("data");
+        csvHdr = new FileManager(csvFile);
+
+        try {
+            String headers =
+                    data.get(0).keySet().stream().map(i -> i.toString()).collect(Collectors.joining(","));
+            //add header line
+            csvHdr.AppendBufferedOnNewLine(headers);
+
+            for (Document datum : data) {
+                StringBuilder lineHead = new StringBuilder();
+                for (String key : datum.keySet()) {
+                    lineHead.append("\"").append(datum.get(key).toString()).append("\",");
+                }
+                lineHead.setLength(Math.max(lineHead.length()-1,0));
+                csvHdr.AppendBufferedOnNewLine(lineHead.toString());
+            }
+
+            csvHdr.Close();
+        }catch (Exception e){
+            WebCrawledDataIO.logger.error("Overwrite() error",e);
+        }
+
     }
 
-    private void Append(){
+    private void Append(Date refTime){
 
     }
 
@@ -122,18 +147,18 @@ public class MatchCSVhandler {
         tmp += "csvTeamH: " + csvTeamH;
         tmp += "\ncsvTeamA:" + csvTeamA;
 
-        if(WCDIO != null){
-            if(WCDIO.containsKey("MatchId")){
-                tmp += "\nMatchId: " + WCDIO.getInteger("MatchId");
+        if(WCDIOdoc != null){
+            if(WCDIOdoc.containsKey("MatchId")){
+                tmp += "\nMatchId: " + WCDIOdoc.getInteger("MatchId");
             }
-            if(WCDIO.containsKey("lastIn")){
-                tmp += "\nlastIn: " + WCDIO.getDate("lastIn");
+            if(WCDIOdoc.containsKey("lastIn")){
+                tmp += "\nlastIn: " + WCDIOdoc.getDate("lastIn");
             }
-            if(WCDIO.containsKey("MarkedEnd")){
-                tmp += "\nMarkedEnd: " + WCDIO.getDate("MarkedEnd");
+            if(WCDIOdoc.containsKey("MarkedEnd")){
+                tmp += "\nMarkedEnd: " + WCDIOdoc.getDate("MarkedEnd");
             }
-            if(WCDIO.containsKey("lastOut")){
-                tmp += "\nlastOut: " + WCDIO.getDate("lastOut");
+            if(WCDIOdoc.containsKey("lastOut")){
+                tmp += "\nlastOut: " + WCDIOdoc.getDate("lastOut");
             }
         }
 
