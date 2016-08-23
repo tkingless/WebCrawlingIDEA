@@ -138,6 +138,32 @@ public class MatchCSVhandler {
 
     private void Append(Date refTime){
 
+        List<Document> data = (List<Document>) WCDIOdoc.get("data");
+        csvHdr = new FileManager(csvFile);
+
+        try {
+
+            for (Document datum : data) {
+
+                Date recorded = datum.getDate("recorded");
+
+                if(recorded.getTime() < refTime.getTime()){
+                    continue;
+                }
+
+                StringBuilder lineHead = new StringBuilder();
+                for (String key : datum.keySet()) {
+                    lineHead.append("\"").append(datum.get(key).toString()).append("\",");
+                }
+                lineHead.setLength(Math.max(lineHead.length() - 1, 0));
+                csvHdr.AppendBufferedOnNewLine(lineHead.toString());
+            }
+
+            csvHdr.Close();
+        }catch (Exception e){
+            WebCrawledDataIO.logger.error("Append() error",e);
+        }
+
     }
 
     @Override
