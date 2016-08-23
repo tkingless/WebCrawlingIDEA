@@ -1,11 +1,9 @@
 package com.tkingless;
 
-import com.tkingless.utils.CSVmanager;
 import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.utils.FileManager;
 import org.bson.Document;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -55,7 +53,7 @@ public class MatchCSVhandler {
             String absCSVpath = rootPath + "/" + csvFile;
             String archivePath = rootPath + "/";
             if(!WCDIO.containsKey("lastOut")){
-                //TODO overwrite, set lastOutSucceed true
+                Overwrite();
                 lastOutSucceed = true;
                 WebCrawledDataIO.logger.debug("no lastOut found, so overwrite");
                 return;
@@ -72,7 +70,7 @@ public class MatchCSVhandler {
                     return;
                 }
 
-                //TODO overwrite, set lastOutSucceed true
+                Overwrite();
                 lastOutSucceed = true;
                 WebCrawledDataIO.logger.debug("no existing csv found found, so overwrite");
                 return;
@@ -92,7 +90,7 @@ public class MatchCSVhandler {
                 refTime = lastOutTime;
             }
 
-            //TODO append csv file and set lastOutSucceed true
+            Append();
             lastOutSucceed = true;
 
         } catch (Exception e){
@@ -115,10 +113,6 @@ public class MatchCSVhandler {
 
     private void Append(){
 
-    }
-
-    private void lastWrite(){
-        //TODO, create subfolder, put written csv to the folder
     }
 
     @Override
