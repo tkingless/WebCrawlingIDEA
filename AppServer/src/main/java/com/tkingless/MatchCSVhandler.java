@@ -63,7 +63,7 @@ public class MatchCSVhandler {
 
             Date lastOutTime = WCDIOdoc.getDate("lastOut");
             String possibleSubfolder = DateTimeEntity.getDefault_dateFormat().format(lastOutTime);
-            archivePath += possibleSubfolder + csvFile;
+            archivePath += possibleSubfolder+ "/" + csvFile;
 
             if (!FileManager.CheckFileExist(absCSVpath) ) {
 

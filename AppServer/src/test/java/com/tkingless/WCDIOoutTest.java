@@ -151,7 +151,10 @@ public class WCDIOoutTest {
 
         hdlrs.forEach(hdlr->{
             hdlr.run();
-            //TODO: check if write succeed, if yes than update lastOut
+            if(hdlr.isLastOutSucceed()){
+
+                UpdateLastOut();
+            }
         });
 
     }
@@ -176,7 +179,6 @@ public class WCDIOoutTest {
         if (result != null) {
             return result;
         }
-
         return null;
     }
 
