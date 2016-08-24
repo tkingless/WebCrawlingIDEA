@@ -121,7 +121,6 @@ public class APoolOddsDAO extends BasicDAO<APoolOddsData, ObjectId> {
     }
 
     public void SortUpdateRecordsByASC(){
-        //TODO return time-order sorted list
         //aList.sort(Comparator.comparing(data -> data.getRecorded()));
     }
 

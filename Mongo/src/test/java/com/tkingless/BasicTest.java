@@ -92,7 +92,6 @@ public class BasicTest {
         });
 
         //TODO make address as indexed object
-        //TODO query returning embedded doc only
 
         //Filters helper
         //db.getCollection("restaurants").find(lt("grades.score", 10));
