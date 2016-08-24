@@ -29,5 +29,3 @@ subprojects {
         }
     }
 }
-
-//TODO refer to buildSrc sample in gradle samples, to get idea of how different modules rely on one another
