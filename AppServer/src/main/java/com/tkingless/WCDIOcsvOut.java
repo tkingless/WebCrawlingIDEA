@@ -63,28 +63,12 @@ public class WCDIOcsvOut {
     }
 
     public void run(){
+        GatherID();
+        ProcHdlrs();
 
     }
 
-    private Document LoadConfigFile() {
-
-        Document config = null;
-
-        ClassLoader classLoader = getClass().getClassLoader();
-        try {
-
-            String jsonString = "";
-            jsonString = IOUtils.toString(classLoader.getResourceAsStream("WCDIOconfig.json"));
-            config = Document.parse(jsonString);
-
-        } catch (IOException e) {
-            WebCrawledDataIO.logger.error("Have you handled WCDIOconfig.json? ", e);
-        }
-
-        return config;
-    }
-
-    public void GatherID() {
+    void GatherID() {
 
         try {
 
@@ -113,9 +97,7 @@ public class WCDIOcsvOut {
 
     }
 
-    public void ProcHdlrs() throws Exception{
-
-        GatherID();
+    void ProcHdlrs(){
 
         hdlrs.forEach(hdlr->{
             hdlr.run();
@@ -150,5 +132,23 @@ public class WCDIOcsvOut {
             return result;
         }
         return null;
+    }
+
+    private Document LoadConfigFile() {
+
+        Document config = null;
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        try {
+
+            String jsonString = "";
+            jsonString = IOUtils.toString(classLoader.getResourceAsStream("WCDIOconfig.json"));
+            config = Document.parse(jsonString);
+
+        } catch (IOException e) {
+            WebCrawledDataIO.logger.error("Have you handled WCDIOconfig.json? ", e);
+        }
+
+        return config;
     }
 }

@@ -54,4 +54,12 @@ public class WebCrawledDataIO implements ServletContextListener {
         }
     }
 
+    public class ScheduledWCDIOout implements Runnable{
+        @Override
+        public void run() {
+            WCDIOcsvOut csvOut = new WCDIOcsvOut();
+            csvOut.run();
+        }
+    }
+
 }
