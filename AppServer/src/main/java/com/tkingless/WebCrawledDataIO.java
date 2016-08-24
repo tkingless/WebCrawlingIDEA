@@ -23,43 +23,12 @@ public class WebCrawledDataIO implements ServletContextListener {
 
     final static Logger logger = LogManager.getLogger(WebCrawledDataIO.class);
 
-    //TODO can write a file into the filesharing folder
-    //TODO can connect to DB to get data
-    //TODO can call CSV, file manager
-    //TODO can have working threads, again....my gosh
-
     private String filePath;
-    private Document config;
     private ScheduledExecutorService scheduler;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         logger.info("WebCrawledDataIO init() called.");
-
-        config = LoadConfigFile();
-
-        filePath = (String) config.get("HostedFilesPath");
-        FileManager fileManager;
-
-        if(FileManager.CreateFolder(filePath)){
-            fileManager = new FileManager(filePath + "/helloWorld.txt");
-
-            try {
-                fileManager.Append("you are the best!");
-                fileManager.Close();
-            } catch (IOException e) {
-                logger.error("filemanager: ",e);
-            }
-        }
-
-        logger.info("[Important] The WDCIO config json file should be placed at: current path: " + (new File(".")).getAbsolutePath());
-
-        if(FileManager.CheckFileExist("WCDIOconfig.json")){
-            System.out.println("found the json");
-        } else {
-            System.out.println("Not found the json");
-        }
-
 
         //TODO csvout worker should delay sometime after csvin worker, sensibly, and lower frequency
         scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -76,24 +45,6 @@ public class WebCrawledDataIO implements ServletContextListener {
             e.printStackTrace();
         }
 
-    }
-
-    private Document LoadConfigFile(){
-
-        Document config = null;
-
-        ClassLoader classLoader = getClass().getClassLoader();
-        try {
-
-            String jsonString = "";
-            jsonString = IOUtils.toString(classLoader.getResourceAsStream("WCDIOconfig.json"));
-            config = Document.parse(jsonString);
-
-        } catch (IOException e) {
-            logger.error("Have you handled WCDIOconfig.json? ", e);
-        }
-
-        return config;
     }
 
     public class ScheduledWCDIOin implements Runnable{
