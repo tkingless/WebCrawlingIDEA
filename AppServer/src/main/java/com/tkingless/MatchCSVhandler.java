@@ -85,6 +85,7 @@ public class MatchCSVhandler {
 
                 if(endTime.getTime() <= lastOutTime.getTime()){
                     WebCrawledDataIO.logger.debug("csv out finish, moved csv file");
+                    FileManager.CreateFolder(rootPath+"/"+possibleSubfolder);
                     FileManager.RenameFile(absCSVpath,archivePath);
                     return;
                 }
@@ -113,6 +114,9 @@ public class MatchCSVhandler {
         csvHdr = new FileManager(rootPath+"/"+csvFile);
 
         try {
+
+            WebCrawledDataIO.logger.trace("Overwrite(), id: "+ data.get(0).getInteger("MatchId"));
+
             String headers =
                     data.get(0).keySet().stream().map(i -> i.toString()).collect(Collectors.joining(","));
             //add header line
@@ -141,6 +145,8 @@ public class MatchCSVhandler {
 
         try {
 
+            WebCrawledDataIO.logger.trace("Append(), id: "+ data.get(0).getInteger("MatchId"));
+
             for (Document datum : data) {
 
                 Date recorded = datum.getDate("recorded");
@@ -154,6 +160,7 @@ public class MatchCSVhandler {
                     lineHead.append("\"").append(datum.get(key).toString()).append("\",");
                 }
                 lineHead.setLength(Math.max(lineHead.length() - 1, 0));
+                WebCrawledDataIO.logger.trace("Append() a newLine, id: "+ data.get(0).getInteger("MatchId"));
                 csvHdr.AppendBufferedOnNewLine(lineHead.toString());
             }
 
