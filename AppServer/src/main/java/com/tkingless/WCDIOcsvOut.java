@@ -42,16 +42,9 @@ public class WCDIOcsvOut {
 
         try {
 
-            if (FileManager.CheckFileExist("WCDIOconfig.json")) {
-                WebCrawledDataIO.logger.trace("found the json");
-            } else {
-                WebCrawledDataIO.logger.trace("Not found the json");
-            }
-
             config = LoadConfigFile();
             fileSharingPath = (String) config.get("HostedFilesPath");
 
-            WebCrawledDataIO.logger.info("[Important] The WDCIO config json file should be placed at: current path: " + (new File(".")).getAbsolutePath());
             WebCrawledDataIO.logger.info("file path is: " + fileSharingPath);
 
 
