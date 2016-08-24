@@ -161,7 +161,7 @@ public class MatchCSVhandler {
                 }
                 lineHead.setLength(Math.max(lineHead.length() - 1, 0));
                 WebCrawledDataIO.logger.trace("Append() a newLine, id: "+ data.get(0).getInteger("MatchId"));
-                csvHdr.AppendBufferedOnNewLine(lineHead.toString());
+                csvHdr.AppendOnNewLine(lineHead.toString());
             }
 
             csvHdr.Close();
@@ -173,7 +173,7 @@ public class MatchCSVhandler {
 
     @Override
     public String toString(){
-        String tmp = null;
+        String tmp = "\n";
 
         tmp += "csvTeamH: " + csvTeamH;
         tmp += "\ncsvTeamA:" + csvTeamA;
