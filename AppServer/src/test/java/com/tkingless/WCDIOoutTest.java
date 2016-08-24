@@ -74,22 +74,23 @@ public class WCDIOoutTest {
         }
 
         try {
-            config = LoadConfigFile();
-            fileSharingPath = (String) config.get("HostedFilesPath");
-
-            WebCrawledDataIO.logger.info("[Important] The WDCIO config json file should be placed at: current path: " + (new File(".")).getAbsolutePath());
 
             if (FileManager.CheckFileExist("WCDIOconfig.json")) {
                 System.out.println("found the json");
             } else {
                 System.out.println("Not found the json");
             }
+
+            config = LoadConfigFile();
+            fileSharingPath = (String) config.get("HostedFilesPath");
+
+            WebCrawledDataIO.logger.info("[Important] The WDCIO config json file should be placed at: current path: " + (new File(".")).getAbsolutePath());
+            WebCrawledDataIO.logger.info("file path is: " + fileSharingPath);
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        fileSharingPath = (String) config.get("HostedFilesPath");
-        WebCrawledDataIO.logger.info("file path is: " + fileSharingPath);
 
         now = new Date();
 
@@ -130,7 +131,6 @@ public class WCDIOoutTest {
                 @Override
                 public void apply(Document document) {
                     Document matchDoc = GetMatchEventDoc(document.getInteger("MatchId"));
-
 
                     hdlrs.add(new MatchCSVhandler(document,matchDoc,fileSharingPath,now));
                 }

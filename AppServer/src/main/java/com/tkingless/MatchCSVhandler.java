@@ -110,7 +110,7 @@ public class MatchCSVhandler {
     private void Overwrite(){
 
         List<Document> data = (List<Document>) WCDIOdoc.get("data");
-        csvHdr = new FileManager(csvFile);
+        csvHdr = new FileManager(rootPath+"/"+csvFile);
 
         try {
             String headers =
@@ -137,7 +137,7 @@ public class MatchCSVhandler {
     private void Append(Date refTime){
 
         List<Document> data = (List<Document>) WCDIOdoc.get("data");
-        csvHdr = new FileManager(csvFile);
+        csvHdr = new FileManager(rootPath+"/"+csvFile);
 
         try {
 
