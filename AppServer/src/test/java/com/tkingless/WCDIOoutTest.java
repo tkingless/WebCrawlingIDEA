@@ -153,7 +153,9 @@ public class WCDIOoutTest {
             hdlr.run();
             if(hdlr.isLastOutSucceed()){
 
-                UpdateLastOut();
+                Document filter = new Document("MatchId",hdlr.getMatchDoc().getInteger("MatchId"));
+                Document data = new Document("lastOut",now);
+                UpdateLastOut(WCDIO,filter,data);
             }
         });
 

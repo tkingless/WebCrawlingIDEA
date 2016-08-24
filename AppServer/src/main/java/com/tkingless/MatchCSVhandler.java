@@ -78,21 +78,19 @@ public class MatchCSVhandler {
                 return;
             }
 
-            Date refTime = null;
+
 
             if (WCDIOdoc.containsKey("MarkedEnd")) {
-                refTime = WCDIOdoc.getDate("MarkedEnd");
+                Date endTime = WCDIOdoc.getDate("MarkedEnd");
 
-                if(refTime.getTime() <= lastOutTime.getTime()){
+                if(endTime.getTime() <= lastOutTime.getTime()){
                     WebCrawledDataIO.logger.debug("csv out finish, moved csv file");
                     FileManager.RenameFile(absCSVpath,archivePath);
                     return;
                 }
-            } else {
-                refTime = lastOutTime;
             }
 
-            Append(refTime);
+            Append(lastOutTime);
             lastOutSucceed = true;
 
         } catch (Exception e){
