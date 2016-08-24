@@ -1,11 +1,17 @@
 package com.tkingless;
 
+import com.mongodb.Block;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.utils.FileManager;
+import org.apache.commons.io.IOUtils;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,9 +43,9 @@ public class WCDIOcsvOut {
         try {
 
             if (FileManager.CheckFileExist("WCDIOconfig.json")) {
-                System.out.println("found the json");
+                WebCrawledDataIO.logger.trace("found the json");
             } else {
-                System.out.println("Not found the json");
+                WebCrawledDataIO.logger.trace("Not found the json");
             }
 
             config = LoadConfigFile();
@@ -50,7 +56,7 @@ public class WCDIOcsvOut {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            WebCrawledDataIO.logger.error("csv out init error",e);
         }
 
         now = new Date();
@@ -58,5 +64,91 @@ public class WCDIOcsvOut {
 
     public void run(){
 
+    }
+
+    private Document LoadConfigFile() {
+
+        Document config = null;
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        try {
+
+            String jsonString = "";
+            jsonString = IOUtils.toString(classLoader.getResourceAsStream("WCDIOconfig.json"));
+            config = Document.parse(jsonString);
+
+        } catch (IOException e) {
+            WebCrawledDataIO.logger.error("Have you handled WCDIOconfig.json? ", e);
+        }
+
+        return config;
+    }
+
+    public void GatherID() {
+
+        try {
+
+            long threshold = now.getTime() - thresholdToConsider;
+            DateTimeEntity timeAfterToConsider = new DateTimeEntity(threshold);
+
+            FindIterable<Document> consideredDocs = WCDIOcsvColl.find(
+                    //Multiple criteria
+                    new Document("lastIn", new Document("$exists", true)).append("lastIn", new Document("$gte", timeAfterToConsider.GetTheInstant()))
+            ).sort(new Document("lastIn", -1)).limit(40);
+
+            consideredDocs.forEach(new Block<Document>() {
+                @Override
+                public void apply(Document document) {
+                    Document matchDoc = GetMatchEventDoc(document.getInteger("MatchId"));
+
+                    hdlrs.add(new MatchCSVhandler(document,matchDoc,fileSharingPath,now));
+                }
+            });
+
+        } catch (Exception e) {
+            WebCrawledDataIO.logger.error("GatherID() error", e);
+        }
+
+        hdlrs.forEach(hdlr->WebCrawledDataIO.logger.trace("considered doc: " + hdlr.toString()));
+
+    }
+
+    public void ProcHdlrs() throws Exception{
+
+        GatherID();
+
+        hdlrs.forEach(hdlr->{
+            hdlr.run();
+            if(hdlr.isLastOutSucceed()){
+
+                Document filter = new Document("MatchId",hdlr.getMatchDoc().getInteger("MatchId"));
+                Document data = new Document("lastOut",now);
+                UpdateLastOut(WCDIOcsvColl,filter,data);
+            }
+        });
+
+    }
+
+    boolean UpdateLastOut(MongoCollection aColl, Bson filter, Document data){
+        boolean writeSucess = false;
+        try {
+            Document update;
+            update = new Document("$set", data);
+
+            aColl.updateOne(filter, update);
+
+            writeSucess = true;
+        } catch (Exception e) {
+            WebCrawledDataIO.logger.error("UpdateLastOut() error", e);
+        }
+        return writeSucess;
+    }
+
+    Document GetMatchEventDoc(Integer id) {
+        Document result = MatchEventsColl.find(new Document("MatchId", id)).first();
+        if (result != null) {
+            return result;
+        }
+        return null;
     }
 }
