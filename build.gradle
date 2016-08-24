@@ -18,7 +18,7 @@ subprojects {
         testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
     }
 
-    version = '0.1-snapshot'
+    version = '0.9.toTest'
 
     //noinspection GroovyAssignabilityCheck
     jar {
@@ -30,4 +30,4 @@ subprojects {
     }
 }
 
-//TODO refer to buildSrc sample in gradle samples, to get idea of how different modules rely on one another
+//TODO rm more logging

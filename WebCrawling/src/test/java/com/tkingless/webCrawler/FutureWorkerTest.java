@@ -6,7 +6,6 @@ import com.mongodb.ServerAddress;
 import com.tkingless.DBobject.MatchEventDAO;
 import com.tkingless.MatchTestCONSTANTS;
 import com.tkingless.MongoDBparam;
-import com.tkingless.utils.ConcurrencyMachine;
 import com.tkingless.MatchCONSTANTS;
 import com.tkingless.crawlee.BoardCrawlee;
 import org.junit.*;
@@ -48,26 +47,6 @@ public class FutureWorkerTest {
 
     @After
     public void tearDown() throws Exception {
-    }
-
-    //This is old test, without DB feature
-    @Ignore
-    //@Test
-    public void TestFutureWorkerState() throws Exception {
-        HKJCcrawler hkjcCrlr = HKJCcrawler.GetInstance();
-        testBoardCrlr = new BoardCrawlee(hkjcCrlr, BoardCrawleeTestSample.FutureBoardhtml);
-        ConcurrencyMachine.GetInstance().RegisterQueue(testBoardCrlr);
-        synchronized (this) {
-            ConcurrencyMachine.GetInstance().InvokeQueue();
-        }
-
-        futureWorker = testBoardCrlr.getParsedWorkers().get(0);
-        System.out.println("TestFutureWorkerState() called");
-        MatchCONSTANTS.MatchStatus expectedState = MatchCONSTANTS.MatchStatus.STATE_TERMINATED;
-
-        Thread.sleep(500);
-        Assert.assertEquals(expectedState, futureWorker.getStatus());
-        Assert.assertEquals(false, futureWorker.isAlive());
     }
 
     @Test

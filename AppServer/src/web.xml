@@ -14,18 +14,19 @@
          <welcome-file>default.jsp</welcome-file> -->
         <welcome-file>hello.jsp</welcome-file>
     </welcome-file-list>
-    <servlet>
+    <!--servlet>
         <servlet-name>HelloWorldServlet</servlet-name>
         <servlet-class>com.tkingless.HelloWorld</servlet-class>
         <load-on-startup>1</load-on-startup>
-    </servlet>
+    </servlet-->
 
+    <!--ONLY THESE SERVLET SERVER FOR MAIN PURPOSE-->
     <listener>
-        <!--listener-class>com.tkingless.WebCrawlingApp</listener-class-->
-        <listener-class>com.tkingless.WebCrawledDataIO</listener-class>
+        <!--listener-class>com.tkingless.WebCrawlingApp</listener-class>
+        <listener-class>com.tkingless.WebCrawledDataIO</listener-class-->
     </listener>
 
-    <servlet>
+    <!--servlet>
         <servlet-name>FileSharingServlet</servlet-name>
         <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
         <init-param>
@@ -37,14 +38,14 @@
             <param-value>true</param-value>
         </init-param>
         <init-param>
-            <param-name>contextXsltFile</param-name> <!--this is just for flavour use-->
+            <param-name>contextXsltFile</param-name> this is just for flavour use(comment this if want to use)
             <param-value>/FilesSharing/context.xsl</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
-    </servlet>
+    </servlet-->
 
-    <servlet-mapping>
+    <!--servlet-mapping>
         <servlet-name>FileSharingServlet</servlet-name>
         <url-pattern>/FilesSharing/*</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping-->
 </web-app>

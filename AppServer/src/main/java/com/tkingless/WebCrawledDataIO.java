@@ -27,7 +27,7 @@ public class WebCrawledDataIO implements ServletContextListener {
         Inscheduler = Executors.newSingleThreadScheduledExecutor();
         Inscheduler.scheduleAtFixedRate(new ScheduledWCDIOin(),0,1000 * 5, TimeUnit.MILLISECONDS);
         Outscheduler = Executors.newSingleThreadScheduledExecutor();
-        Outscheduler.scheduleAtFixedRate(new ScheduledWCDIOout(),2500,1000 * 6, TimeUnit.MILLISECONDS);
+        Outscheduler.scheduleAtFixedRate(new ScheduledWCDIOout(),2500,1000 * 5, TimeUnit.MILLISECONDS);
     }
 
     @Override
