@@ -273,7 +273,7 @@ public class WCDIOcsvData {
                 data.setHADdrawOdd(doc.getDouble("HADdrawOdd"));
             }
             if (doc.containsKey("HADawayOdd")) {
-                data.setHADdrawOdd(doc.getDouble("HADawayOdd"));
+                data.setHADawayOdd(doc.getDouble("HADawayOdd"));
             }
             if (doc.containsKey("HADpoolStatus")) {
                 data.setHADpoolStatus(doc.getString("HADpoolStatus"));
