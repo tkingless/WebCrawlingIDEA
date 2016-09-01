@@ -10,6 +10,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -133,8 +134,10 @@ public class WCDIOcsvOut {
         try {
 
             String jsonString = "";
-            jsonString = IOUtils.toString(classLoader.getResourceAsStream("WCDIOconfig.json"));
+            InputStream input = classLoader.getResourceAsStream("WCDIOconfig.json");
+            jsonString = IOUtils.toString(input);
             config = Document.parse(jsonString);
+            input.close();
 
         } catch (IOException e) {
             WebCrawledDataIO.logger.error("Have you handled WCDIOconfig.json? ", e);
