@@ -17,8 +17,8 @@ public class WebCrawledDataIO implements ServletContextListener {
 
     final static Logger logger = LogManager.getLogger(WebCrawledDataIO.class);
 
-    private ScheduledExecutorService Inscheduler;
-    private ScheduledExecutorService Outscheduler;
+    private static ScheduledExecutorService Inscheduler;
+    private static ScheduledExecutorService Outscheduler;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -35,6 +35,7 @@ public class WebCrawledDataIO implements ServletContextListener {
 
         try {
             Inscheduler.shutdown();
+            Outscheduler.shutdown();
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -52,8 +53,7 @@ public class WebCrawledDataIO implements ServletContextListener {
     public class ScheduledWCDIOout implements Runnable{
         @Override
         public void run() {
-            WCDIOcsvOut csvOut = new WCDIOcsvOut();
-            csvOut.run();
+            WCDIOcsvOut.GetInstance().run();
         }
     }
 

@@ -29,6 +29,17 @@ public class WCDIOcsvOut {
     private long thresholdToConsider = 1000 * 60 * 60 * 4;
     Date now;
 
+    private static WCDIOcsvOut instance = null;
+
+    public static WCDIOcsvOut GetInstance() {
+
+        if (instance == null) {
+            WebCrawledDataIO.logger.trace("WCDIOcsvOut init()");
+            instance = new WCDIOcsvOut();
+        }
+
+        return instance;
+    }
 
     public WCDIOcsvOut() {
         try {
@@ -44,19 +55,22 @@ public class WCDIOcsvOut {
             config = LoadConfigFile();
             fileSharingPath = (String) config.get("HostedFilesPath");
 
-            WebCrawledDataIO.logger.info("file path is: " + fileSharingPath);
+            WebCrawledDataIO.logger.info("WCDIOconfig file path is: " + fileSharingPath);
 
 
         } catch (Exception e) {
             WebCrawledDataIO.logger.error("csv out init error",e);
         }
 
-        now = new Date();
+
     }
 
     public void run(){
+        now = new Date();
         GatherID();
         ProcHdlrs();
+        hdlrs.clear();
+        WebCrawledDataIO.logger.info("WCDIOcsvOut run() once");
 
     }
 
