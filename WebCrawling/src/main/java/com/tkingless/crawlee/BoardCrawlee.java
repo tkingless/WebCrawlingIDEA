@@ -243,6 +243,7 @@ public class BoardCrawlee extends baseCrawlee {
         if (!livingWorkerMatchIDs.contains(worker.getMatchId())) {
             livingWorkerMatchIDs.add(worker.getMatchId());
             livingWorkers.add(worker);
+            logTest.logger.info("[BoardCrawlee] worker, id: " +worker.getMatchId() + "has been registered");
         } else {
             logTest.logger.error("replicated local registration");
         }
@@ -252,8 +253,9 @@ public class BoardCrawlee extends baseCrawlee {
         if (livingWorkerMatchIDs.contains(worker.getMatchId())) {
             livingWorkerMatchIDs.remove(worker.getMatchId());
             livingWorkers.remove(worker);
+            logTest.logger.info("[BoardCrawlee] livingworker, id: " +worker.getMatchId() + "has been released");
         } else
-            logTest.logger.warn("No such local registration before");
+            logTest.logger.info("No such local registration before");
     }
 
     public synchronized static void TerminateAllLivingWorkers(){
