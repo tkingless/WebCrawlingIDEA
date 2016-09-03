@@ -1,6 +1,10 @@
 package com.tkingless;
 
 import com.tkingless.WebCrawling.DBobject.APoolOddsData;
+import com.tkingless.utils.JsoupHelper;
+import com.tkingless.webCrawler.BoardCrawleeTestSample;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -68,6 +72,17 @@ public class Miscs {
             else
                 System.out.println("it is odd: " + i);
         }
+
+    }
+
+    @Test
+    public void TestJsoupGetAttrVal() throws Exception {
+        Document doc = JsoupHelper.GetDocumentFromStr(BoardCrawleeTestSample.FutureBoardhtml);
+
+        Element link = doc.select("td[class$=\"cflag ttgR2\"]>span>img").first();
+        String flg = link.attr("title");
+
+        System.out.println("flag: " + flg);
 
     }
 }
