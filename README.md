@@ -121,6 +121,10 @@ User and Group
 	12. check if start success:
  		sudo vi /var/log/upstart/tomcat.log 
 
+Reference:
+
+	https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-8-on-ubuntu-16-04
+
 Debugging
 ====
 	1. sudo vi /var/log/upstart/tomcat.log 
