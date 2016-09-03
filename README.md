@@ -107,6 +107,8 @@ Configuration
 		allow="^.*$"
 User and Group
 
+Ubuntu 14.04
+
 	1. sudo groupadd tomcat
 	2. sudo useradd -s /bin/false -g tomcat -d /opt/tomcat9 tomcat
 	3. sudo usermod -a -G tkingless tomcat
@@ -114,12 +116,24 @@ User and Group
 	5. sudo chmod g+rwx /opt/tomcat9/conf /opt/tomcat9/webapps #for tkingless convenience
 	6. sudo chmod g+r /opt/tomcat9/conf/*
 	7. copy ForConfigurationUse/tomcat.conf (in this repo) to /etc/init/tomcat.conf
- 	8. sudo initctl reload-configuration #no initctl at Ubuntu 16, use mannual turn on first
- 	9. sudo initctl start tomcat #no initctl at Ubuntu 16, use mannual turn on first
+ 	8. sudo initctl reload-configuration
+ 	9. sudo initctl start tomcat
 	10. sudo sh /opt/tomcat9/bin/startup.sh #start tomcat manually
 	11. sudo sh /opt/tomcat9/bin/shutdown.sh #shutdown tomcat manually
 	12. check if start success:
- 		sudo vi /var/log/upstart/tomcat.log 
+ 		sudo vi /var/log/upstart/tomcat.log
+
+ Ubuntu 16.04
+
+	1. sudo groupadd tomcat
+	2. sudo useradd -s /bin/false -g tomcat -d /opt/tomcat9 tomcat
+	3. sudo usermod -a -G tkingless tomcat
+	4. cd /opt/tomcat9; sudo chown -R tomcat ./
+	5. sudo chmod g+rwx /opt/tomcat9/conf /opt/tomcat9/webapps #for tkingless convenience
+	6. sudo chmod g+r /opt/tomcat9/conf/*
+	7. copy ForConfigurationUse/tomcat.service (in this repo) to /etc/systemd/system/
+ 	8. sudo systemctl daemon-reload
+ 	9. sudo systemctl start tomcat
 
 Reference:
 
