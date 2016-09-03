@@ -1,5 +1,7 @@
 package com.tkingless;
 
+import com.tkingless.utils.logTest;
+
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +29,7 @@ public class MatchCONSTANTS {
         STAGE_FIRST,
         STAGE_HALFTIME,
         STAGE_SECOND,
+        STAGE_FULLTIME,
         STAGE_UNDEFINED
     }
 
@@ -115,8 +118,10 @@ public class MatchCONSTANTS {
             return MatchStage.STAGE_HALFTIME;
         if(lowercase.equals("secondhalf"))
             return MatchStage.STAGE_SECOND;
-        else
+        else {
+            logTest.logger.error("MATCHCONSTANTS.GetMatchStage() unknown string: " + str);
             return MatchStage.STAGE_UNDEFINED;
+        }
     }
 
     public static String GetMatchStageStr(MatchStage stage){
@@ -132,6 +137,7 @@ public class MatchCONSTANTS {
                 return "secondhalf";
             case STAGE_UNDEFINED:
                 default:
+                    logTest.logger.error("MatchCONSTANTS.GetMatchStageStr() error: " + stage.toString());
                 return "unknown";
         }
     }

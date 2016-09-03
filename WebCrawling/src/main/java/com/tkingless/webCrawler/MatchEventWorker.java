@@ -32,7 +32,7 @@ import static com.tkingless.MatchCONSTANTS.MatchStatus.*;
 //this is class is to be long-live thread worker to log happening event
 public class MatchEventWorker extends baseCrawler {
 
-    private final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST, MatchStage.STAGE_HALFTIME, MatchStage.STAGE_SECOND);
+    private final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST, MatchStage.STAGE_HALFTIME, MatchStage.STAGE_SECOND, MatchStage.STAGE_FULLTIME);
     private static final String threadName = "MatchEventWorker-thread";
 
     //The unique id for this worker
@@ -81,7 +81,7 @@ public class MatchEventWorker extends baseCrawler {
             preRegperiod = 1000 * 10;
             long rectTimestamp = (long) (workerTime.GetTheInstant().getTime() + 0.5 * preRegperiod);
             commenceTime = new DateTimeEntity(rectTimestamp);
-            IdentifyStage(statusEle);
+            IdentifyStage(statusEle); //this usage is for test case use only
         } else {
             ExtractStatus(statusEle);
         }
@@ -214,6 +214,7 @@ public class MatchEventWorker extends baseCrawler {
                 case STAGE_FIRST:
                 case STAGE_HALFTIME:
                 case STAGE_SECOND:
+                case STAGE_FULLTIME:
 
                     if (workerDAO.QueryDataFieldExists(this, "commence")) {
                         long timestampOfcommence = workerDAO.findByMatchId(matchId).getCommence().getTime();
@@ -244,7 +245,10 @@ public class MatchEventWorker extends baseCrawler {
             stage = MatchStage.STAGE_HALFTIME;
         } else if (statusEle.text().contains("2nd Half In Progress")) {
             stage = MatchStage.STAGE_SECOND;
-        } else {
+        } else if (statusEle.text().contains("Full Time")) {
+            stage = MatchStage.STAGE_FULLTIME;
+        } else
+        {
             logTest.logger.error("This is unknwon stage: " + statusEle.text());
         }
     }
@@ -420,7 +424,7 @@ public class MatchEventWorker extends baseCrawler {
                 }
             }
 
-            if (stage == MatchStage.STAGE_SECOND) {
+            if (stage == MatchStage.STAGE_SECOND || stage == MatchStage.STAGE_FULLTIME) {
                 if (lastMatchCrle.isAllPoolClosed()) {
                     logTest.logger.debug("[ENDREASON]last crle shown all pool closed");
                     endGameConfirmCnt++;
