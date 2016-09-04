@@ -67,6 +67,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
         data.setMatchKey(worker.getMatchKey());
         data.setHomeTeam(worker.getHomeTeam());
         data.setAwayTeam(worker.getAwayTeam());
+        data.setLeague(worker.getLeague());
 
         if(worker.getCommenceTime() != null){
             data.setCommence(worker.getCommenceTime().GetTheInstant());

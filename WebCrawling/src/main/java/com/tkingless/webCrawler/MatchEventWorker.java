@@ -247,12 +247,6 @@ public class MatchEventWorker extends baseCrawler {
         }
     }
 
-    private void ExtractTeams(Element homeEle, Element awayEle) {
-        homeTeam = homeEle.text();
-        awayTeam = awayEle.text();
-        logTest.logger.info("ExtractTeams(), matchTeams: " + homeTeam + " vs " + awayTeam);
-    }
-
     /*
     Constructor functions: end
      */
@@ -518,6 +512,10 @@ public class MatchEventWorker extends baseCrawler {
     public String getAwayTeam() {
         return awayTeam;
     }
+
+    public String getLeague() { return  league;}
+
+
 
     /*
     Subsidary functions(): end

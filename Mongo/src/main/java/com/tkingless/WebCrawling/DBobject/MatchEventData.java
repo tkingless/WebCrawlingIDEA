@@ -38,6 +38,7 @@ public class MatchEventData {
 
     private String homeTeam;
     private String awayTeam;
+    private String league;
     private List<String> poolTypes;
 
     private Date commence;
@@ -60,6 +61,10 @@ public class MatchEventData {
 
     public void setAwayTeam(String awayTeam) {
         this.awayTeam = awayTeam;
+    }
+
+    public void setLeague(String league) {
+        this.league = league;
     }
 
     public void setCommence(Date commence) {
@@ -116,6 +121,10 @@ public class MatchEventData {
 
     public List<InPlayAttrUpdates> getCornerTotUpdates() {
         return cornerTotUpdates;
+    }
+
+    public String getLeague() {
+        return league;
     }
 
     public boolean equals(MatchEventData data){
