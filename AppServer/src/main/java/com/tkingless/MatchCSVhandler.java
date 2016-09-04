@@ -84,8 +84,6 @@ public class MatchCSVhandler {
                 return;
             }
 
-
-
             if (WCDIOdoc.containsKey("MarkedEnd")) {
                 Date endTime = WCDIOdoc.getDate("MarkedEnd");
 
