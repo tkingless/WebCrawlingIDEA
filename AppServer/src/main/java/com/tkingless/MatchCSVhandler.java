@@ -14,8 +14,9 @@ import java.util.stream.Collectors;
 public class MatchCSVhandler {
 
     String csvFile;
-    String csvTeamH;
-    String csvTeamA;
+    String csvTeamH="";
+    String csvTeamA="";
+    String league="";
     String subFolder;
     String rootPath;
     FileManager csvHdr;
@@ -37,7 +38,12 @@ public class MatchCSVhandler {
             csvTeamA = csvTeamA.replace(' ', '_');
         }
 
-        csvFile = WCDIOdoc.getInteger("MatchId").toString() + '.' + csvTeamH + '.' + csvTeamA + ".csv";
+        if(matchDoc.containsKey("league")){
+            league = matchDoc.getString("league");
+            league = league.replace(' ', '_');
+        }
+
+        csvFile = WCDIOdoc.getInteger("MatchId").toString() + '.' + csvTeamH + '.' + csvTeamA + "." + league + ".csv";
 
         subFolder=DateTimeEntity.getDefault_dateFormat().format(now);
 
