@@ -40,6 +40,10 @@ public class MatchInitContainer {
     }
 
     void specialTreatmentonTeam(){
+
+        homeTeams = new Elements();
+        awayTeams = new Elements();
+
         for(int i = 0; i < matchTeams.size(); i++){
             if(i%2 == 0){
                 homeTeams.add(matchTeams.get(i));
@@ -112,9 +116,12 @@ public class MatchInitContainer {
 
                 Element statusEle = matchStatIte.next();
 
-                if( statusEle.childNode(3) != null &&  !statusEle.childNode(3).toString().isEmpty()){
-                    matchInitTime =  statusEle.childNode(3).toString();
+                if(statusEle.childNodeSize() >= 3){
+                    if(!statusEle.childNode(3).toString().isEmpty()){
+                        matchInitTime =  statusEle.childNode(3).toString();
+                    }
                 }
+
 
                 carriers.add(new MatchCarrier(
                         Integer.parseInt(ExtractMatchId(aRefUrl)),

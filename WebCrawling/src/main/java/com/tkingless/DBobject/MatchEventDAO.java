@@ -40,7 +40,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
     //CRUD: create
 
     public void RegisterMatchEventWorker (MatchEventWorker worker) {
-        String idStr = worker.getMatchId();
+        Integer idStr = worker.getMatchId();
         if(!IsMatchRegisteredBefore(idStr)){
             SaveMatchEventWorker(worker);
         }else{
@@ -63,7 +63,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
     }
 
     private void EventWorkerToDBdata(MatchEventWorker worker, MatchEventData data){
-        data.setMatchId(Integer.parseInt(worker.getMatchId()));
+        data.setMatchId(worker.getMatchId());
         data.setMatchKey(worker.getMatchKey());
         data.setHomeTeam(worker.getHomeTeam());
         data.setAwayTeam(worker.getAwayTeam());
@@ -86,18 +86,18 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
 
     //CRUD: read
 
-    public MatchEventData findByMatchId (String id){
-        return findOne("MatchId",Integer.parseInt(id));
+    public MatchEventData findByMatchId (Integer id){
+        return findOne("MatchId",id);
     }
 
-    public boolean IsMatchRegisteredBefore(String id){
-        return exists("MatchId",Integer.parseInt(id));
+    public boolean IsMatchRegisteredBefore(Integer id){
+        return exists("MatchId",id);
     }
 
     public boolean QueryDataFieldExists (MatchEventWorker worker, String field){
         boolean existing = false;
 
-        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId())).field(field).exists();
+        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(worker.getMatchId()).field(field).exists();
         MatchEventData data = query.get();
         if(data != null){
             existing = true;
@@ -112,7 +112,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
     public Set<MatchCONSTANTS.InplayPoolType> QueryPoolTypes(MatchEventWorker worker){
         Set<MatchCONSTANTS.InplayPoolType> returnPools;
 
-        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
+        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(worker.getMatchId());
         MatchEventData data = query.get();
         returnPools = MatchCONSTANTS.GetInplayPoolTypeSet(data.getPoolTypes());
 
@@ -171,7 +171,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
     }
 
     public void SetField(MatchEventWorker worker, String field, Object val){
-        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
+        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(worker.getMatchId());
         UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).set(field,val);
         getDatastore().update(query,ops);
 
@@ -179,7 +179,7 @@ public class MatchEventDAO extends BasicDAO<MatchEventData, ObjectId> {
     }
 
     private void ApplyLastModified(MatchEventWorker worker){
-        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(Integer.parseInt(worker.getMatchId()));
+        Query<MatchEventData> query = getDatastore().createQuery(MatchEventData.class).field("MatchId").equal(worker.getMatchId());
         UpdateOperations<MatchEventData> ops = getDatastore().createUpdateOperations(MatchEventData.class).set("lastModifiedAt",worker.getLastModifiedTime().GetTheInstant());
         getDatastore().update(query,ops);
     }

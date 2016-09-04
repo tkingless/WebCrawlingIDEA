@@ -76,6 +76,7 @@ public class MatchEventWorker extends baseCrawler {
         matchKey = carrier.getMatchNo();
         homeTeam = carrier.getHomeTeam();
         awayTeam = carrier.getAwayTeam();
+        league = carrier.getLeague();
 
         if (type == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
             preRegperiod = 1000 * 10;
@@ -162,11 +163,6 @@ public class MatchEventWorker extends baseCrawler {
     Constructor functions
      */
 
-    private void ExtractMatcdKey(Element matchKeyEle) {
-        matchKey = matchKeyEle.text();
-        //logTest.logger.info("GetChildNodes(), matchKey: " + matchKey);
-    }
-
     private boolean noDBcommenceTimeHistory = false;
 
     //This function now only concern about commenceTime
@@ -215,7 +211,7 @@ public class MatchEventWorker extends baseCrawler {
                 case STAGE_FULLTIME:
 
                     if (workerDAO.QueryDataFieldExists(this, "commence")) {
-                        long timestampOfcommence = workerDAO.findByMatchId(matchId.toString()).getCommence().getTime();
+                        long timestampOfcommence = workerDAO.findByMatchId(matchId).getCommence().getTime();
                         commenceTime = new DateTimeEntity(timestampOfcommence);
                     }
 
@@ -359,7 +355,7 @@ public class MatchEventWorker extends baseCrawler {
 
         //This is added later on as workaround for service started just at pre-reg time, the chance is supposed to be low though...
         if(stage == MatchStage.STAGE_ESST){
-            if(!workerDAO.IsMatchRegisteredBefore(matchId.toString())) {
+            if(!workerDAO.IsMatchRegisteredBefore(matchId)) {
                 workerDAO.RegisterMatchEventWorker(this);
             }
         }

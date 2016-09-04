@@ -93,12 +93,12 @@ public class BoardCrawlee extends baseCrawlee {
         return workerList;
     }
 
-    private static List<String> livingWorkerMatchIDs = new ArrayList<String>();
+    private static List<Integer> livingWorkerMatchIDs = new ArrayList<Integer>();
     private static List<MatchEventWorker> livingWorkers = new ArrayList<MatchEventWorker>();
 
     public synchronized static boolean IsRegisteredByID(MatchEventWorker worker) {
         boolean isRegistered = false;
-        String ID = worker.getMatchId();
+        Integer ID = worker.getMatchId();
 
         if (livingWorkerMatchIDs.contains(ID))
             isRegistered = true;
