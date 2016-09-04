@@ -1,11 +1,8 @@
 package com.tkingless.webCrawler;
 
-import com.tkingless.DBManager;
+import com.tkingless.*;
 import com.tkingless.DBobject.APoolOddsDAO;
 import com.tkingless.DBobject.MatchEventDAO;
-import com.tkingless.MatchCONSTANTS;
-import com.tkingless.MatchTestCONSTANTS;
-import com.tkingless.MongoDBparam;
 import com.tkingless.WebCrawling.DBobject.InPlayAttrUpdates;
 import com.tkingless.crawlee.BoardCrawlee;
 import com.tkingless.crawlee.MatchCrawlee;
@@ -36,7 +33,7 @@ public class MatchEventWorker extends baseCrawler {
     private static final String threadName = "MatchEventWorker-thread";
 
     //The unique id for this worker
-    private String matchId;
+    private Integer matchId;
     private long scanPeriod = 0;
     private long preRegperiod = 1000 * 60 * 5;
 
@@ -52,12 +49,14 @@ public class MatchEventWorker extends baseCrawler {
     String matchKey;
     String homeTeam;
     String awayTeam;
+    //TODO upload league to DB
+    String league;
 
     MatchEventDAO workerDAO;
     APoolOddsDAO crleOddsDAO;
 
-    public MatchEventWorker(String aMatchId, Element matchKeyEle, Element statusEle, Element homeEle, Element awayEle, MatchTestCONSTANTS.TestType type) throws ParseException {
-        super(CrawlerKeyBinding.MatchEvent, threadName + "-" + aMatchId);
+    public MatchEventWorker(MatchCarrier carrier, MatchTestCONSTANTS.TestType type) throws ParseException {
+        super(CrawlerKeyBinding.MatchEvent, threadName + "-" + carrier.getMatchId());
         testTypeSwitch = type;
 
         if(type != null){
@@ -70,20 +69,21 @@ public class MatchEventWorker extends baseCrawler {
 
         workerTime = new DateTimeEntity();
         status = MatchStatus.STATE_INITIALIZATION;
-        matchId = aMatchId;
+        matchId = carrier.getMatchId();
         logTest.logger.info("MatchEventWorker constructed, matchId:" + matchId);
         ///logTest.logger.info("and allOddsLink: " + linkAddr);
 
-        ExtractMatcdKey(matchKeyEle);
-        ExtractTeams(homeEle,awayEle);
+        matchKey = carrier.getMatchNo();
+        homeTeam = carrier.getHomeTeam();
+        awayTeam = carrier.getAwayTeam();
 
         if (type == MatchTestCONSTANTS.TestType.TYPE_PRE_REG) {
             preRegperiod = 1000 * 10;
             long rectTimestamp = (long) (workerTime.GetTheInstant().getTime() + 0.5 * preRegperiod);
             commenceTime = new DateTimeEntity(rectTimestamp);
-            IdentifyStage(statusEle); //this usage is for test case use only
+            IdentifyStage(carrier.getMatchStatusText()); //this usage is for test case use only
         } else {
-            ExtractStatus(statusEle);
+            ExtractStatus(carrier.getMatchStatusText(),carrier.getMatchStatusTime());
         }
 
         //do not use run(), to create worker threads
@@ -170,14 +170,13 @@ public class MatchEventWorker extends baseCrawler {
     private boolean noDBcommenceTimeHistory = false;
 
     //This function now only concern about commenceTime
-    private void ExtractStatus(Element statusEle) throws ParseException {
+    private void ExtractStatus(String statusText,String startTimeWeb) throws ParseException {
 
-        IdentifyStage(statusEle);
+        IdentifyStage(statusText);
 
         try {
             switch (stage) {
                 case STAGE_ESST:
-                    String startTimeWeb = statusEle.childNode(3).toString();
 
                     Pattern dayPattern = Pattern.compile("[0-9]{1,2}/[0-9]{1,2}");
                     Pattern timePattern = Pattern.compile("[0-9]{1,2}:[0-9]{1,2}");
@@ -195,7 +194,6 @@ public class MatchEventWorker extends baseCrawler {
                     dateTimeBuilder.append(day);
                     dateTimeBuilder.append("/");
                     dateTimeBuilder.append(DateTimeEntity.GetCurrentYear());
-
 
                     //=========================check whether next year datetime
                     DateTimeEntity checkIfNextYear = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
@@ -217,7 +215,7 @@ public class MatchEventWorker extends baseCrawler {
                 case STAGE_FULLTIME:
 
                     if (workerDAO.QueryDataFieldExists(this, "commence")) {
-                        long timestampOfcommence = workerDAO.findByMatchId(matchId).getCommence().getTime();
+                        long timestampOfcommence = workerDAO.findByMatchId(matchId.toString()).getCommence().getTime();
                         commenceTime = new DateTimeEntity(timestampOfcommence);
                     }
 
@@ -236,20 +234,20 @@ public class MatchEventWorker extends baseCrawler {
         }
     }
 
-    private void IdentifyStage(Element statusEle) {
-        if (statusEle.text().contains("Expected In Play start selling time")) {
+    private void IdentifyStage(String statusText) {
+        if (statusText.contains("Expected In Play start selling time")) {
             stage = MatchStage.STAGE_ESST;
-        } else if (statusEle.text().contains("1st Half In Progress")) {
+        } else if (statusText.contains("1st Half In Progress")) {
             stage = MatchStage.STAGE_FIRST;
-        } else if (statusEle.text().contains("Half Time")) {
+        } else if (statusText.contains("Half Time")) {
             stage = MatchStage.STAGE_HALFTIME;
-        } else if (statusEle.text().contains("2nd Half In Progress")) {
+        } else if (statusText.contains("2nd Half In Progress")) {
             stage = MatchStage.STAGE_SECOND;
-        } else if (statusEle.text().contains("Full Time")) {
+        } else if (statusText.contains("Full Time")) {
             stage = MatchStage.STAGE_FULLTIME;
         } else
         {
-            logTest.logger.error("This is unknwon stage: " + statusEle.text());
+            logTest.logger.error("This is unknwon stage: " + statusText);
         }
     }
 
@@ -361,7 +359,7 @@ public class MatchEventWorker extends baseCrawler {
 
         //This is added later on as workaround for service started just at pre-reg time, the chance is supposed to be low though...
         if(stage == MatchStage.STAGE_ESST){
-            if(!workerDAO.IsMatchRegisteredBefore(matchId)) {
+            if(!workerDAO.IsMatchRegisteredBefore(matchId.toString())) {
                 workerDAO.RegisterMatchEventWorker(this);
             }
         }
@@ -481,7 +479,7 @@ public class MatchEventWorker extends baseCrawler {
         BoardCrawlee.RegisterWorker(this);
     }
 
-    public synchronized String getMatchId() {
+    public synchronized Integer getMatchId() {
         return matchId;
     }
 
@@ -556,7 +554,7 @@ public class MatchEventWorker extends baseCrawler {
                 switch (differentiator) {
                     case UPDATE_STAGE:
                         InPlayAttrUpdates DVPstage = new InPlayAttrUpdates();
-                        DVPstage.setMatchId(Integer.parseInt(matchId));
+                        DVPstage.setMatchId(matchId);
                         DVPstage.setRecorded(crle.getRecordTime().GetTheInstant());
                         DVPstage.setVal(MatchCONSTANTS.GetMatchStageStr(crle.getMatchStage()));
                         DVPstage.setType("stage");
@@ -567,7 +565,7 @@ public class MatchEventWorker extends baseCrawler {
                         break;
                     case UPDATE_SCORES:
                         InPlayAttrUpdates DVPscore = new InPlayAttrUpdates();
-                        DVPscore.setMatchId(Integer.parseInt(matchId));
+                        DVPscore.setMatchId(matchId);
                         DVPscore.setRecorded(crle.getRecordTime().GetTheInstant());
                         DVPscore.setVal(crle.getScores());
                         DVPscore.setType("score");
@@ -576,7 +574,7 @@ public class MatchEventWorker extends baseCrawler {
                     case UPDATE_CORNER:
                         if (!crle.getTotalCorners().contains("-") || crle.getTotalCorners().isEmpty()) {
                             InPlayAttrUpdates DVPcorner = new InPlayAttrUpdates();
-                            DVPcorner.setMatchId(Integer.parseInt(matchId));
+                            DVPcorner.setMatchId(matchId);
                             DVPcorner.setRecorded(crle.getRecordTime().GetTheInstant());
                             DVPcorner.setVal(crle.getTotalCorners());
                             DVPcorner.setType("corner");
@@ -621,7 +619,7 @@ public class MatchEventWorker extends baseCrawler {
             newMatchCrle = new MatchCrawlee(matchCrleTestTarget);
         }
         else {
-            newMatchCrle = new MatchCrawlee(this, matchId);
+            newMatchCrle = new MatchCrawlee(this, matchId.toString());
         }
 
         newMatchCrle.run();

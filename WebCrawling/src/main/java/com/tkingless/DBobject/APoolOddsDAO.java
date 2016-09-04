@@ -37,12 +37,12 @@ public class APoolOddsDAO extends BasicDAO<APoolOddsData, ObjectId> {
     //CRUD: CREATE
 
     //this function coupled with MatchCrawlee::ExplainHADpool(), ExplainCHIpool(), ExtractPoolTypeBody()
-    public void InsertOddPoolUpdates(String matchId, MatchCrawlee lastCrle, Set<MatchCONSTANTS.UpdateDifferentiator> difftr) throws XPathExpressionException {
+    public void InsertOddPoolUpdates(Integer matchId, MatchCrawlee lastCrle, Set<MatchCONSTANTS.UpdateDifferentiator> difftr) throws XPathExpressionException {
 
         for (MatchCONSTANTS.UpdateDifferentiator update : difftr){
 
             APoolOddsData data = new APoolOddsData();
-            data.setMatchId(Integer.parseInt(matchId));
+            data.setMatchId(matchId);
             data.setRecorded(lastCrle.getRecordTime().GetTheInstant());
 
             switch (update){
@@ -72,11 +72,11 @@ public class APoolOddsDAO extends BasicDAO<APoolOddsData, ObjectId> {
     }
 
     //this function coupled with MatchCrawlee::ExplainHADpool(), ExplainCHIpool(), ExtractPoolTypeBody()
-    public void InsertOddPoolUpdates(String matchId, MatchCrawlee lastCrle, MatchCONSTANTS.InplayPoolType aPool) {
+    public void InsertOddPoolUpdates(Integer matchId, MatchCrawlee lastCrle, MatchCONSTANTS.InplayPoolType aPool) {
 
         try {
             APoolOddsData data = new APoolOddsData();
-            data.setMatchId(Integer.parseInt(matchId));
+            data.setMatchId(matchId);
             data.setRecorded(lastCrle.getRecordTime().GetTheInstant());
 
             switch (aPool) {

@@ -17,8 +17,6 @@ public class MatchInitContainer {
 
     Elements onboardChildUrls,matchNos,matchTeams,homeTeams,awayTeams,statuses,leagues;
 
-    //TODO do proxy to list of MatchCarrier
-
     List<MatchCarrier> carriers;
 
     public List<MatchCarrier> getCarriers() {
@@ -110,12 +108,21 @@ public class MatchInitContainer {
 
             for (Element aRefUrl : onboardChildUrls) {
 
+                String matchInitTime = "";
+
+                Element statusEle = matchStatIte.next();
+
+                if( statusEle.childNode(3) != null &&  !statusEle.childNode(3).toString().isEmpty()){
+                    matchInitTime =  statusEle.childNode(3).toString();
+                }
+
                 carriers.add(new MatchCarrier(
                         Integer.parseInt(ExtractMatchId(aRefUrl)),
                         ExtractMatchNo(matchNoIte.next()),
                         homeTeamIte.next().text(),
                         awayTeamIte.next().text(),
-                        matchStatIte.next().text(),
+                        statusEle.text(),
+                        matchInitTime,
                         ExtractLeague(leagueIte.next())
                 ));
             }
