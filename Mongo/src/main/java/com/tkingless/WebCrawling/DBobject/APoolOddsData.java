@@ -28,9 +28,12 @@ public class APoolOddsData {
     private Double HADhomeOdd;
     private Double HADdrawOdd;
     private Double HADawayOdd;
-    private String CHLline;
-    private Double CHLhigh;
-    private Double CHLlow;
+    private String CHLline_1;
+    private Double CHLhigh_1;
+    private Double CHLlow_1;
+    private String CHLline_2;
+    private Double CHLhigh_2;
+    private Double CHLlow_2;
 
     private String poolStatus;
 
@@ -79,28 +82,52 @@ public class APoolOddsData {
         this.HADawayOdd = HADawayOdd;
     }
 
-    public String getCHLline() {
-        return CHLline;
+    public String getCHLline_1() {
+        return CHLline_1;
     }
 
-    public void setCHLline(String CHLline) {
-        this.CHLline = CHLline;
+    public void setCHLline_1(String CHLline_1) {
+        this.CHLline_1 = CHLline_1;
     }
 
-    public Double getCHLhigh() {
-        return CHLhigh;
+    public Double getCHLhigh_1() {
+        return CHLhigh_1;
     }
 
-    public void setCHLhigh(Double CHLhigh) {
-        this.CHLhigh = CHLhigh;
+    public void setCHLhigh_1(Double CHLhigh_1) {
+        this.CHLhigh_1 = CHLhigh_1;
     }
 
-    public Double getCHLlow() {
-        return CHLlow;
+    public Double getCHLlow_1() {
+        return CHLlow_1;
     }
 
-    public void setCHLlow(Double CHLlow) {
-        this.CHLlow = CHLlow;
+    public void setCHLlow_1(Double CHLlow_1) {
+        this.CHLlow_1 = CHLlow_1;
+    }
+
+    public String getCHLline_2() {
+        return CHLline_2;
+    }
+
+    public void setCHLline_2(String CHLline_2) {
+        this.CHLline_2 = CHLline_2;
+    }
+
+    public Double getCHLhigh_2() {
+        return CHLhigh_2;
+    }
+
+    public void setCHLhigh_2(Double CHLhigh_2) {
+        this.CHLhigh_2 = CHLhigh_2;
+    }
+
+    public Double getCHLlow_2() {
+        return CHLlow_2;
+    }
+
+    public void setCHLlow_2(Double CHLlow_2) {
+        this.CHLlow_2 = CHLlow_2;
     }
 
     public String getPoolStatus() {

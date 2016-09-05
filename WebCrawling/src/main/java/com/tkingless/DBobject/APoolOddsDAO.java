@@ -1,23 +1,17 @@
 package com.tkingless.DBobject;
 
 import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
 import com.tkingless.MatchCONSTANTS;
-import com.tkingless.MongoDBparam;
 import com.tkingless.WebCrawling.DBobject.APoolOddsData;
 import com.tkingless.crawlee.MatchCrawlee;
 import com.tkingless.utils.logTest;
-import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.dao.BasicDAO;
 
-import javax.xml.xpath.XPathExpressionException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by tsangkk on 7/26/16.
@@ -35,41 +29,6 @@ public class APoolOddsDAO extends BasicDAO<APoolOddsData, ObjectId> {
     }
 
     //CRUD: CREATE
-
-    //this function coupled with MatchCrawlee::ExplainHADpool(), ExplainCHIpool(), ExtractPoolTypeBody()
-    public void InsertOddPoolUpdates(Integer matchId, MatchCrawlee lastCrle, Set<MatchCONSTANTS.UpdateDifferentiator> difftr) throws XPathExpressionException {
-
-        for (MatchCONSTANTS.UpdateDifferentiator update : difftr){
-
-            APoolOddsData data = new APoolOddsData();
-            data.setMatchId(matchId);
-            data.setRecorded(lastCrle.getRecordTime().GetTheInstant());
-
-            switch (update){
-                case UPDATE_POOL_HAD:
-                    HashMap<String,String> toUpdateHAD = lastCrle.ExtractPoolTypeBody(MatchCONSTANTS.InplayPoolType.HAD);
-                    data.setType("HAD");
-                    data.setPoolStatus(toUpdateHAD.get("PoolStat"));
-                    data.setHADhomeOdd(Double.parseDouble(toUpdateHAD.get("home")));
-                    data.setHADdrawOdd(Double.parseDouble(toUpdateHAD.get("draw")));
-                    data.setHADawayOdd(Double.parseDouble(toUpdateHAD.get("away")));
-                    break;
-                case UPDATE_POOL_CHL:
-                    HashMap<String,String> toUpdateCHL = lastCrle.ExtractPoolTypeBody(MatchCONSTANTS.InplayPoolType.CHL);
-                    data.setType("CHL");
-                    data.setPoolStatus(toUpdateCHL.get("PoolStat"));
-                    data.setCHLline(toUpdateCHL.get("line"));
-                    data.setCHLhigh(Double.parseDouble(toUpdateCHL.get("high")));
-                    data.setCHLlow(Double.parseDouble(toUpdateCHL.get("low")));
-                    break;
-                default:
-                    logTest.logger.error("[PoolOddInsertion] Undefined pool yet");
-                    break;
-            }
-
-            save(data);
-        }
-    }
 
     //this function coupled with MatchCrawlee::ExplainHADpool(), ExplainCHIpool(), ExtractPoolTypeBody()
     public void InsertOddPoolUpdates(Integer matchId, MatchCrawlee lastCrle, MatchCONSTANTS.InplayPoolType aPool) {
@@ -96,9 +55,16 @@ public class APoolOddsDAO extends BasicDAO<APoolOddsData, ObjectId> {
                     if(toUpdateCHL.get("Exist").equals("true")) {
                         data.setType("CHL");
                         data.setPoolStatus(toUpdateCHL.get("PoolStat"));
-                        data.setCHLline(toUpdateCHL.get("line"));
-                        data.setCHLhigh(Double.parseDouble(toUpdateCHL.get("high")));
-                        data.setCHLlow(Double.parseDouble(toUpdateCHL.get("low")));
+                        data.setCHLline_1(toUpdateCHL.get("CHLline_1"));
+                        data.setCHLhigh_1(Double.parseDouble(toUpdateCHL.get("CHLhigh_1")));
+                        data.setCHLlow_1(Double.parseDouble(toUpdateCHL.get("CHLlow_1")));
+
+                        if(toUpdateCHL.containsKey("CHLline_2")){
+                            data.setCHLline_2(toUpdateCHL.get("CHLline_2"));
+                            data.setCHLhigh_2(Double.parseDouble(toUpdateCHL.get("CHLhigh_2")));
+                            data.setCHLlow_2(Double.parseDouble(toUpdateCHL.get("CHLlow_2")));
+                        }
+
                         save(data);
                     }
                     break;
