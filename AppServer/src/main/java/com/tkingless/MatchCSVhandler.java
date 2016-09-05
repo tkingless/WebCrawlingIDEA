@@ -4,8 +4,7 @@ import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.utils.FileManager;
 import org.bson.Document;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -112,9 +111,6 @@ public class MatchCSVhandler {
         return match;
     }
 
-    //TODO format:
-    //RecordTime, AdjustedTime, Stage, HomeTeamScore, AwayTeamScore, HADhomeOdd, HADdrawOdd, HADawayOdd, HADpoolStatus, CornerCount, CornerLine1, CornerLine1High, CornerLine1Low, CornerLine2, CornerLine2High, CornerLine2Low, CHLpoolStatus
-
     private void Overwrite(){
 
         List<Document> data = (List<Document>) WCDIOdoc.get("data");
@@ -124,10 +120,14 @@ public class MatchCSVhandler {
 
             WebCrawledDataIO.logger.trace("Overwrite(), id: "+ data.get(0).getInteger("MatchId"));
 
-            String headers =
+            List<String> headers = Arrays.asList("Recorded Time","Adjusted Time","Stage","HomeTeamScore","AwayTeamScore","HADhomeOdd","HADdrawOdd","HADawayOdd","HADpoolStatus");
+
+            List<String> pools = (List<String>) match.get("poolTypes");
+
+            String headerStr =
                     data.get(0).keySet().stream().map(i -> i.toString()).collect(Collectors.joining(","));
             //add header line
-            csvHdr.AppendBufferedOnNewLine(headers);
+            csvHdr.AppendBufferedOnNewLine(headerStr);
 
             for (Document datum : data) {
                 StringBuilder lineHead = new StringBuilder();
