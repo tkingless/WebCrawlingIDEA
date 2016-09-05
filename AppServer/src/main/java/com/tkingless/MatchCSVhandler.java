@@ -43,7 +43,7 @@ public class MatchCSVhandler {
             league = league.replace(' ', '_');
         }
 
-        csvFile = WCDIOdoc.getInteger("MatchId").toString() + '.' + csvTeamH + '.' + csvTeamA + "." + league + ".csv";
+        csvFile = league + "." + WCDIOdoc.getInteger("MatchId").toString() + '.' + csvTeamH + '.' + csvTeamA + ".csv";
 
         subFolder=DateTimeEntity.getDefault_dateFormat().format(now);
 
@@ -111,6 +111,9 @@ public class MatchCSVhandler {
     public Document getMatchDoc() {
         return match;
     }
+
+    //TODO format:
+    //RecordTime, AdjustedTime, Stage, HomeTeamScore, AwayTeamScore, HADhomeOdd, HADdrawOdd, HADawayOdd, HADpoolStatus, CornerCount, CornerLine1, CornerLine1High, CornerLine1Low, CornerLine2, CornerLine2High, CornerLine2Low, CHLpoolStatus
 
     private void Overwrite(){
 
