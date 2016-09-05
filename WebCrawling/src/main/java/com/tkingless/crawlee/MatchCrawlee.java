@@ -10,13 +10,10 @@ import com.tkingless.utils.JsoupHelper;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
-import java.io.IOException;
 
 import org.apache.commons.io.*;
 
@@ -291,7 +288,7 @@ public class MatchCrawlee extends baseCrawlee {
             if (newCrle == null)
                 return difftr;
             if (oldCrle == null) {
-                difftr.addAll(EnumSet.of(UpdateDifferentiator.UPDATE_STAGE, UpdateDifferentiator.UPDATE_STAGE, UpdateDifferentiator.UPDATE_SCORES));
+                difftr.addAll(EnumSet.of(UpdateDifferentiator.UPDATE_STAGE, UpdateDifferentiator.UPDATE_POOLS, UpdateDifferentiator.UPDATE_SCORES));
 
                 for (InplayPoolType aType : newCrle.getPoolType()) {
 
