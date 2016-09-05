@@ -192,7 +192,7 @@ public class MatchCrawlee extends baseCrawlee {
                     ExplainHADpool(hmap);
                     break;
                 case CHL:
-                    ExplainCHIpool(hmap);
+                    ExplainCHLpool(hmap);
                     break;
                 default:
                     //logTest.logger.info("[Error] undefined pool type: " + type.toString());
@@ -224,7 +224,7 @@ public class MatchCrawlee extends baseCrawlee {
         hmap.put("away", awayVal);
     }
 
-    void ExplainCHIpool(HashMap<String, String> hmap) {
+    void ExplainCHLpool(HashMap<String, String> hmap) {
         final String CornerLineQuery = "//pool[@type=\"CHL\"]/@line";
         final String CornerHighQuery = "//pool[@type=\"CHL\"]/@h";
         final String CornerLowQuery = "//pool[@type=\"CHL\"]/@l";
@@ -237,16 +237,16 @@ public class MatchCrawlee extends baseCrawlee {
         List<String> highs = new ArrayList<>(Arrays.asList(highVal.split("_")));
         List<String> lows = new ArrayList<>(Arrays.asList(lowVal.split("_")));
 
-        highs.forEach(high -> {
-            high = StrTrimAtChar(high);
-        });
+        highs.replaceAll(high ->
+            StrTrimAtChar(high)
+        );
 
-        lows.forEach(low -> {
-            low = StrTrimAtChar(low);
-        });
+        lows.forEach(low ->
+            StrTrimAtChar(low)
+        );
 
         if(lines.size() == highs.size() && highs.size()== lows.size()){
-            logTest.logger.info("ExplainCHIpool Cardinality checks right");
+            logTest.logger.info("ExplainCHLpool Cardinality checks right");
             for(int i=0 ; i<lines.size();i++){
                 hmap.put("CHLline_"+(i+1),lines.get(i));
                 hmap.put("CHLhigh_"+(i+1),highs.get(i));
@@ -254,7 +254,7 @@ public class MatchCrawlee extends baseCrawlee {
 
             }
         }else {
-            logTest.logger.error("ExplainCHIpool Cardinality checks wrong");
+            logTest.logger.error("ExplainCHLpool Cardinality checks wrong");
         }
     }
 
