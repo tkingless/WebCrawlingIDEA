@@ -18,9 +18,8 @@ import javax.xml.xpath.*;
 import org.apache.commons.io.*;
 
 import java.io.InputStream;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Set;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Created by tkingless on 6/26/16.
@@ -235,12 +234,29 @@ public class MatchCrawlee extends baseCrawlee {
         String highVal = GetValueByQuery(CornerHighQuery);
         String lowVal = GetValueByQuery(CornerLowQuery);
 
-        highVal = StrTrimAtChar(highVal);
-        lowVal = StrTrimAtChar(lowVal);
+        List<String> lines = new ArrayList<>(Arrays.asList(lineVal.split("_")));
+        List<String> highs = new ArrayList<>(Arrays.asList(highVal.split("_")));
+        List<String> lows = new ArrayList<>(Arrays.asList(lowVal.split("_")));
 
-        hmap.put("line", lineVal);
-        hmap.put("high", highVal);
-        hmap.put("low", lowVal);
+        highs.forEach(high -> {
+            high = StrTrimAtChar(high);
+        });
+
+        lows.forEach(low -> {
+            low = StrTrimAtChar(low);
+        });
+
+        if(lines.size() == highs.size() && highs.size()== lows.size()){
+            logTest.logger.info("ExplainCHIpool Cardinality checks right");
+            for(int i=0 ; i<lines.size();i++){
+                hmap.put("CHLline_"+(i+1),lines.get(i));
+                hmap.put("CHLhigh_"+(i+1),highs.get(i));
+                hmap.put("CHLlow_"+(i+1),lows.get(i));
+
+            }
+        }else {
+            logTest.logger.error("ExplainCHIpool Cardinality checks wrong");
+        }
     }
 
     String StrTrimAtChar(String str) {
