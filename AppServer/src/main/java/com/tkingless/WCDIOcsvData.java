@@ -2,7 +2,6 @@ package com.tkingless;
 
 import org.bson.Document;
 
-import javax.print.Doc;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -23,9 +22,12 @@ public class WCDIOcsvData {
     Double HADdrawOdd;
     Double HADawayOdd;
     String HADpoolStatus;
-    String CHLline;
-    Double CHLhigh;
-    Double CHLlow;
+    String CHLline_1;
+    Double CHLhigh_1;
+    Double CHLlow_1;
+    String CHLline_2;
+    Double CHLhigh_2;
+    Double CHLlow_2;
     String CHLpoolStatus;
 
     public Date getRecorded() {
@@ -108,28 +110,28 @@ public class WCDIOcsvData {
         this.HADpoolStatus = HADpoolStatus;
     }
 
-    public String getCHLline() {
-        return CHLline;
+    public String getCHLline_1() {
+        return CHLline_1;
     }
 
-    public void setCHLline(String CHLline) {
-        this.CHLline = CHLline;
+    public void setCHLline_1(String CHLline_1) {
+        this.CHLline_1 = CHLline_1;
     }
 
-    public Double getCHLhigh() {
-        return CHLhigh;
+    public Double getCHLhigh_1() {
+        return CHLhigh_1;
     }
 
-    public void setCHLhigh(Double CHLhigh) {
-        this.CHLhigh = CHLhigh;
+    public void setCHLhigh_1(Double CHLhigh_1) {
+        this.CHLhigh_1 = CHLhigh_1;
     }
 
-    public Double getCHLlow() {
-        return CHLlow;
+    public Double getCHLlow_1() {
+        return CHLlow_1;
     }
 
-    public void setCHLlow(Double CHLlow) {
-        this.CHLlow = CHLlow;
+    public void setCHLlow_1(Double CHLlow_1) {
+        this.CHLlow_1 = CHLlow_1;
     }
 
     public String getCHLpoolStatus() {
@@ -174,14 +176,14 @@ public class WCDIOcsvData {
             if (HADpoolStatus != null) {
                 bson.append("HADpoolStatus", HADpoolStatus);
             }
-            if (CHLline != null) {
-                bson.append("CHLline", CHLline);
+            if (CHLline_1 != null) {
+                bson.append("CHLline_1", CHLline_1);
             }
-            if (CHLhigh != null) {
-                bson.append("CHLhigh", CHLhigh);
+            if (CHLhigh_1 != null) {
+                bson.append("CHLhigh_1", CHLhigh_1);
             }
-            if (CHLlow != null) {
-                bson.append("CHLlow", CHLlow);
+            if (CHLlow_1 != null) {
+                bson.append("CHLlow_1", CHLlow_1);
             }
             if (CHLpoolStatus != null) {
                 bson.append("CHLpoolStatus", CHLpoolStatus);
@@ -220,9 +222,9 @@ public class WCDIOcsvData {
             head.setHADhomeOdd(doc.getDouble("HADhomeOdd"));
             head.setHADpoolStatus(doc.getString("poolStatus"));
         } else if (type.equals("CHL")) {
-            head.setCHLline(doc.getString("CHLline"));
-            head.setCHLhigh(doc.getDouble("CHLhigh"));
-            head.setCHLlow(doc.getDouble("CHLlow"));
+            head.setCHLline_1(doc.getString("CHLline_1"));
+            head.setCHLhigh_1(doc.getDouble("CHLhigh_1"));
+            head.setCHLlow_1(doc.getDouble("CHLlow_1"));
             head.setCHLpoolStatus(doc.getString("poolStatus"));
         } else if (type.equals("stage")) {
             head.setStage(doc.getString("val"));
@@ -278,14 +280,14 @@ public class WCDIOcsvData {
             if (doc.containsKey("HADpoolStatus")) {
                 data.setHADpoolStatus(doc.getString("HADpoolStatus"));
             }
-            if (doc.containsKey("CHLline")) {
-                data.setCHLline(doc.getString("CHLline"));
+            if (doc.containsKey("CHLline_1")) {
+                data.setCHLline_1(doc.getString("CHLline_1"));
             }
-            if (doc.containsKey("CHLhigh")) {
-                data.setCHLhigh(doc.getDouble("CHLhigh"));
+            if (doc.containsKey("CHLhigh_1")) {
+                data.setCHLhigh_1(doc.getDouble("CHLhigh_1"));
             }
-            if (doc.containsKey("CHLlow")) {
-                data.setCHLlow(doc.getDouble("CHLlow"));
+            if (doc.containsKey("CHLlow_1")) {
+                data.setCHLlow_1(doc.getDouble("CHLlow_1"));
             }
             if (doc.containsKey("CHLpoolStatus")) {
                 data.setCHLpoolStatus(doc.getString("CHLpoolStatus"));
@@ -344,16 +346,16 @@ public class WCDIOcsvData {
                 tmp.append("HADpoolStatus " + HADpoolStatus);
                 tmp.append("\n");
             }
-            if (CHLline != null) {
-                tmp.append("CHLline " + CHLline);
+            if (CHLline_1 != null) {
+                tmp.append("CHLline_1 " + CHLline_1);
                 tmp.append("\n");
             }
-            if (CHLhigh != null) {
-                tmp.append("CHLhigh " + CHLhigh);
+            if (CHLhigh_1 != null) {
+                tmp.append("CHLhigh_1 " + CHLhigh_1);
                 tmp.append("\n");
             }
-            if (CHLlow != null) {
-                tmp.append("CHLlow " + CHLlow);
+            if (CHLlow_1 != null) {
+                tmp.append("CHLlow_1 " + CHLlow_1);
                 tmp.append("\n");
             }
             if (CHLpoolStatus != null) {
