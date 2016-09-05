@@ -241,7 +241,7 @@ public class MatchCrawlee extends baseCrawlee {
             StrTrimAtChar(high)
         );
 
-        lows.forEach(low ->
+        lows.replaceAll(low ->
             StrTrimAtChar(low)
         );
 
