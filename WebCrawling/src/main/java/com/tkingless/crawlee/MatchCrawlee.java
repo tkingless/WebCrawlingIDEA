@@ -246,7 +246,7 @@ public class MatchCrawlee extends baseCrawlee {
         );
 
         if(lines.size() == highs.size() && highs.size()== lows.size()){
-            logTest.logger.info("ExplainCHLpool Cardinality checks right");
+            //logTest.logger.trace("ExplainCHLpool Cardinality checks right");
             for(int i=0 ; i<lines.size();i++){
                 hmap.put("CHLline_"+(i+1),lines.get(i));
                 hmap.put("CHLhigh_"+(i+1),highs.get(i));

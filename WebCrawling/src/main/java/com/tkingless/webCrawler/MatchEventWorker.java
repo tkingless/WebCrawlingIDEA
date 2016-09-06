@@ -443,6 +443,12 @@ public class MatchEventWorker extends baseCrawler {
                 logTest.logger.info("updateDifftr not empty, last crle is: \n" + lastMatchCrle.toString());
             }
 
+            //TODO this is only repeating, error proof, should not have this line here
+            if(!workerDAO.QueryDataFieldExists(this,"poolTypes")){
+                logTest.logger.error("still no poolTypes update on DB, matchId: " + matchId);
+                workerDAO.SetField(this, "poolTypes", matchPools);
+            }
+
         }catch (Exception e){
             logTest.logger.error("MatchEventWorker error", e);
         }
@@ -569,6 +575,7 @@ public class MatchEventWorker extends baseCrawler {
                         workerDAO.UpdateInplayStage(this,DVPstage);
                         break;
                     case UPDATE_POOLS:
+                        logTest.logger.debug("[UpdateDBByDifftr] matchEvent pool to be updated");
                         workerDAO.SetField(this, "poolTypes", matchPools);
                         break;
                     case UPDATE_SCORES:
