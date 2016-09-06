@@ -176,7 +176,7 @@ public class MatchCSVhandler {
                     continue;
                 }
 
-                csvHdr.AppendBufferedOnNewLine(ConcatenateProperLine(datum,origin));
+                csvHdr.AppendOnNewLine(ConcatenateProperLine(datum,origin));
 
                 WebCrawledDataIO.logger.trace("Append() a newLine, id: "+ data.get(0).getInteger("MatchId"));
             }
