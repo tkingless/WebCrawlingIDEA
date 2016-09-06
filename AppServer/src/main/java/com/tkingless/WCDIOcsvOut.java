@@ -70,7 +70,6 @@ public class WCDIOcsvOut {
         GatherID();
         ProcHdlrs();
         hdlrs.clear();
-        WebCrawledDataIO.logger.info("WCDIOcsvOut run() once");
 
     }
 
