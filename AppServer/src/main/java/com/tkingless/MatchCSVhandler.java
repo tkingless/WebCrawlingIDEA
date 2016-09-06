@@ -139,7 +139,7 @@ public class MatchCSVhandler {
             }
 
             String headerStr =
-                    (new HashSet<>(headers)).stream().map(i -> i.toString()).collect(Collectors.joining(","));
+                    (new LinkedHashSet<>(headers)).stream().map(i -> i.toString()).collect(Collectors.joining(","));
 
             //add header line
             csvHdr.AppendBufferedOnNewLine(headerStr);

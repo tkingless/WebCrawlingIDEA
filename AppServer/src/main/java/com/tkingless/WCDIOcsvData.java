@@ -216,7 +216,7 @@ public class WCDIOcsvData {
                 bson.append("CHLhigh_2", CHLhigh_2);
             }
             if (CHLlow_2 != null) {
-                bson.append("CHLlow_1", CHLlow_2);
+                bson.append("CHLlow_2", CHLlow_2);
             }
             if (CHLpoolStatus != null) {
                 bson.append("CHLpoolStatus", CHLpoolStatus);
