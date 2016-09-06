@@ -49,7 +49,6 @@ public class MatchEventWorker extends baseCrawler {
     String matchKey;
     String homeTeam;
     String awayTeam;
-    //TODO upload league to DB
     String league;
 
     MatchEventDAO workerDAO;
@@ -365,13 +364,25 @@ public class MatchEventWorker extends baseCrawler {
         if(terminateStates.contains(status)) {
             return;
         }
-        //init the match DB data
-        if(workerDAO.QueryDataFieldExists(this,"stageUpdates"))
+        //init the match DB data //TODO understand the use of these three lines: safety proof?
+        if(workerDAO.QueryDataFieldExists(this,"stageUpdates")) {
+            logTest.logger.debug("OnStateMarchStart(), existing stageUpdate");
             updateDifftr.remove(UpdateDifferentiator.UPDATE_STAGE);
-        if(workerDAO.QueryDataFieldExists(this,"scoreUpdates"))
+        }else{
+            logTest.logger.debug("OnStateMarchStart(), not existing stageUpdate!!!!");
+        }
+        if(workerDAO.QueryDataFieldExists(this,"scoreUpdates")) {
+            logTest.logger.debug("OnStateMarchStart(), existing scoreUpdates");
             updateDifftr.remove(UpdateDifferentiator.UPDATE_SCORES);
-        if(workerDAO.QueryDataFieldExists(this,"cornerTotUpdates"))
+        }else{
+            logTest.logger.debug("OnStateMarchStart(), not existing scoreUpdates!!!!");
+        }
+        if(workerDAO.QueryDataFieldExists(this,"cornerTotUpdates")) {
+            logTest.logger.debug("OnStateMarchStart(), existing cornerTotUpdates");
             updateDifftr.remove(UpdateDifferentiator.UPDATE_CORNER);
+        }else{
+            logTest.logger.debug("OnStateMarchStart(), not existing cornerTotUpdates!!!!");
+        }
 
         UpdateDBByDifftr(updateDifftr,lastMatchCrle);
         if(lastMatchCrle == null){

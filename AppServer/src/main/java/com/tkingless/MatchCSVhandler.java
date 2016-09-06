@@ -111,6 +111,9 @@ public class MatchCSVhandler {
         return match;
     }
 
+    static List<String> commonHdrs = Arrays.asList("Recorded Time","Adjusted Time","Stage","HomeTeamScore","AwayTeamScore","HADhomeOdd","HADdrawOdd","HADawayOdd","HADpoolStatus");
+    static List<String> CHLheaders = Arrays.asList("Corner Count","Corner Line 1", "Corner Line 1 High", "Corner Line 1 Low","Corner Line 2", "Corner Line 2 High", "Corner Line 2 Low","CHLpoolStatus");
+
     private void Overwrite(){
 
         List<Document> data = (List<Document>) WCDIOdoc.get("data");
@@ -120,9 +123,13 @@ public class MatchCSVhandler {
 
             WebCrawledDataIO.logger.trace("Overwrite(), id: "+ data.get(0).getInteger("MatchId"));
 
-            List<String> headers = Arrays.asList("Recorded Time","Adjusted Time","Stage","HomeTeamScore","AwayTeamScore","HADhomeOdd","HADdrawOdd","HADawayOdd","HADpoolStatus");
+            List<String> headers = new ArrayList<>();
 
             List<String> pools = (List<String>) match.get("poolTypes");
+
+            if(pools.contains("CHL")){
+                headers.addAll(CHLheaders);
+            }
 
             String headerStr =
                     data.get(0).keySet().stream().map(i -> i.toString()).collect(Collectors.joining(","));
