@@ -1,6 +1,5 @@
 package com.tkingless.crawlee;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import com.tkingless.MatchCarrier;
 import com.tkingless.MatchInitContainer;
 import com.tkingless.utils.logTest;
@@ -10,13 +9,10 @@ import com.tkingless.webCrawler.baseCrawler;
 import com.tkingless.utils.JsoupHelper;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by tkingless on 24/6/2016.
