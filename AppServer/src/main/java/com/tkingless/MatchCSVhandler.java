@@ -4,6 +4,7 @@ import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.utils.FileManager;
 import org.bson.Document;
 
+import javax.print.Doc;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ public class MatchCSVhandler {
     FileManager csvHdr;
 
     Document WCDIOdoc,match;
+    Boolean hasCHLpool = false;
 
     private boolean lastOutSucceed = false;
 
@@ -51,6 +53,11 @@ public class MatchCSVhandler {
 
         //make sure root exist
         FileManager.CreateFolder(root);
+
+        List<String> pools = (List<String>) match.get("poolTypes");
+        if(pools.contains("CHL")){
+            hasCHLpool = true;
+        }
 
     }
 
@@ -111,6 +118,7 @@ public class MatchCSVhandler {
         return match;
     }
 
+    //This is the ordering of header for csv out
     static List<String> commonHdrs = Arrays.asList("Recorded Time","Adjusted Time","Stage","HomeTeamScore","AwayTeamScore","HADhomeOdd","HADdrawOdd","HADawayOdd","HADpoolStatus");
     static List<String> CHLheaders = Arrays.asList("Corner Count","Corner Line 1", "Corner Line 1 High", "Corner Line 1 Low","Corner Line 2", "Corner Line 2 High", "Corner Line 2 Low","CHLpoolStatus");
 
@@ -124,25 +132,22 @@ public class MatchCSVhandler {
             WebCrawledDataIO.logger.trace("Overwrite(), id: "+ data.get(0).getInteger("MatchId"));
 
             List<String> headers = new ArrayList<>();
+            headers.addAll(commonHdrs);
 
-            List<String> pools = (List<String>) match.get("poolTypes");
-
-            if(pools.contains("CHL")){
+            if(hasCHLpool){
                 headers.addAll(CHLheaders);
             }
 
             String headerStr =
-                    data.get(0).keySet().stream().map(i -> i.toString()).collect(Collectors.joining(","));
+                    (new HashSet<>(headers)).stream().map(i -> i.toString()).collect(Collectors.joining(","));
+
             //add header line
             csvHdr.AppendBufferedOnNewLine(headerStr);
 
+            Date origin = data.get(0).getDate("recorded");
+
             for (Document datum : data) {
-                StringBuilder lineHead = new StringBuilder();
-                for (String key : datum.keySet()) {
-                    lineHead.append("\"").append(datum.get(key).toString()).append("\",");
-                }
-                lineHead.setLength(Math.max(lineHead.length()-1,0));
-                csvHdr.AppendBufferedOnNewLine(lineHead.toString());
+                csvHdr.AppendBufferedOnNewLine(ConcatenateProperLine(datum,origin));
             }
 
             csvHdr.Close();
@@ -161,6 +166,8 @@ public class MatchCSVhandler {
 
             WebCrawledDataIO.logger.trace("Append(), id: "+ data.get(0).getInteger("MatchId"));
 
+            Date origin = data.get(0).getDate("recorded");
+
             for (Document datum : data) {
 
                 Date recorded = datum.getDate("recorded");
@@ -169,13 +176,9 @@ public class MatchCSVhandler {
                     continue;
                 }
 
-                StringBuilder lineHead = new StringBuilder();
-                for (String key : datum.keySet()) {
-                    lineHead.append("\"").append(datum.get(key).toString()).append("\",");
-                }
-                lineHead.setLength(Math.max(lineHead.length() - 1, 0));
+                csvHdr.AppendBufferedOnNewLine(ConcatenateProperLine(datum,origin));
+
                 WebCrawledDataIO.logger.trace("Append() a newLine, id: "+ data.get(0).getInteger("MatchId"));
-                csvHdr.AppendOnNewLine(lineHead.toString());
             }
 
             csvHdr.Close();
@@ -183,6 +186,111 @@ public class MatchCSVhandler {
             WebCrawledDataIO.logger.error("Append() error",e);
         }
 
+    }
+
+    String ConcatenateProperLine (Document data, Date origin){
+        StringBuilder lineHead = new StringBuilder();
+
+        addEntry(lineHead,data.get("recorded").toString());
+
+        //Handling adjust time
+        Date now = data.getDate("recorded");
+        int elapsed = (int) (now.getTime() - origin.getTime())/(1000 * 60);
+        addEntry(lineHead,elapsed);
+
+        addEntry(lineHead,data.get("stage"));
+        addEntry(lineHead,data.get("homeTeamScore"));
+        addEntry(lineHead,data.get("awayTeamScore"));
+
+        //Handling HAD odds
+        if(data.containsKey("HADhomeOdd")){
+            addEntry(lineHead,data.get("HADhomeOdd"));
+        } else {
+            addEntry(lineHead,"");
+        }
+
+        if(data.containsKey("HADdrawOdd")){
+            addEntry(lineHead,data.get("HADdrawOdd"));
+        } else {
+            addEntry(lineHead,"");
+        }
+
+        if(data.containsKey("HADawayOdd")){
+            addEntry(lineHead,data.get("HADawayOdd"));
+        } else {
+            addEntry(lineHead,"");
+        }
+
+        if(data.containsKey("HADpoolStatus")){
+            addEntry(lineHead,data.get("HADpoolStatus"));
+        } else {
+            addEntry(lineHead,"");
+        }
+
+
+        if(hasCHLpool){
+
+            if(data.containsKey("cornerCount")){
+                addEntry(lineHead,data.get("cornerCount"));
+            } else {
+                addEntry(lineHead,"");
+            }
+
+            if(data.containsKey("CHLline_1")){
+                addEntry(lineHead,data.get("CHLline_1"));
+            } else {
+                addEntry(lineHead,"");
+            }
+
+            if(data.containsKey("CHLhigh_1")){
+                addEntry(lineHead,data.get("CHLhigh_1"));
+            } else {
+                addEntry(lineHead,"");
+            }
+
+            if(data.containsKey("CHLlow_1")){
+                addEntry(lineHead,data.get("CHLlow_1"));
+            } else {
+                addEntry(lineHead,"");
+            }
+
+            if(data.containsKey("CHLline_2")){
+                addEntry(lineHead,data.get("CHLline_2"));
+            } else {
+                addEntry(lineHead,"");
+            }
+
+            if(data.containsKey("CHLhigh_2")){
+                addEntry(lineHead,data.get("CHLhigh_2"));
+            } else {
+                addEntry(lineHead,"");
+            }
+
+            if(data.containsKey("CHLlow_2")){
+                addEntry(lineHead,data.get("CHLlow_2"));
+            } else {
+                addEntry(lineHead,"");
+            }
+
+            if(data.containsKey("CHLpoolStatus")){
+                addEntry(lineHead,data.get("CHLpoolStatus"));
+            } else {
+                addEntry(lineHead,"");
+            }
+        }
+
+        lineHead.setLength(Math.max(lineHead.length()-1,0));
+
+        return lineHead.toString();
+    }
+
+    void addEntry(StringBuilder str, Object content){
+        try {
+            str.append("\"").append(content).append("\",");
+        } catch (Exception e){
+            WebCrawledDataIO.logger.error("addEntry error: ",e);
+            str.append("\"").append("").append("\",");
+        }
     }
 
     @Override
