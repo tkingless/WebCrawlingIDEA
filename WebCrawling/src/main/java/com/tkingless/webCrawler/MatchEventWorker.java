@@ -364,7 +364,10 @@ public class MatchEventWorker extends baseCrawler {
         if(terminateStates.contains(status)) {
             return;
         }
-        //init the match DB data //TODO understand the use of these three lines: safety proof?
+        //init the match DB data
+        //TODO
+        // In case re-entering logging event, workaround, do not immediately update these three already recorded,
+        //of course if there is real update between shutdown and restart, no good....
         if(workerDAO.QueryDataFieldExists(this,"stageUpdates")) {
             logTest.logger.debug("OnStateMarchStart(), existing stageUpdate");
             updateDifftr.remove(UpdateDifferentiator.UPDATE_STAGE);
