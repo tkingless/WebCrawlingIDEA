@@ -11,6 +11,8 @@ import org.bson.Document;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static com.tkingless.MongoDBparam.TestDBAddr;
 import static com.tkingless.MongoDBparam.TestDBport;
 import static com.tkingless.MongoDBparam.webCrawlingDB;
@@ -66,6 +68,28 @@ public class CrawlerTest {
             @Override
             public void apply(final Document document) {
                 System.out.println(document);
+            }
+        });
+    }
+
+    @Test
+    public void GetPoolTypes() throws Exception{
+        MongoDatabase DB = client.getDatabase(TestDBname);
+        MongoCollection dbCollection = DB.getCollection("MatchEvents");
+
+        FindIterable<Document> embeddedDocQuery = dbCollection.find(new Document("MatchId", 106038));
+
+        embeddedDocQuery.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+
+                List<String> pools = (List<String>) document.get("poolTypes");
+
+                System.out.println(pools);
+
+                if(pools.contains("CHL")){
+                    System.out.println("yes");
+                }
             }
         });
     }
