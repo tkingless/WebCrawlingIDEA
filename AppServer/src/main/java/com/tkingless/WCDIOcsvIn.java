@@ -122,6 +122,9 @@ public class WCDIOcsvIn {
                 if (idOddsCursor.hasNext()) {
                     //WebCrawledDataIO.logger.trace("there is odd update for id:" + id);
                     updateHistory = GetUpdateHistory(id, AttrColl, OddsColl);
+                } else {
+                    WebCrawledDataIO.logger.debug("idOddsCursor is null");
+                    continue;
                 }
 
                 if (!updateHistory.isEmpty()) {

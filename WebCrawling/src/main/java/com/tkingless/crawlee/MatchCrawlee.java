@@ -68,6 +68,12 @@ public class MatchCrawlee extends baseCrawlee {
         return matchXmlValid;
     }
 
+    org.jsoup.nodes.Document jsoupDoc = null;
+
+    public org.jsoup.nodes.Document getJsoupDoc() {
+        return jsoupDoc;
+    }
+
     public MatchCrawlee(baseCrawler crlr, String aMatchID) {
         super(crlr);
         matchID = aMatchID;
@@ -85,7 +91,16 @@ public class MatchCrawlee extends baseCrawlee {
             String source;
 
             if (strSource == null) {
-                source = JsoupHelper.GetDocumentFrom(linkAddr).toString();
+
+                JsoupMetrics();
+
+                if(jsoupDoc!=null) {
+                    source = jsoupDoc.toString();
+                }else{
+                    logTest.logger.error("still cannot grab jsoup document");
+                    return;
+                }
+
             } else {
                 source = JsoupHelper.GetDocumentFromStr(strSource).toString();
             }
@@ -118,6 +133,34 @@ public class MatchCrawlee extends baseCrawlee {
         } catch (Exception e) {
             logTest.logger.error("Match Crawlee error 1: ",e);
         }
+    }
+
+    void JsoupMetrics (){
+        //TODO there is a connection manager, managing connection repsonse, fail then do what, it need to checks every grabbing, so that not suppose every
+        //TODO connection is successful
+        int max_retry = 6;
+        int retry = 0;
+        int incrementalTimeOut = 4000;
+
+        try {
+            while(jsoupDoc == null && retry < max_retry){
+                long startTime = System.currentTimeMillis();
+                jsoupDoc = JsoupHelper.GetDocumentFrom(linkAddr,incrementalTimeOut);
+                long currentTime = System.currentTimeMillis();
+
+                if(retry == 0){
+                    logTest.logger.info("JsoupMetrics() Response time: " + (currentTime - startTime) + "ms");
+                } else {
+                    logTest.logger.warn("JsoupMetrics Response time with " + retry + " and timeOut " + incrementalTimeOut + " : " + (currentTime - startTime) + "ms");
+                }
+
+                incrementalTimeOut += 1000;
+                retry ++;
+            }
+        } catch (Exception e){
+            logTest.logger.error("JsoupMetrics() error",e);
+        }
+
     }
 
     String GetValueByQuery(String aQuery) {

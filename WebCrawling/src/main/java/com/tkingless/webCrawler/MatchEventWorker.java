@@ -10,8 +10,6 @@ import com.tkingless.utils.logTest;
 import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.MatchCONSTANTS.*;
 
-import org.jsoup.nodes.Element;
-
 import javax.xml.xpath.XPathExpressionException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -146,7 +144,6 @@ public class MatchEventWorker extends baseCrawler {
                 }else{
                     endTime = lastMatchCrle.getRecordTime();
                 }
-
 
                 workerDAO.SetField(this,"endTime",endTime.GetTheInstant());
                 logTest.logger.info("Actual end time: "+ endTime.toString());
@@ -443,12 +440,6 @@ public class MatchEventWorker extends baseCrawler {
                 logTest.logger.info("updateDifftr not empty, last crle is: \n" + lastMatchCrle.toString());
             }
 
-            //TODO this is only repeating, error proof, should not have this line here
-            if(!workerDAO.QueryDataFieldExists(this,"poolTypes")){
-                logTest.logger.error("still no poolTypes update on DB, matchId: " + matchId);
-                workerDAO.SetField(this, "poolTypes", matchPools);
-            }
-
         }catch (Exception e){
             logTest.logger.error("MatchEventWorker error", e);
         }
@@ -457,6 +448,22 @@ public class MatchEventWorker extends baseCrawler {
 
     void OnStateFuture(){
         workerDAO.RegisterMatchEventWorker(this);
+
+        try{
+            MatchCrawlee matchCrle = GetMatchCrleRun();
+
+            if(matchCrle.getJsoupDoc() != null){
+                //if(!workerDAO.QueryDataFieldExists(this,"poolTypes")){
+                if(matchCrle.getPoolType() != null) {
+                    workerDAO.SetField(this, "poolTypes", matchCrle.getPoolType());
+                }
+                //}
+            }
+
+        } catch (Exception e){
+            logTest.logger.error("OnStateFuture() error",e);
+        }
+
         status = STATE_TERMINATED;
     }
 
@@ -630,14 +637,7 @@ public class MatchEventWorker extends baseCrawler {
     private void EmitRequest() throws XPathExpressionException {
         MatchCrawlee newMatchCrle;
 
-        if (testTypeSwitch != null) {
-            newMatchCrle = new MatchCrawlee(matchCrleTestTarget);
-        }
-        else {
-            newMatchCrle = new MatchCrawlee(this, matchId.toString());
-        }
-
-        newMatchCrle.run();
+        newMatchCrle = GetMatchCrleRun();
 
         if (!newMatchCrle.isMatchXmlValid()) {
             logTest.logger.error("[Error] the grabbed xml is not valid");
@@ -649,7 +649,7 @@ public class MatchEventWorker extends baseCrawler {
                 if(workerDAO.QueryDataFieldExists(this,"scoreUpdates"))
                     if(workerDAO.QueryDataFieldExists(this,"stageUpdates"))
                         if(workerDAO.QueryDataFieldExists(this,"actualCommence")){
-                            logTest.logger.info("[nullpo] this exceptional case happened");
+                            logTest.logger.debug("[nullpo] this exceptional case happened");
                             status = MatchStatus.STATE_MATCH_ENDED;
                             return;
                         }
@@ -666,6 +666,22 @@ public class MatchEventWorker extends baseCrawler {
             lastMatchCrle = newMatchCrle;
         }
 
+    }
+
+    MatchCrawlee GetMatchCrleRun (){
+
+        MatchCrawlee newMatchCrle;
+
+        if (testTypeSwitch != null) {
+            newMatchCrle = new MatchCrawlee(matchCrleTestTarget);
+        }
+        else {
+            newMatchCrle = new MatchCrawlee(this, matchId.toString());
+        }
+
+        newMatchCrle.run();
+
+        return newMatchCrle;
     }
 
     //this function is not touching DB part
