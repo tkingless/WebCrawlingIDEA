@@ -453,11 +453,11 @@ public class MatchEventWorker extends baseCrawler {
             MatchCrawlee matchCrle = GetMatchCrleRun();
 
             if(matchCrle.getJsoupDoc() != null){
-                //if(!workerDAO.QueryDataFieldExists(this,"poolTypes")){
-                if(matchCrle.getPoolType() != null) {
-                    workerDAO.SetField(this, "poolTypes", matchCrle.getPoolType());
+                if(!workerDAO.QueryDataFieldExists(this,"poolTypes")){
+                    if(matchCrle.getPoolType() != null) {
+                        workerDAO.SetField(this, "poolTypes", matchCrle.getPoolType());
+                    }
                 }
-                //}
             }
 
         } catch (Exception e){
