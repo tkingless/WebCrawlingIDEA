@@ -56,10 +56,10 @@ public class MatchEventWorker extends baseCrawler {
         super(CrawlerKeyBinding.MatchEvent, threadName + "-" + carrier.getMatchId());
         testTypeSwitch = type;
 
-        if(type != null){
-            workerDAO = new MatchEventDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
-            crleOddsDAO = new APoolOddsDAO(DBManager.getInstance().getClient(),DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
-        }else{
+        if (type != null) {
+            workerDAO = new MatchEventDAO(DBManager.getInstance().getClient(), DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
+            crleOddsDAO = new APoolOddsDAO(DBManager.getInstance().getClient(), DBManager.getInstance().getMorphia(), MongoDBparam.webCrawlingTestDB);
+        } else {
             workerDAO = new MatchEventDAO(DBManager.getInstance().getDatastore());
             crleOddsDAO = new APoolOddsDAO(DBManager.getInstance().getDatastore());
         }
@@ -81,7 +81,7 @@ public class MatchEventWorker extends baseCrawler {
             commenceTime = new DateTimeEntity(rectTimestamp);
             IdentifyStage(carrier.getMatchStatusText()); //this usage is for test case use only
         } else {
-            ExtractStatus(carrier.getMatchStatusText(),carrier.getMatchStatusTime());
+            ExtractStatus(carrier.getMatchStatusText(), carrier.getMatchStatusTime());
         }
 
         //do not use run(), to create worker threads
@@ -133,20 +133,20 @@ public class MatchEventWorker extends baseCrawler {
         if (status == MatchStatus.STATE_MATCH_ENDED || status == MatchStatus.STATE_TERMINATED) {
             logTest.logger.info("Threadname: " + threadName + matchId + " STATE_MATCH_ENDED||STATE_TERMINATED");
 
-            if(lastMatchCrle != null) {
+            if (lastMatchCrle != null) {
                 logTest.logger.debug("status is end|terminated, last crle: " + lastMatchCrle.toString());
             }
 
-            if(status == MatchStatus.STATE_MATCH_ENDED){
+            if (status == MatchStatus.STATE_MATCH_ENDED) {
 
-                if(lastMatchCrle == null || lastMatchCrle.getRecordTime() == null){
+                if (lastMatchCrle == null || lastMatchCrle.getRecordTime() == null) {
                     endTime = new DateTimeEntity();
-                }else{
+                } else {
                     endTime = lastMatchCrle.getRecordTime();
                 }
 
-                workerDAO.SetField(this,"endTime",endTime.GetTheInstant());
-                logTest.logger.info("Actual end time: "+ endTime.toString());
+                workerDAO.SetField(this, "endTime", endTime.GetTheInstant());
+                logTest.logger.info("Actual end time: " + endTime.toString());
 
             }
             BoardCrawlee.DetachWorker(this);
@@ -162,7 +162,7 @@ public class MatchEventWorker extends baseCrawler {
     private boolean noDBcommenceTimeHistory = false;
 
     //This function now only concern about commenceTime
-    private void ExtractStatus(String statusText,String startTimeWeb) throws ParseException {
+    private void ExtractStatus(String statusText, String startTimeWeb) throws ParseException {
 
         IdentifyStage(statusText);
 
@@ -220,8 +220,8 @@ public class MatchEventWorker extends baseCrawler {
                     logTest.logger.info("[Error] no proper type input");
                     break;
             }
-        } catch(Exception e){
-            logTest.logger.error("ExtractStatus() error",e);
+        } catch (Exception e) {
+            logTest.logger.error("ExtractStatus() error", e);
 
         }
     }
@@ -237,8 +237,7 @@ public class MatchEventWorker extends baseCrawler {
             stage = MatchStage.STAGE_SECOND;
         } else if (statusText.contains("Full Time")) {
             stage = MatchStage.STAGE_FULLTIME;
-        } else
-        {
+        } else {
             logTest.logger.error("This is unknwon stage: " + statusText);
         }
     }
@@ -259,12 +258,12 @@ public class MatchEventWorker extends baseCrawler {
             return;
         }
 
-        if(workerDAO.QueryDataFieldExists(this,"endTime")){
-            logTest.logger.debug("match worker id: "+ matchId + "found ended time");
+        if (workerDAO.QueryDataFieldExists(this, "endTime")) {
+            logTest.logger.debug("match worker id: " + matchId + "found ended time");
             status = MatchStatus.STATE_TERMINATED;
             return;
-        }else{
-            logTest.logger.debug("match worker id: "+ matchId + "not found ended time yet");
+        } else {
+            logTest.logger.debug("match worker id: " + matchId + "not found ended time yet");
         }
 
         long timediff = 0;
@@ -292,7 +291,7 @@ public class MatchEventWorker extends baseCrawler {
                 status = MatchStatus.STATE_PRE_REGISTERED;
                 scanPeriod = 0;
 
-                if(testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_MATCHING || testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_ENDED){
+                if (testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_MATCHING || testTypeSwitch == MatchTestCONSTANTS.TestType.TYPE_ENDED) {
                     scanPeriod = 500;
                 }
             }
@@ -305,14 +304,14 @@ public class MatchEventWorker extends baseCrawler {
 
     void OnStatePreRegistered() {
 
-        if(terminateStates.contains(status)) {
+        if (terminateStates.contains(status)) {
             return;
         }
 
         long timediff = 0;
 
-        if(commenceTime != null) {
-           timediff =commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
+        if (commenceTime != null) {
+            timediff = commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
         }
 
         if (timediff > 0) {
@@ -327,7 +326,7 @@ public class MatchEventWorker extends baseCrawler {
                 scanPeriod = scanPeriod + 1000 * 2;
                 logTest.logger.info("dry waiting for start state");
 
-                if(timediff <= -1 * 1000 * 60 * 180 * 4){
+                if (timediff <= -1 * 1000 * 60 * 180 * 4) {
                     logTest.logger.error("waited too long for start state, terminating...");
                     status = MatchStatus.STATE_TERMINATED;
                 }
@@ -344,13 +343,13 @@ public class MatchEventWorker extends baseCrawler {
         }
 
         //This is added later on as workaround for service started just at pre-reg time, the chance is supposed to be low though...
-        if(stage == MatchStage.STAGE_ESST){
-            if(!workerDAO.IsMatchRegisteredBefore(matchId)) {
+        if (stage == MatchStage.STAGE_ESST) {
+            if (!workerDAO.IsMatchRegisteredBefore(matchId)) {
                 workerDAO.RegisterMatchEventWorker(this);
             }
         }
 
-        if(!BoardCrawlee.IsRegisteredByID(this)) {
+        if (!BoardCrawlee.IsRegisteredByID(this)) {
             registerOnlocal();
         }
 
@@ -358,40 +357,40 @@ public class MatchEventWorker extends baseCrawler {
 
     void OnStateMatchStart() throws XPathExpressionException {
 
-        if(terminateStates.contains(status)) {
+        if (terminateStates.contains(status)) {
             return;
         }
         //init the match DB data
         //TODO
         // In case re-entering logging event, workaround, do not immediately update these three already recorded,
         //of course if there is real update between shutdown and restart, no good....
-        if(workerDAO.QueryDataFieldExists(this,"stageUpdates")) {
+        if (workerDAO.QueryDataFieldExists(this, "stageUpdates")) {
             logTest.logger.debug("OnStateMarchStart(), existing stageUpdate");
             updateDifftr.remove(UpdateDifferentiator.UPDATE_STAGE);
-        }else{
+        } else {
             logTest.logger.debug("OnStateMarchStart(), not existing stageUpdate!!!!");
         }
-        if(workerDAO.QueryDataFieldExists(this,"scoreUpdates")) {
+        if (workerDAO.QueryDataFieldExists(this, "scoreUpdates")) {
             logTest.logger.debug("OnStateMarchStart(), existing scoreUpdates");
             updateDifftr.remove(UpdateDifferentiator.UPDATE_SCORES);
-        }else{
+        } else {
             logTest.logger.debug("OnStateMarchStart(), not existing scoreUpdates!!!!");
         }
-        if(workerDAO.QueryDataFieldExists(this,"cornerTotUpdates")) {
+        if (workerDAO.QueryDataFieldExists(this, "cornerTotUpdates")) {
             logTest.logger.debug("OnStateMarchStart(), existing cornerTotUpdates");
             updateDifftr.remove(UpdateDifferentiator.UPDATE_CORNER);
-        }else{
+        } else {
             logTest.logger.debug("OnStateMarchStart(), not existing cornerTotUpdates!!!!");
         }
 
-        UpdateDBByDifftr(updateDifftr,lastMatchCrle);
-        if(lastMatchCrle == null){
+        UpdateDBByDifftr(updateDifftr, lastMatchCrle);
+        if (lastMatchCrle == null) {
             logTest.logger.debug("[Worker] lastMatchCrle is null");
         }
 
         actualCommence = lastMatchCrle.getRecordTime();
 
-        if(!workerDAO.QueryDataFieldExists(this,"actualCommence")) {
+        if (!workerDAO.QueryDataFieldExists(this, "actualCommence")) {
             workerDAO.SetField(this, "actualCommence", actualCommence.GetTheInstant());
         }
 
@@ -401,9 +400,9 @@ public class MatchEventWorker extends baseCrawler {
         logTest.logger.info("Threadname: " + threadName + matchId + "Entered STATE_MATCH_LOGGING");
     }
 
-    private int endGameConfirmCnt =0;
+    private int endGameConfirmCnt = 0;
     private int endGameConfirm = 25;
-    private int invalidEndCnt =0;
+    private int invalidEndCnt = 0;
     private int invalidEndConfirm = 150;
 
     void OnStateMatchLogging() throws XPathExpressionException {
@@ -440,28 +439,28 @@ public class MatchEventWorker extends baseCrawler {
                 logTest.logger.info("updateDifftr not empty, last crle is: \n" + lastMatchCrle.toString());
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             logTest.logger.error("MatchEventWorker error", e);
         }
 
     }
 
-    void OnStateFuture(){
+    void OnStateFuture() {
         workerDAO.RegisterMatchEventWorker(this);
 
-        try{
-            MatchCrawlee matchCrle = GetMatchCrleRun();
+        try {
 
-            if(matchCrle.getJsoupDoc() != null){
-                if(!workerDAO.QueryDataFieldExists(this,"poolTypes")){
-                    if(matchCrle.getPoolType() != null) {
+            if (!workerDAO.QueryDataFieldExists(this, "poolTypes")) {
+                MatchCrawlee matchCrle = GetMatchCrleRun();
+                if (matchCrle.getJsoupDoc() != null) {
+                    if (matchCrle.getPoolType() != null) {
                         workerDAO.SetField(this, "poolTypes", matchCrle.getPoolType());
                     }
                 }
             }
 
-        } catch (Exception e){
-            logTest.logger.error("OnStateFuture() error",e);
+        } catch (Exception e) {
+            logTest.logger.error("OnStateFuture() error", e);
         }
 
         status = STATE_TERMINATED;
@@ -526,7 +525,7 @@ public class MatchEventWorker extends baseCrawler {
     }
 
     public DateTimeEntity getLastModifiedTime() {
-        if(lastMatchCrle == null)
+        if (lastMatchCrle == null)
             return new DateTimeEntity();
         else
             return lastMatchCrle.getRecordTime();
@@ -540,7 +539,9 @@ public class MatchEventWorker extends baseCrawler {
         return awayTeam;
     }
 
-    public String getLeague() { return  league;}
+    public String getLeague() {
+        return league;
+    }
 
 
 
@@ -579,7 +580,7 @@ public class MatchEventWorker extends baseCrawler {
                         DVPstage.setRecorded(crle.getRecordTime().GetTheInstant());
                         DVPstage.setVal(MatchCONSTANTS.GetMatchStageStr(crle.getMatchStage()));
                         DVPstage.setType("stage");
-                        workerDAO.UpdateInplayStage(this,DVPstage);
+                        workerDAO.UpdateInplayStage(this, DVPstage);
                         break;
                     case UPDATE_POOLS:
                         logTest.logger.debug("[UpdateDBByDifftr] matchEvent pool to be updated");
@@ -591,7 +592,7 @@ public class MatchEventWorker extends baseCrawler {
                         DVPscore.setRecorded(crle.getRecordTime().GetTheInstant());
                         DVPscore.setVal(crle.getScores());
                         DVPscore.setType("score");
-                        workerDAO.UpdateInplayScore(this,DVPscore);
+                        workerDAO.UpdateInplayScore(this, DVPscore);
                         break;
                     case UPDATE_CORNER:
                         if (!crle.getTotalCorners().contains("-") || crle.getTotalCorners().isEmpty()) {
@@ -600,7 +601,7 @@ public class MatchEventWorker extends baseCrawler {
                             DVPcorner.setRecorded(crle.getRecordTime().GetTheInstant());
                             DVPcorner.setVal(crle.getTotalCorners());
                             DVPcorner.setType("corner");
-                            workerDAO.UpdateInplayCorner(this,DVPcorner);
+                            workerDAO.UpdateInplayCorner(this, DVPcorner);
                         }
                         break;
                     case UPDATE_POOL_HAD:
@@ -615,7 +616,7 @@ public class MatchEventWorker extends baseCrawler {
                 }
             }
             difftr.clear();
-        }catch (Exception e){
+        } catch (Exception e) {
             logTest.logger.error("MatchEventworker error: ", e);
         }
     }
@@ -641,14 +642,14 @@ public class MatchEventWorker extends baseCrawler {
 
         if (!newMatchCrle.isMatchXmlValid()) {
             logTest.logger.error("[Error] the grabbed xml is not valid");
-            invalidTolerate ++;
+            invalidTolerate++;
 
-            if(invalidTolerate>maxInvalidTolerate) {
+            if (invalidTolerate > maxInvalidTolerate) {
 
                 //somtimes, the match xml just close too quickly, so add a consideration to exemplify it as ended match
-                if(workerDAO.QueryDataFieldExists(this,"scoreUpdates"))
-                    if(workerDAO.QueryDataFieldExists(this,"stageUpdates"))
-                        if(workerDAO.QueryDataFieldExists(this,"actualCommence")){
+                if (workerDAO.QueryDataFieldExists(this, "scoreUpdates"))
+                    if (workerDAO.QueryDataFieldExists(this, "stageUpdates"))
+                        if (workerDAO.QueryDataFieldExists(this, "actualCommence")) {
                             logTest.logger.debug("[nullpo] this exceptional case happened");
                             status = MatchStatus.STATE_MATCH_ENDED;
                             return;
@@ -659,7 +660,7 @@ public class MatchEventWorker extends baseCrawler {
             return;
         }
 
-        updateDifftr = MatchCrawlee.UpdateDifferentiator(lastMatchCrle,newMatchCrle);
+        updateDifftr = MatchCrawlee.UpdateDifferentiator(lastMatchCrle, newMatchCrle);
 
         if (!updateDifftr.isEmpty()) {
             UpdateWorkerFromCrle(newMatchCrle);
@@ -668,14 +669,13 @@ public class MatchEventWorker extends baseCrawler {
 
     }
 
-    MatchCrawlee GetMatchCrleRun (){
+    MatchCrawlee GetMatchCrleRun() {
 
         MatchCrawlee newMatchCrle;
 
         if (testTypeSwitch != null) {
             newMatchCrle = new MatchCrawlee(matchCrleTestTarget);
-        }
-        else {
+        } else {
             newMatchCrle = new MatchCrawlee(this, matchId.toString());
         }
 
@@ -698,8 +698,8 @@ public class MatchEventWorker extends baseCrawler {
             } else {
                 logTest.logger.error("[getStage] crle get Match has null pointer exception");
             }
-        } catch (Exception e){
-            logTest.logger.error("[UpdateWorkerFromCrle] error",e);
+        } catch (Exception e) {
+            logTest.logger.error("[UpdateWorkerFromCrle] error", e);
         }
     }
 
