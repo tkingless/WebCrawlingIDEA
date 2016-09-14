@@ -32,7 +32,7 @@ public class JsoupHelper {
             return Jsoup.connect(url).data("query", "Java").userAgent("Mozilla")
                     .cookie("auth", "token").timeout(Customtimeout).post();
         } catch (Exception e){
-            logTest.logger.error("JsoupHelper GetDocumentFrom() error",e);
+            logTest.logger.error("JsoupHelper GetDocumentFrom() error");
             return null;
         }
 

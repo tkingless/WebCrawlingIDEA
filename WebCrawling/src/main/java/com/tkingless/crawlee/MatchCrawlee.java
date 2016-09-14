@@ -152,6 +152,10 @@ public class MatchCrawlee extends baseCrawlee {
                     logTest.logger.info("JsoupMetrics() Response time: " + (currentTime - startTime) + "ms");
                 } else {
                     logTest.logger.warn("JsoupMetrics Response time with " + retry + " and timeOut " + incrementalTimeOut + " : " + (currentTime - startTime) + "ms");
+                    if (retry == max_retry - 1) {
+                        logTest.logger.warn("JsoupMetrics max retry reached :  " + retry);
+
+                    }
                 }
 
                 incrementalTimeOut += 1000;
