@@ -323,6 +323,26 @@ public class MatchCrawlee extends baseCrawlee {
                 poolType.add(aType);
             }
         }
+
+        try {
+            HumanErrorCheck();
+        } catch (XPathExpressionException e) {
+            logTest.logger.error("HumanErrorCheck() error", e);
+        }
+
+    }
+
+    private void HumanErrorCheck() throws XPathExpressionException {
+        final String HADExistQuery = "//pool[@type=\"HAD\"]";
+        final String CHLExistQuery = "//pool[@type=\"CHL\"]";
+
+        if (CheckXMLNodeValid(HADExistQuery)){
+            poolType.add(InplayPoolType.HAD);
+        }
+        if (CheckXMLNodeValid(CHLExistQuery)){
+            poolType.add(InplayPoolType.CHL);
+        }
+
     }
 
     private void ExtractStage() {
