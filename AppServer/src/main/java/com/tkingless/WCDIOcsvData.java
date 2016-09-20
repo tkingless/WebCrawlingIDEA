@@ -262,6 +262,11 @@ public class WCDIOcsvData {
                 head.setCHLline_2(doc.getString("CHLline_2"));
                 head.setCHLhigh_2(doc.getDouble("CHLhigh_2"));
                 head.setCHLlow_2(doc.getDouble("CHLlow_2"));
+            }else{
+                //forget about past CHL 2s
+                head.setCHLline_2("");
+                head.setCHLhigh_2(0.0);
+                head.setCHLlow_2(0.0);
             }
             head.setCHLpoolStatus(doc.getString("poolStatus"));
         } else if (type.equals("stage")) {
