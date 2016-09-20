@@ -41,17 +41,17 @@ public class WCDIOcsvIn {
             OddsColl = db.getCollection("InPlayOddsUpdates");
             AttrColl = db.getCollection("InPlayAttrUpdates");
             WCDIOcsvColl = db.getCollection("WCDIOcsv");
-        } catch (Exception e){
+        } catch (Exception e) {
             WebCrawledDataIO.logger.error("WCDIOcsvIn init error", e);
         }
     }
 
-    public void run(){
+    public void run() {
 
         Date now = new Date();
         GetConsideredWorkersByTime(now);
-        ProcConsideredId(now,launchedMatchIds,false);
-        ProcConsideredId(now,lostMatchingIds,true);
+        ProcConsideredId(now, launchedMatchIds, false);
+        ProcConsideredId(now, lostMatchingIds, true);
         launchedMatchIds.clear();
         lostMatchingIds.clear();
     }
@@ -85,13 +85,13 @@ public class WCDIOcsvIn {
                     if (docCommence.CalTimeIntervalDiff(timeAfterToConsider) >= 0) {
                         launchedMatchIds.add(document.getInteger("MatchId"));
                     } else {
-                        if(!document.containsKey("endTime")) {
+                        if (!document.containsKey("endTime")) {
                             lostMatchingIds.add(document.getInteger("MatchId"));
                         }
                     }
 
                 } catch (Exception e) {
-                    WebCrawledDataIO.logger.error("GetConsideredWorkersByTime() error",e);
+                    WebCrawledDataIO.logger.error("GetConsideredWorkersByTime() error", e);
                 }
 
             }
@@ -105,12 +105,12 @@ public class WCDIOcsvIn {
 
         for (Integer id : ids) {
             try {
-                Document IDfilter = new Document("MatchId",id);
+                Document IDfilter = new Document("MatchId", id);
 
                 MongoCursor<Document> idOddsCursor = OddsColl.find(IDfilter).iterator();
                 FindIterable<Document> WCDIOdoc = WCDIOcsvColl.find(IDfilter.append("lastIn", new Document("$exists", true)));
 
-                if(WCDIOdoc.iterator().hasNext()) {
+                if (WCDIOdoc.iterator().hasNext()) {
                     if (WCDIOdoc.first().containsKey("MarkedEnd")) {
                         WebCrawledDataIO.logger.trace("skipped this id as marked end already: " + id);
                         continue;
@@ -149,16 +149,16 @@ public class WCDIOcsvIn {
                         // if now is larger than lastIn, do Update In
                         Date lastIn = WCDIOdoc.first().getDate("lastIn");
 
-                        if (updateHistory.get(updateHistory.size()-1).getDate().getTime() > lastIn.getTime()) {
-                            WebCrawledDataIO.logger.trace("going to update, id: "+ id);
-                            UpdateWCDIOcsv(id, updateHistory, lastIn,now);
+                        if (updateHistory.get(updateHistory.size() - 1).getDate().getTime() > lastIn.getTime()) {
+                            WebCrawledDataIO.logger.trace("going to update, id: " + id);
+                            UpdateWCDIOcsv(id, updateHistory, lastIn, now);
                         }
 
                     }
                 }
 
                 Document MatchEventDoc = MatchEventsColl.find(new Document("MatchId", id)).first();
-                if(MatchEventDoc != null) {
+                if (MatchEventDoc != null) {
                     WebCrawledDataIO.logger.debug("[Adding MarkedEnded] MatchEventDoc is not null, id: " + id);
                     if (MatchEventDoc.containsKey("endTime") || toEnd) {
                         WebCrawledDataIO.logger.debug("[Adding MarkedEnded] csv markded ended, id: " + id);
@@ -186,7 +186,6 @@ public class WCDIOcsvIn {
 
         WCDIOcsvData.InitializeRecordHead(updateHistory, head);
 
-        //testing
         update = new Document("$set", content);
         WCDIOcsvColl.updateOne(filter, update, updateOpts);
 
@@ -201,15 +200,16 @@ public class WCDIOcsvIn {
 
         try {
             Document filter = new Document("MatchId", id);
-            Document lastRecord = GetLastRecordFromData(WCDIOcsvColl.find(filter));
+            Document lastRecord = GetLastRecordFromData(WCDIOcsvColl.find(filter)); // lastRecord is an element of "data" of a match in WCDIOcsv coll, and a document
 
             WCDIOcsvData head = new WCDIOcsvData();
             //init the head first
-            WCDIOcsvData.ParseInFromDocument(head, lastRecord);
+            WCDIOcsvData.ParseInFromDocument(head, lastRecord); //head is transformed from lastRecord
 
             Iterator<DateDocumentObj> ite = updateHistory.iterator();
 
             DateDocumentObj ddo = null;
+            //iterate until updateHistory is newer than since time, then all ite.next() DDO need updated
             while (ite.hasNext()) {
                 ddo = ite.next();
                 if (ddo.getDate().getTime() > since.getTime()) {
@@ -226,21 +226,21 @@ public class WCDIOcsvIn {
                 }
             }
 
-            }catch(Exception e){
-                WebCrawledDataIO.logger.error("UpdateWCDIOcsv()", e);
-            }
+        } catch (Exception e) {
+            WebCrawledDataIO.logger.error("UpdateWCDIOcsv()", e);
+        }
 
     }
 
-    void UpdateAction(DateDocumentObj ddo, WCDIOcsvData head, Integer id, Document filter, Date now){
+    void UpdateAction(DateDocumentObj ddo, WCDIOcsvData head, Integer id, Document filter, Date now) {
         WCDIOcsvData.SetHeadByType(ddo.getDoc(), head);
         //WebCrawledDataIO.logger.debug("UpdateAction, head: " + head.toString());
 
-        if(PushToDataField(WCDIOcsvColl, new Document("MatchId", id), head.ToBson())) {
+        if (PushToDataField(WCDIOcsvColl, new Document("MatchId", id), head.ToBson())) {
             Document updateLastIn = new Document("lastIn", now);
             Document update = new Document("$set", updateLastIn);
             WCDIOcsvColl.updateOne(filter, update);
-            WebCrawledDataIO.logger.debug("has updated lastIn as: "+ now);
+            WebCrawledDataIO.logger.debug("has updated lastIn as: " + now);
         }
     }
 
@@ -249,13 +249,13 @@ public class WCDIOcsvIn {
         try {
             List<Document> csv = (List<Document>) queried.first().get("data");
             lastRecord = csv.get(csv.size() - 1);
-        } catch ( Exception e){
-            WebCrawledDataIO.logger.error("GetLastRecordFromData()",e);
+        } catch (Exception e) {
+            WebCrawledDataIO.logger.error("GetLastRecordFromData()", e);
         }
         return lastRecord;
     }
 
-    public List<DateDocumentObj> GetUpdateHistory(Integer id, MongoCollection matchAttrColl, MongoCollection oddsColl){
+    public List<DateDocumentObj> GetUpdateHistory(Integer id, MongoCollection matchAttrColl, MongoCollection oddsColl) {
 
         List<DateDocumentObj> updateTimeOrders = new ArrayList<>();
 
@@ -283,8 +283,8 @@ public class WCDIOcsvIn {
                 WebCrawledDataIO.logger.debug("GetUpdateHistory, ddo date: "+ddo.getDate()+" type: " + ddo.getDoc().get("type"));
             }*/
 
-        } catch (Exception e){
-            WebCrawledDataIO.logger.error("GetUpdateHistory()",e);
+        } catch (Exception e) {
+            WebCrawledDataIO.logger.error("GetUpdateHistory()", e);
         }
 
         return updateTimeOrders;
@@ -308,7 +308,7 @@ public class WCDIOcsvIn {
         return writeSucess;
     }
 
-    boolean MarkedEnded(MongoCollection aColl, Bson filter, Document data){
+    boolean MarkedEnded(MongoCollection aColl, Bson filter, Document data) {
         boolean writeSucess = false;
         try {
             Document update;
