@@ -265,6 +265,8 @@ public class MatchCSVhandler {
                 Double hightwo = data.getDouble("CHLhigh_2");
                 if (!hightwo.equals(0.0)) {
                     addEntry(lineHead, data.get("CHLhigh_2"));
+                } else {
+                    addEntry(lineHead,"");
                 }
             } else {
                 addEntry(lineHead, "");
@@ -274,6 +276,8 @@ public class MatchCSVhandler {
                 Double lowtwo = data.getDouble("CHLlow_2");
                 if (!lowtwo.equals(0.0)) {
                     addEntry(lineHead, data.get("CHLlow_2"));
+                } else {
+                    addEntry(lineHead,"");
                 }
             } else {
                 addEntry(lineHead, "");
