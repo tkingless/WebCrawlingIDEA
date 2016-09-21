@@ -262,23 +262,13 @@ public class MatchCSVhandler {
             }
 
             if (data.containsKey("CHLhigh_2")) {
-                Double hightwo = data.getDouble("CHLhigh_2");
-                if (!hightwo.equals(0.0)) {
-                    addEntry(lineHead, data.get("CHLhigh_2"));
-                } else {
-                    addEntry(lineHead,"");
-                }
+                addEntry(lineHead,data.get("CHLhigh_2"));
             } else {
                 addEntry(lineHead, "");
             }
 
             if (data.containsKey("CHLlow_2")) {
-                Double lowtwo = data.getDouble("CHLlow_2");
-                if (!lowtwo.equals(0.0)) {
-                    addEntry(lineHead, data.get("CHLlow_2"));
-                } else {
-                    addEntry(lineHead,"");
-                }
+                addEntry(lineHead,data.get("CHLlow_2"));
             } else {
                 addEntry(lineHead, "");
             }

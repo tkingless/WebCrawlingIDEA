@@ -23,11 +23,11 @@ public class WCDIOcsvData {
     Double HADawayOdd;
     String HADpoolStatus;
     String CHLline_1;
-    Double CHLhigh_1;
-    Double CHLlow_1;
+    String CHLhigh_1;
+    String CHLlow_1;
     String CHLline_2;
-    Double CHLhigh_2;
-    Double CHLlow_2;
+    String CHLhigh_2;
+    String CHLlow_2;
     String CHLpoolStatus;
 
     public Date getRecorded() {
@@ -118,19 +118,19 @@ public class WCDIOcsvData {
         this.CHLline_1 = CHLline_1;
     }
 
-    public Double getCHLhigh_1() {
+    public String getCHLhigh_1() {
         return CHLhigh_1;
     }
 
-    public void setCHLhigh_1(Double CHLhigh_1) {
+    public void setCHLhigh_1(String CHLhigh_1) {
         this.CHLhigh_1 = CHLhigh_1;
     }
 
-    public Double getCHLlow_1() {
+    public String getCHLlow_1() {
         return CHLlow_1;
     }
 
-    public void setCHLlow_1(Double CHLlow_1) {
+    public void setCHLlow_1(String CHLlow_1) {
         this.CHLlow_1 = CHLlow_1;
     }
 
@@ -142,19 +142,19 @@ public class WCDIOcsvData {
         this.CHLline_2 = CHLline_2;
     }
 
-    public Double getCHLhigh_2() {
+    public String getCHLhigh_2() {
         return CHLhigh_2;
     }
 
-    public void setCHLhigh_2(Double CHLhigh_2) {
+    public void setCHLhigh_2(String CHLhigh_2) {
         this.CHLhigh_2 = CHLhigh_2;
     }
 
-    public Double getCHLlow_2() {
+    public String getCHLlow_2() {
         return CHLlow_2;
     }
 
-    public void setCHLlow_2(Double CHLlow_2) {
+    public void setCHLlow_2(String CHLlow_2) {
         this.CHLlow_2 = CHLlow_2;
     }
 
@@ -256,17 +256,17 @@ public class WCDIOcsvData {
             head.setHADpoolStatus(doc.getString("poolStatus"));
         } else if (type.equals("CHL")) {
             head.setCHLline_1(doc.getString("CHLline_1"));
-            head.setCHLhigh_1(doc.getDouble("CHLhigh_1"));
-            head.setCHLlow_1(doc.getDouble("CHLlow_1"));
+            head.setCHLhigh_1(doc.getDouble("CHLhigh_1").toString());
+            head.setCHLlow_1(doc.getDouble("CHLlow_1").toString());
             if(doc.containsKey("CHLline_2")){
                 head.setCHLline_2(doc.getString("CHLline_2"));
-                head.setCHLhigh_2(doc.getDouble("CHLhigh_2"));
-                head.setCHLlow_2(doc.getDouble("CHLlow_2"));
+                head.setCHLhigh_2(doc.getDouble("CHLhigh_2").toString());
+                head.setCHLlow_2(doc.getDouble("CHLlow_2").toString());
             }else{
                 //forget about past CHL 2s
                 head.setCHLline_2("");
-                head.setCHLhigh_2(0.0);
-                head.setCHLlow_2(0.0);
+                head.setCHLhigh_2("");
+                head.setCHLlow_2("");
             }
             head.setCHLpoolStatus(doc.getString("poolStatus"));
         } else if (type.equals("stage")) {
@@ -327,19 +327,19 @@ public class WCDIOcsvData {
                 data.setCHLline_1(doc.getString("CHLline_1"));
             }
             if (doc.containsKey("CHLhigh_1")) {
-                data.setCHLhigh_1(doc.getDouble("CHLhigh_1"));
+                data.setCHLhigh_1(doc.getDouble("CHLhigh_1").toString());
             }
             if (doc.containsKey("CHLlow_1")) {
-                data.setCHLlow_1(doc.getDouble("CHLlow_1"));
+                data.setCHLlow_1(doc.getDouble("CHLlow_1").toString());
             }
             if (doc.containsKey("CHLline_2")) {
                 data.setCHLline_2(doc.getString("CHLline_2"));
             }
             if (doc.containsKey("CHLhigh_2")) {
-                data.setCHLhigh_2(doc.getDouble("CHLhigh_2"));
+                data.setCHLhigh_2(doc.getDouble("CHLhigh_2").toString());
             }
             if (doc.containsKey("CHLlow_2")) {
-                data.setCHLlow_2(doc.getDouble("CHLlow_2"));
+                data.setCHLlow_2(doc.getDouble("CHLlow_2").toString());
             }
             if (doc.containsKey("CHLpoolStatus")) {
                 data.setCHLpoolStatus(doc.getString("CHLpoolStatus"));
