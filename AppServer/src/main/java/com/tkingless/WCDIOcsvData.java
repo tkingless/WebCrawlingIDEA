@@ -327,19 +327,19 @@ public class WCDIOcsvData {
                 data.setCHLline_1(doc.getString("CHLline_1"));
             }
             if (doc.containsKey("CHLhigh_1")) {
-                data.setCHLhigh_1(doc.getDouble("CHLhigh_1").toString());
+                data.setCHLhigh_1(doc.getString("CHLhigh_1"));
             }
             if (doc.containsKey("CHLlow_1")) {
-                data.setCHLlow_1(doc.getDouble("CHLlow_1").toString());
+                data.setCHLlow_1(doc.getString("CHLlow_1"));
             }
             if (doc.containsKey("CHLline_2")) {
                 data.setCHLline_2(doc.getString("CHLline_2"));
             }
             if (doc.containsKey("CHLhigh_2")) {
-                data.setCHLhigh_2(doc.getDouble("CHLhigh_2").toString());
+                data.setCHLhigh_2(doc.getString("CHLhigh_2"));
             }
             if (doc.containsKey("CHLlow_2")) {
-                data.setCHLlow_2(doc.getDouble("CHLlow_2").toString());
+                data.setCHLlow_2(doc.getString("CHLlow_2"));
             }
             if (doc.containsKey("CHLpoolStatus")) {
                 data.setCHLpoolStatus(doc.getString("CHLpoolStatus"));
