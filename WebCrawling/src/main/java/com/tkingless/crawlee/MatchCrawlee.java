@@ -127,7 +127,7 @@ public class MatchCrawlee extends baseCrawlee {
                 }*/
                 recordTime = new DateTimeEntity();
             } else {
-                logTest.logger.info("MatchCrawlee CheckXMLNodeValid() not valid.");
+                logTest.logger.warn("MatchCrawlee CheckXMLNodeValid() not valid.");
             }
 
         } catch (Exception e) {
@@ -149,7 +149,7 @@ public class MatchCrawlee extends baseCrawlee {
                 long currentTime = System.currentTimeMillis();
 
                 if(retry == 0){
-                    logTest.logger.info("JsoupMetrics() Response time: " + (currentTime - startTime) + "ms");
+                    logTest.logger.debug("JsoupMetrics() Response time: " + (currentTime - startTime) + "ms");
                 } else {
                     logTest.logger.warn("JsoupMetrics Response time with " + retry + " and timeOut " + incrementalTimeOut + " : " + (currentTime - startTime) + "ms");
                     if (retry == max_retry - 1) {
@@ -242,7 +242,7 @@ public class MatchCrawlee extends baseCrawlee {
                     ExplainCHLpool(hmap);
                     break;
                 default:
-                    //logTest.logger.info("[Error] undefined pool type: " + type.toString());
+                    //logTest.logger.error("[Error] undefined pool type: " + type.toString());
                     hmap.put("Error", "true");
                     break;
             }

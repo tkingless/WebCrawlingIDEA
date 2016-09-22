@@ -36,7 +36,7 @@ public class baseCrawlee implements Callable<Document> {
     }
 
     public Document call() {
-        logTest.logger.info("baseCrawlee call() called.");
+        logTest.logger.debug("baseCrawlee call() called.");
        return Jdoc;
     }
 }

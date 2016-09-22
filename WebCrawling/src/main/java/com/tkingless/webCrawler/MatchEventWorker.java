@@ -67,7 +67,7 @@ public class MatchEventWorker extends baseCrawler {
         workerTime = new DateTimeEntity();
         status = MatchStatus.STATE_INITIALIZATION;
         matchId = carrier.getMatchId();
-        logTest.logger.info("MatchEventWorker constructed, matchId:" + matchId);
+        logTest.logger.debug("MatchEventWorker constructed, matchId:" + matchId);
         ///logTest.logger.info("and allOddsLink: " + linkAddr);
 
         matchKey = carrier.getMatchNo();
@@ -97,7 +97,7 @@ public class MatchEventWorker extends baseCrawler {
         while (!terminateStates.contains(status)) {
             switch (status) {
                 case STATE_INITIALIZATION:
-                    logTest.logger.info("Threadname: " + threadName + matchId + " STATE_INITIALIZATION");
+                    logTest.logger.debug("Threadname: " + threadName + matchId + " STATE_INITIALIZATION");
                     OnStateInitialization();
                     break;
                 case STATE_PRE_REGISTERED:
@@ -110,16 +110,16 @@ public class MatchEventWorker extends baseCrawler {
                     OnStateMatchStart();
                     break;
                 case STATE_MATCH_LOGGING:
-                    //logTest.logger.info("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
+                    //logTest.logger.verbose("Threadname: " + threadName + matchId + " STATE_MATCH_LOGGING");
                     EmitRequest();
                     OnStateMatchLogging();
                     break;
                 case STATE_FUTURE_MATCH:
-                    logTest.logger.info("Threadname: " + threadName + matchId + " STATE_FUTURE_MATCH");
+                    logTest.logger.debug("Threadname: " + threadName + matchId + " STATE_FUTURE_MATCH");
                     OnStateFuture();
                     break;
                 default:
-                    logTest.logger.info("Threadname: " + threadName + matchId + " unknown state");
+                    logTest.logger.error("Threadname: " + threadName + matchId + " unknown state");
                     break;
             }
 
@@ -134,7 +134,7 @@ public class MatchEventWorker extends baseCrawler {
             logTest.logger.info("Threadname: " + threadName + matchId + " STATE_MATCH_ENDED||STATE_TERMINATED");
 
             if (lastMatchCrle != null) {
-                logTest.logger.debug("status is end|terminated, last crle: " + lastMatchCrle.toString());
+                logTest.logger.info("status is end|terminated, last crle: " + lastMatchCrle.toString());
             }
 
             if (status == MatchStatus.STATE_MATCH_ENDED) {
@@ -199,7 +199,7 @@ public class MatchEventWorker extends baseCrawler {
                     //=========================check whether next year datetime: end
 
                     commenceTime = new DateTimeEntity(dateTimeBuilder.toString(), new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"));
-                    logTest.logger.info("ExtractStatus(),commenceTime: " + commenceTime.toString());
+                    logTest.logger.debug("ExtractStatus(),commenceTime: " + commenceTime.toString());
                     break;
                 case STAGE_FIRST:
                 case STAGE_HALFTIME:
@@ -213,12 +213,12 @@ public class MatchEventWorker extends baseCrawler {
                     }
 
                     if (commenceTime == null) {
-                        logTest.logger.info("[Warning] commenceTime is null");
+                        logTest.logger.warn("[Warning] commenceTime is null");
                         noDBcommenceTimeHistory = true;
                     }
                     break;
                 default:
-                    logTest.logger.info("[Error] no proper type input");
+                    logTest.logger.error("[Error] no proper type input");
                     break;
             }
         } catch (Exception e) {
@@ -274,7 +274,7 @@ public class MatchEventWorker extends baseCrawler {
         long timediff = 0;
         if (!noDBcommenceTimeHistory) {
             timediff = commenceTime.CalTimeIntervalDiff(new DateTimeEntity());
-            logTest.logger.info("timediff: " + timediff + " match id: " + matchId);
+            logTest.logger.info("Now and commenceTime timediff: " + timediff + " match id: " + matchId);
         }
 
         //only pass considered cases
@@ -370,22 +370,22 @@ public class MatchEventWorker extends baseCrawler {
         // In case re-entering logging event, workaround, do not immediately update these three already recorded,
         //of course if there is real update between shutdown and restart, no good....
         if (workerDAO.QueryDataFieldExists(this, "stageUpdates")) {
-            logTest.logger.debug("OnStateMarchStart(), existing stageUpdate");
+            logTest.logger.info("OnStateMarchStart(), existing stageUpdate");
             updateDifftr.remove(UpdateDifferentiator.UPDATE_STAGE);
         } else {
-            logTest.logger.debug("OnStateMarchStart(), not existing stageUpdate!!!!");
+            logTest.logger.info("OnStateMarchStart(), not existing stageUpdate!!!!");
         }
         if (workerDAO.QueryDataFieldExists(this, "scoreUpdates")) {
-            logTest.logger.debug("OnStateMarchStart(), existing scoreUpdates");
+            logTest.logger.info("OnStateMarchStart(), existing scoreUpdates");
             updateDifftr.remove(UpdateDifferentiator.UPDATE_SCORES);
         } else {
-            logTest.logger.debug("OnStateMarchStart(), not existing scoreUpdates!!!!");
+            logTest.logger.info("OnStateMarchStart(), not existing scoreUpdates!!!!");
         }
         if (workerDAO.QueryDataFieldExists(this, "cornerTotUpdates")) {
-            logTest.logger.debug("OnStateMarchStart(), existing cornerTotUpdates");
+            logTest.logger.info("OnStateMarchStart(), existing cornerTotUpdates");
             updateDifftr.remove(UpdateDifferentiator.UPDATE_CORNER);
         } else {
-            logTest.logger.debug("OnStateMarchStart(), not existing cornerTotUpdates!!!!");
+            logTest.logger.info("OnStateMarchStart(), not existing cornerTotUpdates!!!!");
         }
 
         UpdateDBByDifftr(updateDifftr, lastMatchCrle);
@@ -419,7 +419,7 @@ public class MatchEventWorker extends baseCrawler {
             }
 
             if (!lastMatchCrle.isMatchXmlValid()) {
-                logTest.logger.debug("[ENDREASON]lastMatchCrle is not valid");
+                logTest.logger.info("[ENDREASON]lastMatchCrle is not valid");
                 invalidEndCnt++;
                 if (invalidEndCnt > invalidEndConfirm) {
                     status = MatchStatus.STATE_MATCH_ENDED;
@@ -429,7 +429,7 @@ public class MatchEventWorker extends baseCrawler {
 
             if (stage == MatchStage.STAGE_SECOND || stage == MatchStage.STAGE_FULLTIME || stage == MatchStage.STAGE_PENALTY) {
                 if (lastMatchCrle.isAllPoolClosed()) {
-                    logTest.logger.debug("[ENDREASON]last crle shown all pool closed");
+                    logTest.logger.info("[ENDREASON]last crle shown all pool closed");
                     endGameConfirmCnt++;
 
                     if (endGameConfirmCnt > endGameConfirm) {
@@ -441,7 +441,7 @@ public class MatchEventWorker extends baseCrawler {
 
             if (!updateDifftr.isEmpty()) {
                 UpdateDBByDifftr(updateDifftr, lastMatchCrle);
-                logTest.logger.info("updateDifftr not empty, last crle is: \n" + lastMatchCrle.toString());
+                logTest.logger.debug("updateDifftr not empty, last crle is: \n" + lastMatchCrle.toString());
             }
 
         } catch (Exception e) {
@@ -485,7 +485,6 @@ public class MatchEventWorker extends baseCrawler {
 
     public void run() {
         try {
-            ////logTest.logger.info("MatchEventWorker run() called");
             Proc();
         } catch (Exception e) {
             logTest.logger.error(e);
@@ -570,11 +569,11 @@ public class MatchEventWorker extends baseCrawler {
             }
 
             if (crle.getRecordTime() == null) {
-                logTest.logger.debug("input crle.getRecordTime() is null");
+                logTest.logger.info("input crle.getRecordTime() is null");
             }
 
             if (crle.getMatchStage() == null) {
-                logTest.logger.debug("input crle.getMatchStage() is null");
+                logTest.logger.info("input crle.getMatchStage() is null");
             }
 
             for (UpdateDifferentiator differentiator : difftr) {
@@ -588,7 +587,7 @@ public class MatchEventWorker extends baseCrawler {
                         workerDAO.UpdateInplayStage(this, DVPstage);
                         break;
                     case UPDATE_POOLS:
-                        logTest.logger.debug("[UpdateDBByDifftr] matchEvent pool to be updated");
+                        logTest.logger.info("[UpdateDBByDifftr] matchEvent pool to be updated");
                         workerDAO.SetField(this, "poolTypes", matchPools);
                         break;
                     case UPDATE_SCORES:
@@ -655,7 +654,7 @@ public class MatchEventWorker extends baseCrawler {
                 if (workerDAO.QueryDataFieldExists(this, "scoreUpdates"))
                     if (workerDAO.QueryDataFieldExists(this, "stageUpdates"))
                         if (workerDAO.QueryDataFieldExists(this, "actualCommence")) {
-                            logTest.logger.debug("[nullpo] this exceptional case happened");
+                            logTest.logger.info("[nullpo] this exceptional case happened");
                             status = MatchStatus.STATE_MATCH_ENDED;
                             return;
                         }
@@ -695,7 +694,7 @@ public class MatchEventWorker extends baseCrawler {
         try {
             if (matchPools == null) {
                 matchPools = crle.getPoolType();
-                logTest.logger.info("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());
+                logTest.logger.debug("ONE AND ONLY ONCE, MATCHPOOLS RECORDED: " + matchPools.toString());
             }
 
             if (crle.getMatchStage() != null) {

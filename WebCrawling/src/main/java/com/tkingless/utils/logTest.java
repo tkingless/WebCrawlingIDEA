@@ -13,8 +13,5 @@ public class logTest {
 
     public static void DoALog() {
 
-        logger.info("logTest DoALog() called");
-        logger.error("logTest DoALog() called");
-
     }
 }

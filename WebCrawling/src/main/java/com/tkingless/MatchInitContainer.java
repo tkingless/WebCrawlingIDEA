@@ -77,22 +77,17 @@ public class MatchInitContainer {
             cardinality = cardinalityChecks.get(0).size();
         } else {
             result = false;
-            logTest.logger.info("[Error]BoardCrawlee.CardinalityChecking is null");
+            logTest.logger.error("BoardCrawlee.CardinalityChecking is null");
         }
 
         for (Elements eles : cardinalityChecks) {
             if (eles.size() != cardinality) {
                 result = false;
-                logTest.logger.info("[Error]inconsistent cardinality check number found, hint: ");
-                logTest.logger.info(eles.text());
+                logTest.logger.error("inconsistent cardinality check number found, hint: ");
+                logTest.logger.error(eles.text());
                 break;
             }
         }
-
-        //debug use
-       /* for (Elements eles: cardinalityChecks){
-            logTest.logger.info(eles.size());
-        }*/
 
         return result;
     }
@@ -103,7 +98,6 @@ public class MatchInitContainer {
 
         try {
 
-            //logTest.logger.info("[Iterator loop start:]");
             Iterator<Element> matchNoIte = matchNos.iterator();
             Iterator<Element> homeTeamIte = homeTeams.iterator();
             Iterator<Element> awayTeamIte = awayTeams.iterator();
@@ -148,7 +142,6 @@ public class MatchInitContainer {
         if (idMatcher.find()) {
             matchId = idMatcher.group();
             matchId = matchId.substring(matchId.lastIndexOf('=') + 1);
-            //logTest.logger.info("GetChildNodes(), match indexes: " + matchId);
         }
 
         return matchId;
@@ -156,7 +149,6 @@ public class MatchInitContainer {
 
     private String ExtractMatchNo (Element matchKeyEle) {
         return matchKeyEle.text();
-        //logTest.logger.info("GetChildNodes(), matchKey: " + matchKey);
     }
 
     private String ExtractLeague (Element leagueEle) {

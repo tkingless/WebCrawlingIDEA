@@ -70,7 +70,7 @@ public class MatchCSVhandler {
             if (!WCDIOdoc.containsKey("lastOut")) {
                 Overwrite();
                 lastOutSucceed = true;
-                WebCrawledDataIO.logger.debug("no lastOut found, so overwrite");
+                WebCrawledDataIO.logger.info("no lastOut found, so overwrite");
                 return;
             }
 
@@ -81,13 +81,13 @@ public class MatchCSVhandler {
             if (!FileManager.CheckFileExist(absCSVpath)) {
 
                 if (FileManager.CheckFileExist(archivePath)) {
-                    WebCrawledDataIO.logger.debug("markedEnded csv found in subfolder, so nothing to do");
+                    WebCrawledDataIO.logger.info("markedEnded csv found in subfolder, so nothing to do");
                     return;
                 }
 
                 Overwrite();
                 lastOutSucceed = true;
-                WebCrawledDataIO.logger.debug("no existing csv found found, so overwrite");
+                WebCrawledDataIO.logger.info("no existing csv found found, so overwrite");
                 return;
             }
 
@@ -95,7 +95,7 @@ public class MatchCSVhandler {
                 Date endTime = WCDIOdoc.getDate("MarkedEnd");
 
                 if (endTime.getTime() <= lastOutTime.getTime()) {
-                    WebCrawledDataIO.logger.debug("csv out finish, moved csv file");
+                    WebCrawledDataIO.logger.info("csv out finish, moved csv file");
                     FileManager.CreateFolder(rootPath + "/" + possibleSubfolder);
                     FileManager.RenameFile(absCSVpath, archivePath);
                     return;

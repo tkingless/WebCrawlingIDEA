@@ -123,7 +123,7 @@ public class WCDIOcsvIn {
                     //WebCrawledDataIO.logger.trace("there is odd update for id:" + id);
                     updateHistory = GetUpdateHistory(id, AttrColl, OddsColl);
                 } else {
-                    WebCrawledDataIO.logger.debug("idOddsCursor is null");
+                    WebCrawledDataIO.logger.info("idOddsCursor is null");
                     continue;
                 }
 
@@ -159,13 +159,13 @@ public class WCDIOcsvIn {
 
                 Document MatchEventDoc = MatchEventsColl.find(new Document("MatchId", id)).first();
                 if (MatchEventDoc != null) {
-                    WebCrawledDataIO.logger.debug("[Adding MarkedEnded] MatchEventDoc is not null, id: " + id);
+                    WebCrawledDataIO.logger.info("[Adding MarkedEnded] MatchEventDoc is not null, id: " + id);
                     if (MatchEventDoc.containsKey("endTime") || toEnd) {
-                        WebCrawledDataIO.logger.debug("[Adding MarkedEnded] csv markded ended, id: " + id);
+                        WebCrawledDataIO.logger.info("[Adding MarkedEnded] csv markded ended, id: " + id);
                         MarkedEnded(WCDIOcsvColl, IDfilter, new Document("MarkedEnd", now));
                     }
                 } else {
-                    WebCrawledDataIO.logger.debug("[Adding MarkedEnded] MatchEventDoc is null, id: " + id);
+                    WebCrawledDataIO.logger.info("[Adding MarkedEnded] MatchEventDoc is null, id: " + id);
                 }
 
             } catch (Exception e) {
@@ -240,7 +240,7 @@ public class WCDIOcsvIn {
             Document updateLastIn = new Document("lastIn", now);
             Document update = new Document("$set", updateLastIn);
             WCDIOcsvColl.updateOne(filter, update);
-            WebCrawledDataIO.logger.debug("has updated lastIn as: " + now);
+            WebCrawledDataIO.logger.info("has updated lastIn as: " + now);
         }
     }
 

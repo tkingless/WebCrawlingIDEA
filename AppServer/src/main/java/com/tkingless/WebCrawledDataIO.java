@@ -22,7 +22,7 @@ public class WebCrawledDataIO implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        logger.info("WebCrawledDataIO init() called.");
+        logger.debug("WebCrawledDataIO init() called.");
 
         Inscheduler = Executors.newSingleThreadScheduledExecutor();
         Inscheduler.scheduleAtFixedRate(new ScheduledWCDIOin(),0,1000 * 5, TimeUnit.MILLISECONDS);

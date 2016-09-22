@@ -34,7 +34,6 @@ public class BoardCrawlee extends baseCrawlee {
     //callable callbacks
     public Document call() {
 
-        ////logTest.logger.info("BoardCrawlee call() for callable called");
         try {
             Process();
         } catch (IOException e) {
@@ -118,7 +117,7 @@ public class BoardCrawlee extends baseCrawlee {
             livingWorkers.remove(worker);
             logTest.logger.info("[BoardCrawlee] livingworker, id: " +worker.getMatchId() + " has been released");
         } else
-            logTest.logger.info("No such local registration before");
+            logTest.logger.debug("No such local registration before");
     }
 
     public synchronized static void TerminateAllLivingWorkers(){

@@ -240,7 +240,7 @@ public class WCDIOcsvData {
 
             }
 
-            WebCrawledDataIO.logger.debug("InitailizeRecordHead, head: " + head.toString());
+            WebCrawledDataIO.logger.info("InitailizeRecordHead, head: " + head.toString());
         } catch (Exception e) {
             WebCrawledDataIO.logger.error("WCDIOcsvData error", e);
         }

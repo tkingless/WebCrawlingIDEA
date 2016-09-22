@@ -27,7 +27,7 @@ public class HKJCcrawler extends baseCrawler {
 
     public void run() {
         try {
-            logTest.logger.info("HKJCcrwaler run()");
+            logTest.logger.debug("HKJCcrwaler run()");
             GetIndexesFromBoard();
         } catch (Exception e) {
             logTest.logger.error("[HKJC] error",e);
@@ -46,7 +46,7 @@ public class HKJCcrawler extends baseCrawler {
 
         boardCrawlee.Process();
 
-        logTest.logger.info("HKJCcrawler thread revives at GetIndexesFromBoard()");
+        logTest.logger.debug("HKJCcrawler thread revives at GetIndexesFromBoard()");
     }
 
     @Override

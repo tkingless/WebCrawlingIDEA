@@ -29,7 +29,7 @@ public class HelloWorld extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         System.out.println("---------- HelloWorld servlet Initialized successfully ----------");
-        logger.info("This is info, init() called");
+        logger.debug("This is info, init() called");
     }
 
     @PreDestroy
