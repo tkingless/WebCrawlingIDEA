@@ -27,7 +27,7 @@ import static com.tkingless.MatchCONSTANTS.MatchStatus.*;
 //this is class is to be long-live thread worker to log happening event
 public class MatchEventWorker extends baseCrawler {
 
-    private final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST, MatchStage.STAGE_HALFTIME, MatchStage.STAGE_SECOND, MatchStage.STAGE_FULLTIME);
+    private final Set<MatchStage> onMatchingStages = EnumSet.of(MatchStage.STAGE_FIRST, MatchStage.STAGE_HALFTIME, MatchStage.STAGE_SECOND, MatchStage.STAGE_FULLTIME, MatchStage.STAGE_PENALTY);
     private static final String threadName = "MatchEventWorker-thread";
 
     //The unique id for this worker
@@ -205,6 +205,7 @@ public class MatchEventWorker extends baseCrawler {
                 case STAGE_HALFTIME:
                 case STAGE_SECOND:
                 case STAGE_FULLTIME:
+                case STAGE_PENALTY:
 
                     if (workerDAO.QueryDataFieldExists(this, "commence")) {
                         long timestampOfcommence = workerDAO.findByMatchId(matchId).getCommence().getTime();
@@ -237,7 +238,11 @@ public class MatchEventWorker extends baseCrawler {
             stage = MatchStage.STAGE_SECOND;
         } else if (statusText.contains("Full Time")) {
             stage = MatchStage.STAGE_FULLTIME;
-        } else {
+        } else if (statusText.contains("enalt")) {
+            stage = MatchStage.STAGE_PENALTY;
+        }
+
+        else {
             logTest.logger.error("This is unknwon stage: " + statusText);
         }
     }
@@ -422,7 +427,7 @@ public class MatchEventWorker extends baseCrawler {
                 }
             }
 
-            if (stage == MatchStage.STAGE_SECOND || stage == MatchStage.STAGE_FULLTIME) {
+            if (stage == MatchStage.STAGE_SECOND || stage == MatchStage.STAGE_FULLTIME || stage == MatchStage.STAGE_PENALTY) {
                 if (lastMatchCrle.isAllPoolClosed()) {
                     logTest.logger.debug("[ENDREASON]last crle shown all pool closed");
                     endGameConfirmCnt++;

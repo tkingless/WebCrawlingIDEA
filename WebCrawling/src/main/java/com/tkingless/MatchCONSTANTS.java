@@ -30,6 +30,7 @@ public class MatchCONSTANTS {
         STAGE_HALFTIME,
         STAGE_SECOND,
         STAGE_FULLTIME,
+        STAGE_PENALTY,
         STAGE_UNDEFINED
     }
 
@@ -118,6 +119,10 @@ public class MatchCONSTANTS {
             return MatchStage.STAGE_HALFTIME;
         if(lowercase.equals("secondhalf"))
             return MatchStage.STAGE_SECOND;
+        if(lowercase.equals("fulltime"))
+            return MatchStage.STAGE_FULLTIME;
+        if(lowercase.equals("penaltyshootout"))
+            return MatchStage.STAGE_PENALTY;
         else {
             logTest.logger.error("MATCHCONSTANTS.GetMatchStage() unknown string: " + str);
             return MatchStage.STAGE_UNDEFINED;
@@ -135,6 +140,10 @@ public class MatchCONSTANTS {
                 return "halftimecompleted";
             case STAGE_SECOND:
                 return "secondhalf";
+            case STAGE_FULLTIME:
+                return "fulltime";
+            case STAGE_PENALTY:
+                return "penaltyshootout";
             case STAGE_UNDEFINED:
                 default:
                     logTest.logger.error("MatchCONSTANTS.GetMatchStageStr() error: " + stage.toString());
