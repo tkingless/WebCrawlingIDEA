@@ -6,11 +6,14 @@ import com.tkingless.DBobject.MatchEventDAO;
 import com.tkingless.WebCrawling.DBobject.InPlayAttrUpdates;
 import com.tkingless.crawlee.BoardCrawlee;
 import com.tkingless.crawlee.MatchCrawlee;
+import com.tkingless.utils.JsoupHelper;
 import com.tkingless.utils.logTest;
 import com.tkingless.utils.DateTimeEntity;
 import com.tkingless.MatchCONSTANTS.*;
+import org.jsoup.nodes.Document;
 
 import javax.xml.xpath.XPathExpressionException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.EnumSet;
@@ -331,7 +334,11 @@ public class MatchEventWorker extends baseCrawler {
                 scanPeriod = scanPeriod + 1000 * 2;
                 logTest.logger.info("dry waiting for start state");
 
-                if (timediff <= -1 * 1000 * 60 * 180 * 4) {
+                if(timediff <= -1 * 1000 * 60 * 10) {
+                    WhatIsHappening();
+                }
+
+                if (timediff <= -1 * 1000 * 60 * 180) {
                     logTest.logger.error("waited too long for start state, terminating...");
                     status = MatchStatus.STATE_TERMINATED;
                 }
@@ -724,5 +731,21 @@ public class MatchEventWorker extends baseCrawler {
     /*
     Test case useful methods(): end
      */
+
+    void WhatIsHappening() {
+        //Print out current onboard and matchcrle content
+        try {
+            Document boardDoc = JsoupHelper.GetDocumentFrom("http://bet.hkjc.com/football/odds/odds_inplay.aspx?ci=en-US");
+            Document crleDoc = JsoupHelper.GetDocumentFrom("http://bet.hkjc.com/football/getXML.aspx?pooltype=all&isLiveBetting=true&match="+matchId);
+
+            logTest.logger.info("========\n\nDry waiting, see board content is: \n" + boardDoc.text());
+            logTest.logger.info("========\n\nDry waiting, see crawlee content is: \n" + crleDoc.text());
+
+            logTest.logger.info("========\n\n");
+
+        } catch (IOException e) {
+            logTest.logger.error(e);
+        }
+    }
 
 }
